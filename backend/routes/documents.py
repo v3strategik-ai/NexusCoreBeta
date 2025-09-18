@@ -3,11 +3,11 @@ from typing import List, Optional
 import logging
 from datetime import datetime
 
-from ..models import (
+from models import (
     DocumentTemplate, GeneratedDocument, DocumentGenerateRequest,
     DocumentType
 )
-from ..database import get_documents_collection
+from database import get_documents_collection
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 logger = logging.getLogger(__name__)
