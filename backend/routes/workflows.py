@@ -3,10 +3,10 @@ from typing import List, Optional
 import logging
 from datetime import datetime
 
-from ..models import (
+from models import (
     Workflow, WorkflowCreate, WorkflowStatus, WorkflowStep
 )
-from ..database import get_workflows_collection
+from database import get_workflows_collection
 
 router = APIRouter(prefix="/workflows", tags=["workflows"])
 logger = logging.getLogger(__name__)
