@@ -3,10 +3,10 @@ from typing import List, Optional
 from datetime import datetime
 import logging
 
-from ..models import (
+from models import (
     Lead, LeadCreate, LeadUpdate, LeadListResponse, LeadStatus
 )
-from ..database import get_leads_collection, get_agents_collection
+from database import get_leads_collection, get_agents_collection
 
 router = APIRouter(prefix="/crm", tags=["crm"])
 logger = logging.getLogger(__name__)

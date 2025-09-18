@@ -3,8 +3,8 @@ from typing import List
 from datetime import datetime, timedelta
 import logging
 
-from ..models import SystemMetrics, AgentActivity, SystemDashboard
-from ..database import (
+from models import SystemMetrics, AgentActivity, SystemDashboard
+from database import (
     get_agents_collection, get_leads_collection, get_activities_collection,
     get_system_metrics_collection, get_documents_collection
 )
