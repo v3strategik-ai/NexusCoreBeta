@@ -1,54 +1,552 @@
-import { useEffect } from "react";
-import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
+import { useState, useEffect } from 'react'
+import { Button } from './components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card'
+import { Badge } from './components/ui/badge'
+import { Input } from './components/ui/input'
+import { Textarea } from './components/ui/textarea'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs'
+import { Progress } from './components/ui/progress'
+import { Switch } from './components/ui/switch'
+import { 
+  Brain, 
+  Zap, 
+  Shield, 
+  Database, 
+  Mail, 
+  FileText, 
+  BarChart3, 
+  Settings, 
+  Users, 
+  Bot,
+  Sparkles,
+  CheckCircle,
+  Globe,
+  Workflow,
+  Plus,
+  Edit,
+  Home,
+  Briefcase,
+  Target,
+  BookOpen,
+  Upload,
+  Download,
+  Search,
+  CloudUpload,
+  Rocket,
+  Star,
+  Activity,
+  DollarSign,
+  Gauge,
+  Server,
+  Lightbulb,
+  Play,
+  Pause,
+  Power,
+  MessageSquare,
+  Video,
+  Eye,
+  Layers,
+  Trash2,
+  RefreshCw,
+  Minimize
+} from 'lucide-react'
+import axios from 'axios'
+import './App.css'
+import logoFrame3 from './assets/logo_frame_3.png'
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
-
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
-
-  return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
-    </div>
-  );
-};
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
+const API = `${BACKEND_URL}/api`
 
 function App() {
+  const [currentTab, setCurrentTab] = useState('dashboard')
+  const [selectedAgent, setSelectedAgent] = useState(null)
+  const [agents, setAgents] = useState([])
+  const [leads, setLeads] = useState([])
+  const [dashboardData, setDashboardData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  // Fetch data from backend
+  useEffect(() => {
+    fetchDashboardData()
+    fetchAgents()
+    fetchLeads()
+  }, [])
+
+  const fetchDashboardData = async () => {
+    try {
+      const response = await axios.get(`${API}/dashboard/metrics`)
+      setDashboardData(response.data)
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error)
+      setError('Failed to load dashboard data')
+    }
+  }
+
+  const fetchAgents = async () => {
+    try {
+      const response = await axios.get(`${API}/agents/`)
+      setAgents(response.data.agents || [])
+      setLoading(false)
+    } catch (error) {
+      console.error('Error fetching agents:', error)
+      setError('Failed to load agents')
+      setLoading(false)
+    }
+  }
+
+  const fetchLeads = async () => {
+    try {
+      const response = await axios.get(`${API}/crm/leads`)
+      setLeads(response.data.leads || [])
+    } catch (error) {
+      console.error('Error fetching leads:', error)
+      setError('Failed to load leads')
+    }
+  }
+
+  const getAutonomyColor = (level) => {
+    switch(level) {
+      case 'Quantum': return 'text-purple-400'
+      case 'High': return 'text-green-400'
+      case 'Medium': return 'text-yellow-400'
+      default: return 'text-gray-400'
+    }
+  }
+
+  const getStatusColor = (status) => {
+    switch(status) {
+      case 'active': return 'bg-green-500'
+      case 'training': return 'bg-yellow-500'
+      case 'idle': return 'bg-gray-500'
+      default: return 'bg-gray-500'
+    }
+  }
+
+  const getLeadStatusColor = (status) => {
+    switch(status) {
+      case 'hot': return 'destructive'
+      case 'warm': return 'default'
+      case 'converted': return 'default'
+      default: return 'secondary'
+    }
+  }
+
+  const AgentCard = ({ agent }) => (
+    <Card className="bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/50 transition-all duration-300 hover:scale-105 quantum-bg">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <div className="flex items-center space-x-3">
+          <div className="relative">
+            <div className={`w-3 h-3 rounded-full ${getStatusColor(agent.status)} animate-pulse`}></div>
+          </div>
+          <div>
+            <CardTitle className="text-lg font-bold gradient-text">{agent.name}</CardTitle>
+            <p className="text-sm text-muted-foreground">{agent.type}</p>
+          </div>
+        </div>
+        <Badge variant={agent.status === 'active' ? 'default' : 'secondary'} className="quantum-pulse">
+          {agent.status}
+        </Badge>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <div className="text-2xl font-bold">{agent.tasks_completed}</div>
+            <p className="text-xs text-muted-foreground">Tasks Completed</p>
+          </div>
+          <div>
+            <div className="text-2xl font-bold">{agent.efficiency}%</div>
+            <p className="text-xs text-muted-foreground">Efficiency</p>
+          </div>
+        </div>
+        
+        <div>
+          <div className="flex items-center justify-between text-sm mb-2">
+            <span>Learning Progress</span>
+            <span>{agent.learning_progress}%</span>
+          </div>
+          <Progress value={agent.learning_progress} className="h-2" />
+        </div>
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-sm">
+            <span>Autonomy Level:</span>
+            <span className={`font-semibold ${getAutonomyColor(agent.autonomy_level)}`}>
+              {agent.autonomy_level}
+            </span>
+          </div>
+          <div className="text-xs text-muted-foreground">
+            <strong>Personality:</strong> {agent.personality}
+          </div>
+          <div className="text-xs text-muted-foreground">
+            <strong>Specialization:</strong> {agent.specialization}
+          </div>
+        </div>
+
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline" onClick={() => setSelectedAgent(agent)}>
+            <BookOpen className="w-4 h-4 mr-1" />
+            Details
+          </Button>
+          <Button size="sm" variant="outline">
+            <Settings className="w-4 h-4 mr-1" />
+            Configure  
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  )
+
+  const LeadCard = ({ lead }) => (
+    <Card className="bg-card/50 backdrop-blur-sm border-border/50 quantum-bg">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{lead.name}</CardTitle>
+        <Badge variant={getLeadStatusColor(lead.status)}>
+          {lead.status}
+        </Badge>
+      </CardHeader>
+      <CardContent>
+        <div className="text-sm text-muted-foreground mb-2">{lead.email}</div>
+        <div className="text-2xl font-bold">${lead.value?.toLocaleString()}</div>
+        <p className="text-xs text-muted-foreground mb-2">Potential Value</p>
+        <div className="text-xs text-muted-foreground mb-4">
+          <strong>Assigned to:</strong> {lead.assigned_agent_name || 'Unassigned'}
+        </div>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline">
+            <Mail className="w-4 h-4 mr-1" />
+            Contact
+          </Button>
+          <Button size="sm" variant="outline">
+            <Edit className="w-4 h-4 mr-1" />
+            Edit
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  )
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background neural-pattern flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading Nexus Core...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background neural-pattern flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500 mb-4">{error}</p>
+          <Button onClick={() => window.location.reload()}>
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Retry
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+    <div className="min-h-screen bg-background neural-pattern">
+      {/* Header */}
+      <header className="border-b border-border/50 backdrop-blur-sm bg-background/80 sticky top-0 z-40">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <img 
+              src={logoFrame3} 
+              alt="Nexus Core" 
+              className="w-8 h-8 quantum-pulse"
+            />
+            <div>
+              <h1 className="text-xl font-bold gradient-text">Nexus Core</h1>
+              <p className="text-xs text-muted-foreground">Autonomous Digital Employees Powerhouse</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            <Badge variant="outline" className="quantum-pulse">
+              <Rocket className="w-3 h-3 mr-1" />
+              Quantum Level
+            </Badge>
+            <Button variant="outline" size="sm">
+              <Upload className="w-4 h-4 mr-2" />
+              Upload Knowledge
+            </Button>
+            <Button size="sm" className="glow-effect">
+              <Plus className="w-4 h-4 mr-2" />
+              New Digital Employee
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-6">
+        <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-4 mb-6">
+            <TabsTrigger value="dashboard" className="flex items-center gap-2">
+              <Home className="w-4 h-4" />
+              Command Center
+            </TabsTrigger>
+            <TabsTrigger value="agents" className="flex items-center gap-2">
+              <Bot className="w-4 h-4" />
+              Digital Employees
+            </TabsTrigger>
+            <TabsTrigger value="crm" className="flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              CRM Intelligence
+            </TabsTrigger>
+            <TabsTrigger value="documents" className="flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              Documents
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Dashboard Tab */}
+          <TabsContent value="dashboard" className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-4xl font-bold gradient-text mb-2">Quantum Command Center</h2>
+              <p className="text-muted-foreground">Monitor and control your autonomous digital workforce</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card className="quantum-bg glow-effect">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Active Digital Employees</CardTitle>
+                  <Bot className="h-4 w-4 text-muted-foreground quantum-pulse" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold gradient-text">{dashboardData?.active_agents || 0}</div>
+                  <p className="text-xs text-muted-foreground">Quantum-level autonomous</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="quantum-bg glow-effect">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Tasks Completed</CardTitle>
+                  <CheckCircle className="h-4 w-4 text-muted-foreground quantum-pulse" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold gradient-text">{dashboardData?.total_tasks_completed || 0}</div>
+                  <p className="text-xs text-muted-foreground">Autonomous completion</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="quantum-bg glow-effect">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Revenue Generated</CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground quantum-pulse" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold gradient-text">${dashboardData?.total_revenue_generated?.toLocaleString() || '0'}</div>
+                  <p className="text-xs text-muted-foreground">AI-driven revenue</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="quantum-bg glow-effect">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">System Efficiency</CardTitle>
+                  <Gauge className="h-4 w-4 text-muted-foreground quantum-pulse" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold gradient-text">{dashboardData?.system_efficiency || 0}%</div>
+                  <p className="text-xs text-muted-foreground">Peak performance</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card className="quantum-bg">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Server className="w-5 h-5" />
+                    Quantum System Health
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between text-sm mb-2">
+                        <span>Neural Processing Power</span>
+                        <span>{dashboardData?.neural_processing_power || 0}%</span>
+                      </div>
+                      <Progress value={dashboardData?.neural_processing_power || 0} className="h-3" />
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-2">
+                        <span>Knowledge Base Utilization</span>
+                        <span>{dashboardData?.knowledge_base_utilization || 0}%</span>
+                      </div>
+                      <Progress value={dashboardData?.knowledge_base_utilization || 0} className="h-3" />
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-sm mb-2">
+                        <span>Autonomous Decision Rate</span>
+                        <span>{dashboardData?.autonomous_decision_rate || 0}%</span>
+                      </div>
+                      <Progress value={dashboardData?.autonomous_decision_rate || 0} className="h-3" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="quantum-bg">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Activity className="w-5 h-5" />
+                    System Overview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span>Total Digital Employees</span>
+                      <span className="font-bold">{agents.length}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span>Active Leads</span>
+                      <span className="font-bold">{leads.length}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span>Learning Acceleration</span>
+                      <span className="font-bold">{dashboardData?.learning_acceleration || 0}%</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span>Platform Status</span>
+                      <Badge variant="default" className="quantum-pulse">Operational</Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Digital Employees Tab */}
+          <TabsContent value="agents" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-3xl font-bold gradient-text">Digital Employees Management</h2>
+                <p className="text-muted-foreground">Your autonomous workforce of quantum-level AI agents</p>
+              </div>
+              <Button className="glow-effect">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Digital Employee
+              </Button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {agents.map(agent => (
+                <AgentCard key={agent.id} agent={agent} />
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* CRM Tab */}
+          <TabsContent value="crm" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-3xl font-bold gradient-text">CRM Intelligence</h2>
+                <p className="text-muted-foreground">AI-powered customer relationship management</p>
+              </div>
+              <Button className="glow-effect">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Lead
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+              <Card className="quantum-bg glow-effect">
+                <CardHeader>
+                  <CardTitle className="text-sm">Total Leads</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold gradient-text">{leads.length}</div>
+                  <p className="text-xs text-muted-foreground">Active pipeline</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="quantum-bg glow-effect">
+                <CardHeader>
+                  <CardTitle className="text-sm">Hot Leads</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold gradient-text">
+                    {leads.filter(lead => lead.status === 'hot').length}
+                  </div>
+                  <p className="text-xs text-muted-foreground">Ready to convert</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="quantum-bg glow-effect">
+                <CardHeader>
+                  <CardTitle className="text-sm">Pipeline Value</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold gradient-text">
+                    ${leads.reduce((sum, lead) => sum + (lead.value || 0), 0).toLocaleString()}
+                  </div>
+                  <p className="text-xs text-muted-foreground">Total potential</p>
+                </CardContent>
+              </Card>
+
+              <Card className="quantum-bg glow-effect">
+                <CardHeader>
+                  <CardTitle className="text-sm">Converted</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-3xl font-bold gradient-text">
+                    {leads.filter(lead => lead.status === 'converted').length}
+                  </div>
+                  <p className="text-xs text-muted-foreground">Successful deals</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              {leads.map(lead => (
+                <LeadCard key={lead.id} lead={lead} />
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* Documents Tab */}
+          <TabsContent value="documents" className="space-y-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-3xl font-bold gradient-text">Document Generation</h2>
+                <p className="text-muted-foreground">AI-powered business document creation</p>
+              </div>
+              <Button className="glow-effect">
+                <Plus className="w-4 h-4 mr-2" />
+                Generate Document
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { icon: FileText, title: 'AI Proposals', desc: 'Generate winning proposals', color: 'text-blue-400' },
+                { icon: DollarSign, title: 'Smart Invoices', desc: 'Automated invoicing', color: 'text-green-400' },
+                { icon: Briefcase, title: 'Business Plans', desc: 'Comprehensive plans', color: 'text-purple-400' },
+                { icon: BarChart3, title: 'Analytics Reports', desc: 'Data-driven insights', color: 'text-orange-400' }
+              ].map((doc, index) => (
+                <Card key={index} className="quantum-bg cursor-pointer hover:border-primary/50 transition-all duration-300 hover:scale-105 glow-effect">
+                  <CardContent className="p-6 text-center">
+                    <doc.icon className={`w-12 h-12 mx-auto mb-4 ${doc.color}`} />
+                    <h3 className="font-semibold mb-2">{doc.title}</h3>
+                    <p className="text-sm text-muted-foreground">{doc.desc}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
