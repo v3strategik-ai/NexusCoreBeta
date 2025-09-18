@@ -3,11 +3,11 @@ from typing import List, Optional
 from datetime import datetime
 import logging
 
-from ..models import (
+from models import (
     Agent, AgentCreate, AgentUpdate, AgentListResponse,
     AgentActivity, AutonomyLevel, AgentStatus
 )
-from ..database import get_agents_collection, get_activities_collection
+from database import get_agents_collection, get_activities_collection
 
 router = APIRouter(prefix="/agents", tags=["agents"])
 logger = logging.getLogger(__name__)
