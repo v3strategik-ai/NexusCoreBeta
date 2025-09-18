@@ -21,10 +21,19 @@ async def debug_agents():
         # Get raw data
         agents_data = await collection.find({}).to_list(10)
         
+        # Try creating Agent models
+        agents = []
+        for agent_data in agents_data:
+            try:
+                agent = Agent(**agent_data)
+                agents.append(agent.dict())
+            except Exception as e:
+                return {"error": f"Failed to create Agent model: {e}", "raw_data": agent_data}
+        
         return {
-            "count": len(agents_data),
-            "sample": agents_data[0] if agents_data else None,
-            "all_names": [agent.get("name") for agent in agents_data]
+            "count": len(agents),
+            "agents": agents[:2],  # Return first 2 agents
+            "database_name": collection.database.name
         }
         
     except Exception as e:
