@@ -5,11 +5,11 @@ import uuid
 import logging
 from datetime import datetime
 
-from ..models import (
+from models import (
     KnowledgeBase, KnowledgeBaseCreate, KnowledgeCategory,
     KnowledgeFile
 )
-from ..database import get_knowledge_collection, get_agents_collection
+from database import get_knowledge_collection, get_agents_collection
 
 router = APIRouter(prefix="/knowledge", tags=["knowledge"])
 logger = logging.getLogger(__name__)
