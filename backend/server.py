@@ -11,10 +11,10 @@ import uuid
 from datetime import datetime
 
 # Import database functions
-from .database import connect_to_mongo, close_mongo_connection, get_database
+from database import connect_to_mongo, close_mongo_connection, get_database
 
 # Import all route modules
-from .routes import agents, crm, dashboard, knowledge, documents, workflows
+from routes import agents, crm, dashboard, knowledge, documents, workflows
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
