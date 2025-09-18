@@ -12,34 +12,6 @@ from database import get_agents_collection, get_activities_collection
 router = APIRouter(prefix="/agents", tags=["agents"])
 logger = logging.getLogger(__name__)
 
-@router.get("/debug")
-async def debug_agents():
-    """Debug endpoint to check agents data"""
-    try:
-        collection = await get_agents_collection()
-        
-        # Get raw data
-        agents_data = await collection.find({}).to_list(10)
-        
-        # Try creating Agent models
-        agents = []
-        for agent_data in agents_data:
-            try:
-                agent = Agent(**agent_data)
-                agents.append(agent.dict())
-            except Exception as e:
-                return {"error": f"Failed to create Agent model: {e}", "raw_data": agent_data}
-        
-        return {
-            "count": len(agents),
-            "agents": agents[:2],  # Return first 2 agents
-            "database_name": collection.database.name
-        }
-        
-    except Exception as e:
-        logger.error(f"Debug error: {e}")
-        return {"error": str(e)}
-
 @router.get("/", response_model=AgentListResponse)
 async def get_agents(
     skip: int = Query(0, ge=0),
