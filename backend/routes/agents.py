@@ -12,6 +12,25 @@ from database import get_agents_collection, get_activities_collection
 router = APIRouter(prefix="/agents", tags=["agents"])
 logger = logging.getLogger(__name__)
 
+@router.get("/debug")
+async def debug_agents():
+    """Debug endpoint to check agents data"""
+    try:
+        collection = await get_agents_collection()
+        
+        # Get raw data
+        agents_data = await collection.find({}).to_list(10)
+        
+        return {
+            "count": len(agents_data),
+            "sample": agents_data[0] if agents_data else None,
+            "all_names": [agent.get("name") for agent in agents_data]
+        }
+        
+    except Exception as e:
+        logger.error(f"Debug error: {e}")
+        return {"error": str(e)}
+
 @router.get("/", response_model=AgentListResponse)
 async def get_agents(
     skip: int = Query(0, ge=0),
