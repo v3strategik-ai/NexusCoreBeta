@@ -324,7 +324,16 @@ export function WorkflowBuilderModal({ children, agents, onWorkflowCreated }) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-6xl w-[95vw] h-[85vh] flex flex-col quantum-bg">
+      <DialogContent 
+        className="sm:max-w-6xl w-[95vw] h-[85vh] max-h-[700px] flex flex-col quantum-bg border border-primary/20 shadow-2xl"
+        style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          maxHeight: '90vh'
+        }}
+      >
         <DialogHeader className="flex-shrink-0">
           <DialogTitle className="flex items-center gap-3">
             <Workflow className="w-6 h-6 text-primary" />
