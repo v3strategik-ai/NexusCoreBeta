@@ -383,7 +383,7 @@ function App() {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-6">
         <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-6">
+          <TabsList className="grid w-full grid-cols-5 mb-6">
             <TabsTrigger value="dashboard" className="flex items-center gap-2">
               <Home className="w-4 h-4" />
               Command Center
@@ -395,6 +395,10 @@ function App() {
             <TabsTrigger value="crm" className="flex items-center gap-2">
               <Users className="w-4 h-4" />
               CRM Intelligence
+            </TabsTrigger>
+            <TabsTrigger value="workflows" className="flex items-center gap-2">
+              <Workflow className="w-4 h-4" />
+              Workflows
             </TabsTrigger>
             <TabsTrigger value="documents" className="flex items-center gap-2">
               <FileText className="w-4 h-4" />
