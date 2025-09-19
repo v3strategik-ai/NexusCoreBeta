@@ -396,7 +396,7 @@ export function WorkflowBuilderModal({ children, agents, onWorkflowCreated }) {
                       <SelectValue placeholder="Select agent (optional)" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">No specific agent</SelectItem>
+                      <SelectItem value="no_agent">No specific agent</SelectItem>
                       {agents?.map((agent) => (
                         <SelectItem key={agent.id} value={agent.id}>
                           {agent.name} - {agent.type}
