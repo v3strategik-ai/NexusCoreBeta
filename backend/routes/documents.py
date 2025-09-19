@@ -2,12 +2,17 @@ from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional
 import logging
 from datetime import datetime
+import os
+from dotenv import load_dotenv
 
 from models import (
     DocumentTemplate, GeneratedDocument, DocumentGenerateRequest,
     DocumentType
 )
 from database import get_documents_collection
+
+# Load environment variables
+load_dotenv()
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 logger = logging.getLogger(__name__)
