@@ -478,7 +478,7 @@ function App() {
                 <h2 className="text-3xl font-bold gradient-text">Digital Employees Management</h2>
                 <p className="text-muted-foreground">Your autonomous workforce of quantum-level AI agents</p>
               </div>
-              <Button className="glow-effect">
+              <Button className="glow-effect" onClick={handleCreateAgent}>
                 <Plus className="w-4 h-4 mr-2" />
                 Create Digital Employee
               </Button>
