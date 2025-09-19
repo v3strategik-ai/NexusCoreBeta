@@ -180,7 +180,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Lead CRUD Operations Implementation"
     - "Lead Management Actions Integration"
     - "Lead Data Management State"
   stuck_tasks: []
