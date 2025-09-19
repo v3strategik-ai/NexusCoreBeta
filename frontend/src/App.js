@@ -743,30 +743,37 @@ function App() {
                 <h2 className="text-3xl font-bold gradient-text">Document Generation</h2>
                 <p className="text-muted-foreground">AI-powered business document creation</p>
               </div>
-              <Button className="glow-effect" onClick={() => handleGenerateDocument('General')}>
-                <Plus className="w-4 h-4 mr-2" />
-                Generate Document
-              </Button>
+              <DocumentGenerationModal agents={agents} onDocumentGenerated={handleDocumentGenerated}>
+                <Button className="glow-effect">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Generate Document
+                </Button>
+              </DocumentGenerationModal>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
-                { icon: FileText, title: 'AI Proposals', desc: 'Generate winning proposals', color: 'text-blue-400' },
-                { icon: DollarSign, title: 'Smart Invoices', desc: 'Automated invoicing', color: 'text-green-400' },
-                { icon: Briefcase, title: 'Business Plans', desc: 'Comprehensive plans', color: 'text-purple-400' },
-                { icon: BarChart3, title: 'Analytics Reports', desc: 'Data-driven insights', color: 'text-orange-400' }
+                { icon: FileText, title: 'AI Proposals', desc: 'Generate winning proposals', color: 'text-blue-400', type: 'proposal' },
+                { icon: DollarSign, title: 'Smart Invoices', desc: 'Automated invoicing', color: 'text-green-400', type: 'invoice' },
+                { icon: Briefcase, title: 'Business Plans', desc: 'Comprehensive plans', color: 'text-purple-400', type: 'business_plan' },
+                { icon: BarChart3, title: 'Analytics Reports', desc: 'Data-driven insights', color: 'text-orange-400', type: 'report' }
               ].map((doc, index) => (
-                <Card 
+                <DocumentGenerationModal 
                   key={index} 
-                  className="quantum-bg cursor-pointer hover:border-primary/50 transition-all duration-300 hover:scale-105 glow-effect"
-                  onClick={() => handleGenerateDocument(doc.title)}
+                  agents={agents} 
+                  onDocumentGenerated={handleDocumentGenerated}
+                  defaultType={doc.type}
                 >
-                  <CardContent className="p-6 text-center">
-                    <doc.icon className={`w-12 h-12 mx-auto mb-4 ${doc.color}`} />
-                    <h3 className="font-semibold mb-2">{doc.title}</h3>
-                    <p className="text-sm text-muted-foreground">{doc.desc}</p>
-                  </CardContent>
-                </Card>
+                  <Card 
+                    className="quantum-bg cursor-pointer hover:border-primary/50 transition-all duration-300 hover:scale-105 glow-effect"
+                  >
+                    <CardContent className="p-6 text-center">
+                      <doc.icon className={`w-12 h-12 mx-auto mb-4 ${doc.color}`} />
+                      <h3 className="font-semibold mb-2">{doc.title}</h3>
+                      <p className="text-sm text-muted-foreground">{doc.desc}</p>
+                    </CardContent>
+                  </Card>
+                </DocumentGenerationModal>
               ))}
             </div>
           </TabsContent>
