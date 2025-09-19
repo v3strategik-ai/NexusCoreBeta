@@ -221,20 +221,21 @@ export function AgentChatModal({ agent, children }) {
           </ScrollArea>
 
           {/* Message Input */}
-          <div className="border-t border-border p-4">
+          <div className="border-t border-border p-3 flex-shrink-0">
             <div className="flex space-x-2">
               <Input
-                placeholder={`Ask ${agent.name} anything about ${agent.type.toLowerCase()}...`}
+                placeholder={`Ask ${agent.name} anything...`}
                 value={currentMessage}
                 onChange={(e) => setCurrentMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
                 disabled={isLoading}
-                className="flex-1"
+                className="flex-1 text-sm"
               />
               <Button 
                 onClick={sendMessage} 
                 disabled={!currentMessage.trim() || isLoading}
-                className="glow-effect"
+                className="glow-effect px-3"
+                size="sm"
               >
                 {isLoading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -243,8 +244,8 @@ export function AgentChatModal({ agent, children }) {
                 )}
               </Button>
             </div>
-            <div className="text-xs text-muted-foreground mt-2">
-              Press Enter to send • {agent.autonomy_level} level AI assistant
+            <div className="text-xs text-muted-foreground mt-1">
+              Press Enter to send
             </div>
           </div>
         </div>
