@@ -149,6 +149,21 @@ function App() {
     // Optionally refresh data or show success message
   }
 
+  const handleCreateAgent = () => {
+    // This will be handled by the modal
+    console.log('Create new digital employee clicked')
+  }
+
+  const handleUploadKnowledge = () => {
+    // This will be handled by the modal  
+    console.log('Upload knowledge clicked')
+  }
+
+  const handleAddLead = () => {
+    setShowAddLead(true)
+    console.log('Add lead clicked')
+  }
+
   const handleGenerateDocument = (documentType) => {
     console.log('Generate document clicked:', documentType)
     alert(`Document generation for ${documentType} - Coming soon!`)
