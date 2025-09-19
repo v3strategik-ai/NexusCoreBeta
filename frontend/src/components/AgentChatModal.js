@@ -162,22 +162,14 @@ export function AgentChatModal({ agent, children }) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-lg w-[90vw] h-[60vh] max-h-[500px] flex flex-col quantum-bg fixed z-[100] top-[20%] left-1/2 transform -translate-x-1/2 -translate-y-0">
-        <DialogHeader className="pb-3 flex-shrink-0">
-          <DialogTitle className="flex items-center gap-3">
-            <div className="relative">
-              <Bot className="w-5 h-5 text-primary" />
-              <Sparkles className="w-2 h-2 absolute -top-1 -right-1 text-yellow-400" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <span className="gradient-text text-lg">{agent.name}</span>
-              <div className="text-xs text-muted-foreground mt-1 truncate">
-                {agent.type} • {agent.autonomy_level} Autonomy
-              </div>
-            </div>
+      <DialogContent className="sm:max-w-md w-[95vw] h-[400px] flex flex-col quantum-bg border border-primary/20 shadow-2xl">
+        <DialogHeader className="pb-2 flex-shrink-0">
+          <DialogTitle className="flex items-center gap-2 text-base">
+            <Bot className="w-5 h-5 text-primary" />
+            <span className="gradient-text">{agent.name}</span>
           </DialogTitle>
-          <DialogDescription className="text-sm">
-            Chat with your AI agent for specialized assistance.
+          <DialogDescription className="text-xs">
+            {agent.type} • Chat for specialized assistance
           </DialogDescription>
         </DialogHeader>
 
