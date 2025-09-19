@@ -116,6 +116,16 @@ function App() {
     }
   }
 
+  const fetchWorkflows = async () => {
+    try {
+      const response = await axios.get(`${API}/workflows/`)
+      setWorkflows(response.data || [])
+    } catch (error) {
+      console.error('Error fetching workflows:', error)
+      // Don't set error state for workflows as it's not critical
+    }
+  }
+
   const getAutonomyColor = (level) => {
     switch(level) {
       case 'Quantum': return 'text-purple-400'
