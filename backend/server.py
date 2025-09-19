@@ -14,7 +14,7 @@ from datetime import datetime
 from database import connect_to_mongo, close_mongo_connection, get_database
 
 # Import all route modules
-from routes import agents, crm, dashboard, knowledge, documents, workflows, ai_chat
+from routes import agents, crm, dashboard, knowledge, documents, workflows, ai_chat, email
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
