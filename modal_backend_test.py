@@ -97,7 +97,7 @@ class ModalBackendTester:
             "Create Agent via Modal API",
             "POST",
             "agents/",
-            201,
+            200,
             data=agent_data
         )
         
