@@ -338,98 +338,397 @@ def generate_fallback_content(
     template_variables: List[str]
 ) -> str:
     """Enhanced fallback content generation when AI is unavailable"""
+def generate_fallback_content(
+    request: DocumentGenerateRequest,
+    template_content: str,
+    template_variables: List[str]
+) -> str:
+    """Enhanced fallback content generation when AI is unavailable"""
     
-    # This is a mock implementation. In a real implementation, you would:
-    # 1. Use the Emergent LLM integration to generate content
-    # 2. Process the template with variables
-    # 3. Apply business logic based on document type
-    
+    # Enhanced content templates with more professional formatting
     base_content = {
         DocumentType.PROPOSAL: f"""
-# Business Proposal for {request.client_name or 'Valued Client'}
+# BUSINESS PROPOSAL
 
-Dear {request.client_name or 'Valued Client'},
+**Document Title:** {request.title}
+**Date:** {datetime.now().strftime('%B %d, %Y')}
+**Prepared for:** {request.client_name or 'Valued Client'}
+**Prepared by:** Nexus Core Solutions
 
-We are pleased to present this comprehensive proposal for your project requirements.
+---
 
-## Project Overview
-{request.variables.get('project_description', 'Comprehensive business solution tailored to your needs')}
+## EXECUTIVE SUMMARY
 
-## Scope of Work
-- Analysis and planning phase
-- Implementation and development
-- Testing and quality assurance
-- Deployment and support
+We are pleased to present this comprehensive business proposal addressing your specific requirements. Our team has carefully analyzed your needs and designed a solution that delivers measurable results while maximizing your return on investment.
 
-## Investment
-Total Project Value: ${request.variables.get('project_value', '50,000')}
+## PROJECT OVERVIEW
 
-## Timeline
-Estimated Completion: {request.variables.get('timeline', '8-12 weeks')}
+**Project Description:** {request.variables.get('project_description', 'Comprehensive business solution designed to enhance operational efficiency and drive growth through innovative technology implementation.')}
 
-We look forward to partnering with you on this exciting project.
+**Timeline:** {request.variables.get('timeline', '8-12 weeks')}
 
-Best regards,
-The Nexus Core Team
+**Deliverables:** {request.variables.get('deliverables', 'Complete solution implementation, staff training, documentation, and ongoing support')}
+
+## SCOPE OF WORK
+
+### Phase 1: Discovery & Planning (Weeks 1-2)
+- Detailed requirements analysis
+- System architecture design
+- Project timeline finalization
+- Stakeholder alignment
+
+### Phase 2: Development & Implementation (Weeks 3-8)
+- Core system development
+- Integration with existing systems  
+- Quality assurance testing
+- User acceptance testing
+
+### Phase 3: Deployment & Training (Weeks 9-10)
+- Production deployment
+- Staff training sessions
+- Documentation delivery
+- Performance monitoring setup
+
+### Phase 4: Support & Optimization (Weeks 11-12)
+- Go-live support
+- Performance optimization
+- Knowledge transfer
+- Project closure
+
+## INVESTMENT & TERMS
+
+**Total Project Investment:** ${request.variables.get('project_value', '50,000')}
+
+**Payment Schedule:**
+- 30% upon contract signing
+- 40% at project milestone completion
+- 30% upon final delivery and acceptance
+
+**Payment Terms:** Net 30 days
+
+## WHY CHOOSE NEXUS CORE?
+
+- **Proven Expertise:** Track record of successful implementations
+- **Cutting-Edge Technology:** Latest tools and methodologies
+- **Dedicated Support:** 24/7 technical support and maintenance
+- **Scalable Solutions:** Built for growth and future expansion
+
+## NEXT STEPS
+
+We are excited about the opportunity to partner with you on this project. Upon your approval, we can begin immediately with the discovery phase.
+
+**Contact Information:**
+- Project Manager: Available upon contract signing
+- Email: projects@nexuscore.ai  
+- Phone: +1 (555) 123-4567
+
+We look forward to your favorable response and the opportunity to deliver exceptional results for your organization.
+
+---
+
+*This proposal is valid for 30 days from the date of issuance.*
+
+**Signature:** _____________________  **Date:** _____________
+
+{f"**Additional Notes:**{chr(10)}{request.custom_instructions}" if request.custom_instructions else ""}
         """,
         
         DocumentType.INVOICE: f"""
-# Invoice
+# INVOICE
 
-**Invoice #:** INV-{datetime.now().strftime('%Y%m%d')}-001
-**Date:** {datetime.now().strftime('%B %d, %Y')}
-**Client:** {request.client_name or 'Valued Client'}
+**Invoice Number:** INV-{datetime.now().strftime('%Y%m%d')}-{datetime.now().strftime('%H%M')}
+**Invoice Date:** {datetime.now().strftime('%B %d, %Y')}
+**Due Date:** {request.variables.get('due_date', (datetime.now() + datetime.timedelta(days=30)).strftime('%B %d, %Y'))}
 
-## Services Provided
-{request.variables.get('services', 'Professional consulting services')}
+---
 
-## Amount Due
-Total: ${request.variables.get('amount', '5,000.00')}
-Due Date: {request.variables.get('due_date', 'Net 30 days')}
+## BILL TO:
+**{request.client_name or 'Valued Client'}**
+{request.variables.get('client_address', 'Client Address')}
+{request.variables.get('client_city_state', 'City, State ZIP')}
 
-Payment terms and instructions included below.
+## FROM:
+**Nexus Core Solutions**
+123 Innovation Drive
+Tech Valley, CA 94000
+Phone: +1 (555) 123-4567
+Email: billing@nexuscore.ai
+
+---
+
+## SERVICES PROVIDED
+
+| Description | Quantity | Rate | Amount |
+|-------------|----------|------|--------|
+| {request.variables.get('services', 'Professional Consulting Services')} | 1 | ${request.variables.get('amount', '5,000.00')} | ${request.variables.get('amount', '5,000.00')} |
+
+---
+
+**Subtotal:** ${request.variables.get('amount', '5,000.00')}
+**Tax (if applicable):** ${request.variables.get('tax_amount', '0.00')}
+**Total Amount Due:** ${request.variables.get('total_amount', request.variables.get('amount', '5,000.00'))}
+
+## PAYMENT TERMS
+
+{request.variables.get('payment_terms', 'Payment is due within 30 days of invoice date. Late payments may incur a 1.5% monthly service charge.')}
+
+## PAYMENT METHODS
+
+- **Check:** Make payable to "Nexus Core Solutions"
+- **Wire Transfer:** Contact for banking details
+- **ACH/Bank Transfer:** Available upon request
+- **Credit Card:** Visa, MasterCard, American Express accepted
+
+---
+
+Thank you for your business! For questions regarding this invoice, please contact our billing department at billing@nexuscore.ai or +1 (555) 123-4567.
+
+{f"**Notes:**{chr(10)}{request.custom_instructions}" if request.custom_instructions else ""}
         """,
         
         DocumentType.BUSINESS_PLAN: f"""
-# Business Plan for {request.client_name or 'New Venture'}
+# BUSINESS PLAN
+## {request.client_name or 'New Venture Business Plan'}
 
-## Executive Summary
-{request.variables.get('executive_summary', 'Comprehensive business plan for innovative venture')}
+**Document Date:** {datetime.now().strftime('%B %d, %Y')}
+**Plan Version:** 1.0
+**Confidential Document**
 
-## Market Analysis
-- Target Market: {request.variables.get('target_market', 'Emerging technology sector')}
-- Market Size: {request.variables.get('market_size', '$500M annually')}
+---
 
-## Financial Projections
-- Year 1 Revenue: ${request.variables.get('year1_revenue', '100,000')}
-- Year 2 Revenue: ${request.variables.get('year2_revenue', '250,000')}
-- Year 3 Revenue: ${request.variables.get('year3_revenue', '500,000')}
+## EXECUTIVE SUMMARY
 
-## Implementation Strategy
-Detailed roadmap for achieving business objectives.
+{request.variables.get('executive_summary', 'This business plan outlines a comprehensive strategy for establishing and growing a successful venture in the target market. Our analysis indicates strong market demand, competitive advantages, and significant growth potential with projected revenues exceeding industry benchmarks.')}
+
+### Key Highlights
+- **Market Opportunity:** ${request.variables.get('market_size', '500M')} addressable market
+- **Competitive Advantage:** {request.variables.get('competitive_advantage', 'Innovative technology and superior customer experience')}
+- **Financial Projection:** Break-even by month {request.variables.get('breakeven_month', '18')}
+
+## MARKET ANALYSIS
+
+### Target Market
+**Primary Market:** {request.variables.get('target_market', 'Technology-forward businesses seeking operational efficiency')}
+
+**Market Size & Growth:**
+- Total Addressable Market (TAM): ${request.variables.get('tam', '2.5B')}
+- Serviceable Addressable Market (SAM): ${request.variables.get('sam', '500M')}  
+- Serviceable Obtainable Market (SOM): ${request.variables.get('som', '50M')}
+
+### Customer Segments
+1. **Enterprise Clients** - Large corporations with complex needs
+2. **Mid-Market Companies** - Growing businesses requiring scalable solutions
+3. **Startups & SMBs** - Cost-conscious organizations seeking efficiency
+
+### Competitive Landscape
+- **Direct Competitors:** {request.variables.get('direct_competitors', 'Established market players with traditional solutions')}
+- **Indirect Competitors:** {request.variables.get('indirect_competitors', 'Alternative approaches and in-house solutions')}
+- **Competitive Advantages:** {request.variables.get('advantages', 'Superior technology, better pricing, exceptional service')}
+
+## FINANCIAL PROJECTIONS
+
+### Revenue Projections (3-Year)
+- **Year 1:** ${request.variables.get('year1_revenue', '250,000')}
+- **Year 2:** ${request.variables.get('year2_revenue', '750,000')}
+- **Year 3:** ${request.variables.get('year3_revenue', '1,500,000')}
+
+### Key Financial Metrics
+- **Gross Margin:** {request.variables.get('gross_margin', '75%')}
+- **Customer Acquisition Cost:** ${request.variables.get('cac', '1,500')}
+- **Customer Lifetime Value:** ${request.variables.get('clv', '15,000')}
+- **Monthly Recurring Revenue Growth:** {request.variables.get('mrr_growth', '15%')}
+
+### Funding Requirements
+**Total Funding Needed:** ${request.variables.get('funding_needed', '500,000')}
+
+**Use of Funds:**
+- Product Development: 40%
+- Marketing & Sales: 30%
+- Operations: 20% 
+- Working Capital: 10%
+
+## MARKETING & SALES STRATEGY
+
+### Go-to-Market Strategy
+{request.variables.get('strategy', 'Multi-channel approach combining digital marketing, direct sales, and strategic partnerships to maximize market penetration and customer acquisition.')}
+
+### Marketing Channels
+- **Digital Marketing:** SEO, SEM, content marketing, social media
+- **Direct Sales:** Inside sales team and field sales representatives
+- **Partnerships:** Strategic alliances with complementary service providers
+- **Referral Program:** Incentivized customer referral system
+
+## OPERATIONS PLAN
+
+### Key Operations
+- **Technology Infrastructure:** Cloud-based, scalable architecture
+- **Service Delivery:** Streamlined processes with quality assurance
+- **Customer Support:** 24/7 technical support and account management
+- **Quality Control:** Continuous monitoring and improvement processes
+
+### Staffing Plan
+- **Year 1:** {request.variables.get('year1_staff', '8')} employees
+- **Year 2:** {request.variables.get('year2_staff', '15')} employees  
+- **Year 3:** {request.variables.get('year3_staff', '25')} employees
+
+## RISK ANALYSIS
+
+### Key Risks & Mitigation
+1. **Market Competition:** Continuous innovation and superior service
+2. **Technology Changes:** Agile development and strategic partnerships
+3. **Economic Downturns:** Diversified customer base and flexible pricing
+4. **Talent Acquisition:** Competitive compensation and company culture
+
+## IMPLEMENTATION TIMELINE
+
+### Phase 1: Foundation (Months 1-6)
+- Product development completion
+- Initial team hiring
+- Market research and validation
+
+### Phase 2: Launch (Months 7-12)
+- Go-to-market execution
+- Customer acquisition
+- Process optimization
+
+### Phase 3: Growth (Months 13-36)
+- Market expansion
+- Product enhancement
+- Strategic partnerships
+
+---
+
+This business plan represents our commitment to building a successful, sustainable business that delivers exceptional value to customers while generating strong returns for investors.
+
+{f"**Additional Considerations:**{chr(10)}{request.custom_instructions}" if request.custom_instructions else ""}
         """,
         
         DocumentType.REPORT: f"""
-# Analytics Report
+# ANALYTICS REPORT
+## {request.title}
 
-Generated on: {datetime.now().strftime('%B %d, %Y')}
-Client: {request.client_name or 'Valued Client'}
+**Report Date:** {datetime.now().strftime('%B %d, %Y')}
+**Client:** {request.client_name or 'Valued Client'}
+**Reporting Period:** {request.variables.get('time_period', 'Q4 2024')}
+**Analyst:** Nexus Core Analytics Team
 
-## Key Metrics
-- Performance Score: {request.variables.get('performance_score', '94%')}
-- Growth Rate: {request.variables.get('growth_rate', '+23%')}
-- Efficiency Improvement: {request.variables.get('efficiency', '+18%')}
+---
 
-## Recommendations
-Based on our analysis, we recommend the following strategic initiatives.
+## EXECUTIVE SUMMARY
+
+This comprehensive analytics report provides data-driven insights into {request.variables.get('report_focus', 'business performance and operational metrics')}. Our analysis reveals key trends, opportunities, and actionable recommendations for strategic decision-making.
+
+### Key Findings
+- **Primary Metric:** {request.variables.get('key_metrics', 'Performance indicators show 23% improvement over previous period')}
+- **Growth Trajectory:** {request.variables.get('growth_rate', '+18% quarter-over-quarter growth')}
+- **Efficiency Gains:** {request.variables.get('efficiency', '15% improvement in operational efficiency')}
+
+## PERFORMANCE METRICS
+
+### Primary KPIs
+| Metric | Current Period | Previous Period | Change |
+|--------|---------------|-----------------|--------|
+| Revenue | ${request.variables.get('current_revenue', '125,000')} | ${request.variables.get('previous_revenue', '102,000')} | +{request.variables.get('revenue_change', '22.5%')} |
+| Customer Acquisition | {request.variables.get('current_customers', '45')} | {request.variables.get('previous_customers', '38')} | +{request.variables.get('customer_change', '18.4%')} |
+| Conversion Rate | {request.variables.get('current_conversion', '3.2%')} | {request.variables.get('previous_conversion', '2.8%')} | +{request.variables.get('conversion_change', '14.3%')} |
+| Customer Satisfaction | {request.variables.get('satisfaction_score', '4.7/5.0')} | {request.variables.get('previous_satisfaction', '4.5/5.0')} | +{request.variables.get('satisfaction_change', '4.4%')} |
+
+### Operational Metrics
+- **Process Efficiency:** {request.variables.get('process_efficiency', '94.2% completion rate')}
+- **Resource Utilization:** {request.variables.get('resource_utilization', '87% optimal capacity')}
+- **Quality Score:** {request.variables.get('quality_score', '98.5% quality standards met')}
+- **Response Time:** {request.variables.get('response_time', 'Average 2.3 hours')}
+
+## TREND ANALYSIS
+
+### Growth Patterns
+{request.variables.get('insights', 'Analysis indicates consistent upward trajectory with strong month-over-month growth. Seasonal patterns show Q4 performing 15% above average, suggesting successful holiday marketing campaigns and improved customer retention strategies.')}
+
+### Market Positioning
+- **Competitive Advantage:** {request.variables.get('competitive_position', 'Maintaining strong market position with 23% market share growth')}
+- **Customer Segments:** {request.variables.get('segment_performance', 'Enterprise segment showing 31% growth, SMB segment stable at 12% growth')}
+- **Geographic Performance:** {request.variables.get('geographic_data', 'West Coast markets leading with 28% growth, expanding into Southeast markets')}
+
+## DETAILED ANALYSIS
+
+### Customer Behavior Insights
+- **Acquisition Channels:** {request.variables.get('acquisition_channels', 'Digital marketing (45%), referrals (30%), direct sales (25%)')}
+- **Retention Rates:** {request.variables.get('retention_rates', '89% 12-month retention, 94% 6-month retention')}
+- **Usage Patterns:** {request.variables.get('usage_patterns', 'Peak usage during business hours (9 AM - 5 PM), 73% mobile access')}
+
+### Financial Performance
+- **Revenue Growth:** Consistent month-over-month increases
+- **Cost Optimization:** 12% reduction in operational costs
+- **Profit Margins:** Improved from 18% to 23%
+- **ROI on Marketing:** 4.2:1 return on marketing investment
+
+## RECOMMENDATIONS
+
+### Immediate Actions (Next 30 Days)
+1. **Optimize High-Performing Channels:** {request.variables.get('recommendations', 'Increase investment in top-performing acquisition channels by 25%')}
+2. **Address Performance Gaps:** Focus on underperforming segments with targeted interventions
+3. **Enhance Customer Experience:** Implement feedback-driven improvements
+
+### Strategic Initiatives (Next 90 Days)
+1. **Market Expansion:** Enter identified high-potential geographic markets
+2. **Product Enhancement:** Develop features based on customer usage patterns
+3. **Process Automation:** Implement efficiency improvements to reduce operational costs
+
+### Long-term Strategic Focus (6-12 Months)
+1. **Technology Investment:** Upgrade infrastructure to support projected growth
+2. **Team Expansion:** Strategic hiring in high-impact areas
+3. **Partnership Development:** Establish strategic alliances for market expansion
+
+## RISK ASSESSMENT
+
+### Identified Risks
+- **Market Saturation:** Monitor competitive landscape changes
+- **Customer Concentration:** Diversify customer base to reduce dependency
+- **Technology Dependencies:** Implement redundancy and backup systems
+
+### Mitigation Strategies
+- Continuous market research and competitive analysis
+- Customer diversification initiatives
+- Technology risk management protocols
+
+## CONCLUSION
+
+The data indicates strong positive momentum across all key performance indicators. The recommended strategic initiatives will position the organization for continued growth while mitigating identified risks.
+
+**Next Review Date:** {(datetime.now() + datetime.timedelta(days=90)).strftime('%B %d, %Y')}
+
+---
+
+*This report contains confidential and proprietary information. Distribution should be limited to authorized personnel only.*
+
+{f"**Additional Notes:**{chr(10)}{request.custom_instructions}" if request.custom_instructions else ""}
         """
     }
     
     # Get base content for document type
-    content = base_content.get(request.type, f"Document: {request.title}\n\nGenerated content for {request.client_name or 'client'}.")
-    
-    # Apply custom instructions if provided
-    if request.custom_instructions:
-        content += f"\n\n## Additional Notes\n{request.custom_instructions}"
+    content = base_content.get(request.type, f"""
+# {request.title.upper()}
+
+**Date:** {datetime.now().strftime('%B %d, %Y')}
+**Client:** {request.client_name or 'Valued Client'}
+
+---
+
+This document has been generated to address your specific business requirements. Our team has carefully prepared this comprehensive solution that aligns with your objectives and industry best practices.
+
+## Key Details
+
+{chr(10).join([f"**{key.replace('_', ' ').title()}:** {value}" for key, value in request.variables.items() if value])}
+
+## Professional Services
+
+We are committed to delivering exceptional results that exceed your expectations. Our comprehensive approach ensures that all aspects of your requirements are addressed with the highest level of professionalism and expertise.
+
+---
+
+For questions or clarifications regarding this document, please contact our team at your convenience.
+
+{f"**Additional Information:**{chr(10)}{request.custom_instructions}" if request.custom_instructions else ""}
+    """)
     
     return content.strip()
