@@ -162,7 +162,7 @@ export function AgentChatModal({ agent, children }) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-2xl h-[600px] flex flex-col quantum-bg">
+      <DialogContent className="max-w-2xl h-[500px] flex flex-col quantum-bg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
             <div className="relative">
