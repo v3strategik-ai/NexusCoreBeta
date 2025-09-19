@@ -340,6 +340,26 @@ async def get_agent_configuration_analytics(agent_id: str):
         logger.error(f"Error getting configuration analytics for agent {agent_id}: {e}")
         raise HTTPException(status_code=500, detail="Failed to retrieve configuration analytics")
 
+@router.get("/{agent_id}/activities")
+async def get_agent_activities(
+    agent_id: str,
+    limit: int = Query(50, ge=1, le=200)
+):
+    """Get recent activities for a specific agent"""
+    try:
+        collection = await get_activities_collection()
+        
+        cursor = collection.find({"agent_id": agent_id}).sort("timestamp", -1).limit(limit)
+        activities_data = await cursor.to_list(limit)
+        
+        activities = [AgentActivity(**activity) for activity in activities_data]
+        
+        return {"activities": activities}
+        
+    except Exception as e:
+        logger.error(f"Error getting activities for agent {agent_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve agent activities")
+
 async def log_agent_activity(
     agent_id: str,
     agent_name: str,
