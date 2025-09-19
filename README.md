@@ -1,0 +1,2 @@
+# NexusCoreBeta
+AI widget
