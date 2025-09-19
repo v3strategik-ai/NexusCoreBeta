@@ -185,6 +185,12 @@ function App() {
         </div>
 
         <div className="flex gap-2">
+          <AgentChatModal agent={agent}>
+            <Button size="sm" variant="outline" className="glow-effect">
+              <MessageSquare className="w-4 h-4 mr-1" />
+              Chat
+            </Button>
+          </AgentChatModal>
           <Button size="sm" variant="outline" onClick={() => setSelectedAgent(agent)}>
             <BookOpen className="w-4 h-4 mr-1" />
             Details
