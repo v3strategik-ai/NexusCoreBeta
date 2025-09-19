@@ -81,6 +81,7 @@ function App() {
     fetchDashboardData()
     fetchAgents()
     fetchLeads()
+    fetchWorkflows()
   }, [])
 
   const fetchDashboardData = async () => {
