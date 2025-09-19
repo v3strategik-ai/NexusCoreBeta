@@ -85,13 +85,13 @@ const DOCUMENT_TYPES = [
   }
 ]
 
-export function DocumentGenerationModal({ children, agents, onDocumentGenerated }) {
+export function DocumentGenerationModal({ children, agents, onDocumentGenerated, defaultType }) {
   const [isOpen, setIsOpen] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
-  const [selectedType, setSelectedType] = useState('')
+  const [selectedType, setSelectedType] = useState(defaultType || '')
   const [formData, setFormData] = useState({
     title: '',
-    type: '',
+    type: defaultType || '',
     client_name: '',
     agent_id: 'auto_select',
     custom_instructions: '',
