@@ -199,7 +199,16 @@ export function AgentConfigModal({ children, agent, onConfigUpdated }) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-4xl w-[95vw] h-[80vh] flex flex-col quantum-bg">
+      <DialogContent 
+        className="sm:max-w-4xl w-[95vw] h-[80vh] max-h-[600px] flex flex-col quantum-bg border border-primary/20 shadow-2xl"
+        style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          maxHeight: '85vh'
+        }}
+      >
         <DialogHeader className="flex-shrink-0">
           <DialogTitle className="flex items-center gap-3">
             <Settings className="w-6 h-6 text-primary" />
