@@ -139,19 +139,14 @@ function App() {
   }
 
   // Event handlers for buttons
-  const handleCreateAgent = () => {
-    setShowCreateAgent(true)
-    console.log('Create new digital employee clicked')
+  const handleAgentCreated = (newAgent) => {
+    setAgents(prev => [...prev, newAgent])
+    console.log('New agent created:', newAgent.name)
   }
 
-  const handleUploadKnowledge = () => {
-    setShowUploadKnowledge(true)
-    console.log('Upload knowledge clicked')
-  }
-
-  const handleAddLead = () => {
-    setShowAddLead(true)
-    console.log('Add lead clicked')
+  const handleKnowledgeUploaded = (knowledgeData) => {
+    console.log('Knowledge uploaded:', knowledgeData.title)
+    // Optionally refresh data or show success message
   }
 
   const handleGenerateDocument = (documentType) => {
