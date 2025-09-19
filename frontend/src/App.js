@@ -522,10 +522,12 @@ function App() {
                 <h2 className="text-3xl font-bold gradient-text">CRM Intelligence</h2>
                 <p className="text-muted-foreground">AI-powered customer relationship management</p>
               </div>
-              <Button className="glow-effect" onClick={handleAddLead}>
-                <Plus className="w-4 h-4 mr-2" />
-                Add Lead
-              </Button>
+              <AddLeadModal agents={agents} onLeadAdded={handleLeadAdded}>
+                <Button className="glow-effect">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Lead
+                </Button>
+              </AddLeadModal>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
