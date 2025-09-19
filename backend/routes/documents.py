@@ -695,7 +695,7 @@ This comprehensive analytics report provides data-driven insights into {request.
 
 The data indicates strong positive momentum across all key performance indicators. The recommended strategic initiatives will position the organization for continued growth while mitigating identified risks.
 
-**Next Review Date:** {(datetime.now() + datetime.timedelta(days=90)).strftime('%B %d, %Y')}
+**Next Review Date:** {(datetime.now() + timedelta(days=90)).strftime('%B %d, %Y')}
 
 ---
 
