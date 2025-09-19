@@ -172,7 +172,7 @@ export function WorkflowBuilderModal({ children, agents, onWorkflowCreated }) {
         trigger_type: workflow.trigger_type,
         trigger_config: workflow.trigger_config,
         steps: workflow.steps.filter(s => s.type !== 'start'), // Remove start step for backend
-        agent_id: workflow.agent_id || null
+        agent_id: workflow.agent_id === 'no_agent' ? null : workflow.agent_id
       }
 
       const response = await axios.post(`${API}/workflows/`, workflowData)
