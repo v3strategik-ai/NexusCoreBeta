@@ -16,6 +16,7 @@ import { ContactLeadModal } from './components/ContactLeadModal'
 import { AgentConfigModal } from './components/AgentConfigModal'
 import { WorkflowBuilderModal } from './components/WorkflowBuilderModal'
 import { DocumentGenerationModal } from './components/DocumentGenerationModal'
+import { EmailAutomationModal } from './components/EmailAutomationModal'
 import { 
   Brain, 
   Zap, 
