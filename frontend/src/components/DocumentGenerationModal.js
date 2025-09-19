@@ -225,16 +225,25 @@ Please create a comprehensive, professional document that follows industry stand
   }
 
   const resetForm = () => {
-    setSelectedType('')
+    const initialType = defaultType || ''
+    setSelectedType(initialType)
     setFormData({
       title: '',
-      type: '',
+      type: initialType,
       client_name: '',
       agent_id: 'auto_select',
       custom_instructions: '',
       variables: {}
     })
     setGeneratedDocument(null)
+  }
+
+  // Handle modal opening with default type
+  const handleModalOpen = (open) => {
+    if (open && defaultType && !selectedType) {
+      handleTypeSelection(defaultType)
+    }
+    setIsOpen(open)
   }
 
   return (
