@@ -271,3 +271,24 @@ class SystemDashboard(BaseModel):
     recent_activities: List[AgentActivity]
     agent_summary: Dict[str, Any]
     revenue_summary: Dict[str, Any]
+
+# AI Chat Models
+class ChatMessage(BaseEntity):
+    agent_id: str
+    user_message: str
+    ai_response: str
+    session_id: str
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    metadata: Dict[str, Any] = {}
+
+class ChatRequest(BaseModel):
+    agent_id: str
+    message: str
+    session_id: Optional[str] = None
+
+class ChatResponse(BaseModel):
+    response: str
+    session_id: str
+    agent_name: str
+    agent_type: str
+    timestamp: datetime = Field(default_factory=datetime.utcnow)
