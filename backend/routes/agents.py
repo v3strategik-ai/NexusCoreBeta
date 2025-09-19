@@ -298,3 +298,97 @@ async def log_agent_activity(
         
     except Exception as e:
         logger.error(f"Error logging agent activity: {e}")
+
+async def process_agent_configuration(agent_id: str, new_config: dict, existing_config: dict) -> dict:
+    """Process and validate agent configuration updates"""
+    try:
+        # Merge configurations with validation
+        processed_config = {**existing_config, **new_config}
+        
+        # Validate configuration structure
+        if "capabilities" in processed_config:
+            # Ensure capabilities is a list
+            if not isinstance(processed_config["capabilities"], list):
+                processed_config["capabilities"] = []
+        
+        if "parameters" in processed_config:
+            # Ensure parameters is a dict
+            if not isinstance(processed_config["parameters"], dict):
+                processed_config["parameters"] = {}
+        
+        # Add processing timestamp
+        processed_config["last_processed"] = datetime.utcnow().isoformat()
+        
+        logger.info(f"Processed configuration for agent {agent_id}")
+        return processed_config
+        
+    except Exception as e:
+        logger.error(f"Error processing configuration for agent {agent_id}: {e}")
+        return existing_config
+
+def calculate_configuration_metrics(config: dict) -> dict:
+    """Calculate metrics based on agent configuration"""
+    try:
+        metrics = {}
+        
+        # Calculate complexity score based on configuration
+        complexity_score = 0
+        if "capabilities" in config:
+            complexity_score += len(config["capabilities"]) * 10
+        if "parameters" in config:
+            complexity_score += len(config["parameters"]) * 5
+        
+        metrics["configuration_complexity"] = complexity_score
+        metrics["capabilities_count"] = len(config.get("capabilities", []))
+        metrics["parameters_count"] = len(config.get("parameters", {}))
+        
+        # Calculate readiness score
+        readiness_score = min(100, complexity_score * 2)
+        metrics["readiness_score"] = readiness_score
+        
+        return metrics
+        
+    except Exception as e:
+        logger.error(f"Error calculating configuration metrics: {e}")
+        return {}
+
+def summarize_configuration_changes(old_config: dict, new_config: dict) -> str:
+    """Generate a summary of configuration changes"""
+    try:
+        changes = []
+        
+        # Check for new capabilities
+        old_capabilities = set(old_config.get("capabilities", []))
+        new_capabilities = set(new_config.get("capabilities", []))
+        
+        added_capabilities = new_capabilities - old_capabilities
+        removed_capabilities = old_capabilities - new_capabilities
+        
+        if added_capabilities:
+            changes.append(f"Added capabilities: {', '.join(added_capabilities)}")
+        if removed_capabilities:
+            changes.append(f"Removed capabilities: {', '.join(removed_capabilities)}")
+        
+        # Check for parameter changes
+        old_params = old_config.get("parameters", {})
+        new_params = new_config.get("parameters", {})
+        
+        param_changes = []
+        for key, value in new_params.items():
+            if key not in old_params:
+                param_changes.append(f"Added {key}")
+            elif old_params[key] != value:
+                param_changes.append(f"Updated {key}")
+        
+        for key in old_params:
+            if key not in new_params:
+                param_changes.append(f"Removed {key}")
+        
+        if param_changes:
+            changes.append(f"Parameter changes: {', '.join(param_changes)}")
+        
+        return "; ".join(changes) if changes else "Minor configuration updates"
+        
+    except Exception as e:
+        logger.error(f"Error summarizing configuration changes: {e}")
+        return "Configuration updated"
