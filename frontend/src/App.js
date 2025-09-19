@@ -208,14 +208,21 @@ function App() {
     // Optionally refresh lead data or show notification
   }
 
-  const handleAgentConfigUpdated = (updatedAgent) => {
-    setAgents(prev => prev.map(agent => 
-      agent.id === updatedAgent.id ? updatedAgent : agent
-    ))
-    console.log('Agent configuration updated:', updatedAgent.name)
+  const handleEmailSent = (emailInfo) => {
+    console.log('Email sent:', emailInfo)
     
-    // Show success notification
-    alert(`Configuration updated for ${updatedAgent.name}!\n\nKey changes:\n- Configuration complexity: ${updatedAgent.metrics?.configuration_complexity || 0}\n- Readiness score: ${updatedAgent.metrics?.readiness_score || 0}%`)
+    // Show success notification based on email type
+    let message = ''
+    if (emailInfo.type === 'single') {
+      const lead = leads.find(l => l.id === emailInfo.lead_id)
+      message = `Email sent to ${lead?.name || 'lead'} using ${emailInfo.template} template!`
+    } else if (emailInfo.type === 'bulk') {
+      message = `Bulk email sent to ${emailInfo.count} leads using ${emailInfo.template} template!`
+    }
+    
+    if (message) {
+      alert(message)
+    }
   }
 
   const handleCreateAgent = () => {
