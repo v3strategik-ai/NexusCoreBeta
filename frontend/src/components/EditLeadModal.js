@@ -1,0 +1,405 @@
+import { useState, useEffect } from 'react'
+import { Button } from './ui/button'
+import { Input } from './ui/input'
+import { Label } from './ui/label'
+import { Textarea } from './ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogHeader, 
+  DialogTitle,
+  DialogTrigger 
+} from './ui/dialog'
+import { 
+  Users, 
+  Loader2,
+  Save,
+  DollarSign,
+  Trash2
+} from 'lucide-react'
+import axios from 'axios'
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
+const API = `${BACKEND_URL}/api`
+
+const LEAD_STATUSES = [
+  { value: 'cold', label: 'Cold', color: 'text-blue-400' },
+  { value: 'warm', label: 'Warm', color: 'text-yellow-400' },
+  { value: 'hot', label: 'Hot', color: 'text-red-400' },
+  { value: 'converted', label: 'Converted', color: 'text-green-400' },
+  { value: 'lost', label: 'Lost', color: 'text-gray-400' }
+]
+
+const LEAD_SOURCES = [
+  'Website Contact Form',
+  'LinkedIn Campaign', 
+  'Google Ads',
+  'Trade Show',
+  'Referral',
+  'Cold Outreach',
+  'Social Media',
+  'Content Marketing',
+  'Email Campaign',
+  'Other'
+]
+
+export function EditLeadModal({ children, lead, agents, onLeadUpdated, onLeadDeleted }) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    status: 'cold',
+    value: '',
+    source: '',
+    assigned_agent_id: 'unassigned',
+    notes: ''
+  })
+
+  // Initialize form data when lead prop changes
+  useEffect(() => {
+    if (lead) {
+      setFormData({
+        name: lead.name || '',
+        email: lead.email || '',
+        phone: lead.phone || '',
+        company: lead.company || '',
+        status: lead.status || 'cold',
+        value: lead.value ? lead.value.toString() : '',
+        source: lead.source || '',
+        assigned_agent_id: lead.assigned_agent_id || 'unassigned',
+        notes: lead.notes && lead.notes.length > 0 ? lead.notes.join('\n') : ''
+      })
+    }
+  }, [lead])
+
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    
+    if (!formData.name || !formData.email || !lead?.id) {
+      alert('Please fill in all required fields')
+      return
+    }
+
+    setIsLoading(true)
+
+    try {
+      const submitData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || null,
+        company: formData.company || null,
+        status: formData.status,
+        value: parseFloat(formData.value) || 0,
+        source: formData.source || null,
+        assigned_agent_id: formData.assigned_agent_id === 'unassigned' ? null : formData.assigned_agent_id,
+        notes: formData.notes ? [formData.notes] : [],
+        tags: lead.tags || []
+      }
+
+      const response = await axios.put(`${API}/crm/leads/${lead.id}`, submitData)
+
+      console.log('Lead updated successfully:', response.data)
+      
+      // Close modal
+      setIsOpen(false)
+      
+      // Notify parent to refresh leads list
+      if (onLeadUpdated) {
+        onLeadUpdated(response.data)
+      }
+
+    } catch (error) {
+      console.error('Error updating lead:', error)
+      const errorMessage = error.response?.data?.detail || 'Failed to update lead. Please try again.'
+      alert(errorMessage)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleDelete = async () => {
+    if (!lead?.id) return
+
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete lead "${lead.name}"? This action cannot be undone.`
+    )
+
+    if (!confirmDelete) return
+
+    setIsDeleting(true)
+
+    try {
+      await axios.delete(`${API}/crm/leads/${lead.id}`)
+
+      console.log('Lead deleted successfully:', lead.id)
+      
+      // Close modal
+      setIsOpen(false)
+      
+      // Notify parent to refresh leads list
+      if (onLeadDeleted) {
+        onLeadDeleted(lead.id)
+      }
+
+    } catch (error) {
+      console.error('Error deleting lead:', error)
+      const errorMessage = error.response?.data?.detail || 'Failed to delete lead. Please try again.'
+      alert(errorMessage)
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
+  const getStatusColor = (status) => {
+    const statusObj = LEAD_STATUSES.find(s => s.value === status)
+    return statusObj?.color || 'text-gray-400'
+  }
+
+  if (!lead) return null
+
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        {children}  
+      </DialogTrigger>
+      <DialogContent 
+        className="sm:max-w-2xl w-[95vw] max-h-[80vh] h-[600px] overflow-y-auto quantum-bg border border-primary/20 shadow-2xl"
+        style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          maxHeight: '85vh'
+        }}
+      >
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-3">
+            <Users className="w-6 h-6 text-primary" />
+            <span className="gradient-text">Edit Lead: {lead.name}</span>
+          </DialogTitle>
+          <DialogDescription>
+            Update lead information and manage lead lifecycle.
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Contact Information */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Contact Name *</Label>
+              <Input
+                id="name"
+                placeholder="John Smith"
+                value={formData.name}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address *</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="john@company.com"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                placeholder="+1-555-0123"
+                value={formData.phone}
+                onChange={(e) => handleInputChange('phone', e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="company">Company</Label>
+              <Input
+                id="company"
+                placeholder="Acme Corporation"
+                value={formData.company}
+                onChange={(e) => handleInputChange('company', e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Lead Details */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="status">Lead Status</Label>
+              <Select value={formData.status} onValueChange={(value) => handleInputChange('status', value)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {LEAD_STATUSES.map((status) => (
+                    <SelectItem key={status.value} value={status.value}>
+                      <span className={status.color}>
+                        {status.label}
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="value">Potential Value ($)</Label>
+              <div className="relative">
+                <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="value"
+                  type="number"
+                  placeholder="50000"
+                  className="pl-10"
+                  value={formData.value}
+                  onChange={(e) => handleInputChange('value', e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="source">Lead Source</Label>
+              <Select value={formData.source} onValueChange={(value) => handleInputChange('source', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select source" />
+                </SelectTrigger>
+                <SelectContent>
+                  {LEAD_SOURCES.map((source) => (
+                    <SelectItem key={source} value={source}>
+                      {source}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Agent Assignment */}
+          <div className="space-y-2">
+            <Label htmlFor="agent">Assign to Digital Employee</Label>
+            <Select value={formData.assigned_agent_id} onValueChange={(value) => handleInputChange('assigned_agent_id', value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select an agent (optional)" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="unassigned">No assignment</SelectItem>
+                {agents.map((agent) => (
+                  <SelectItem key={agent.id} value={agent.id}>
+                    {agent.name} - {agent.type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Notes */}
+          <div className="space-y-2">
+            <Label htmlFor="notes">Notes</Label>
+            <Textarea
+              id="notes"
+              placeholder="Conversation notes, requirements, or other relevant information..."
+              value={formData.notes}
+              onChange={(e) => handleInputChange('notes', e.target.value)}
+              rows={3}
+            />
+          </div>
+
+          {/* Lead Info Display */}
+          <div className="p-4 border border-primary/20 rounded-lg quantum-bg">
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="font-semibold">Lead Information</h4>
+              <span className={`text-sm font-medium ${getStatusColor(formData.status)}`}>
+                {LEAD_STATUSES.find(s => s.value === formData.status)?.label}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="text-muted-foreground">Created:</span>
+                <span className="ml-2">{new Date(lead.created_at).toLocaleDateString()}</span>  
+              </div>
+              <div>
+                <span className="text-muted-foreground">Score:</span>
+                <span className="ml-2 font-medium">{lead.score?.toFixed(1) || 'N/A'}/100</span>
+              </div>
+              {lead.last_contact && (
+                <div>
+                  <span className="text-muted-foreground">Last Contact:</span>
+                  <span className="ml-2">{new Date(lead.last_contact).toLocaleDateString()}</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex justify-between pt-4">
+            <Button 
+              type="button" 
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={isLoading || isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete Lead
+                </>
+              )}
+            </Button>
+
+            <div className="flex space-x-2">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setIsOpen(false)}
+                disabled={isLoading || isDeleting}
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="submit" 
+                className="glow-effect"
+                disabled={isLoading || isDeleting || !formData.name || !formData.email}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  <>
+                    <Save className="w-4 h-4 mr-2" />
+                    Update Lead
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
