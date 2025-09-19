@@ -579,7 +579,11 @@ function App() {
                 { icon: Briefcase, title: 'Business Plans', desc: 'Comprehensive plans', color: 'text-purple-400' },
                 { icon: BarChart3, title: 'Analytics Reports', desc: 'Data-driven insights', color: 'text-orange-400' }
               ].map((doc, index) => (
-                <Card key={index} className="quantum-bg cursor-pointer hover:border-primary/50 transition-all duration-300 hover:scale-105 glow-effect">
+                <Card 
+                  key={index} 
+                  className="quantum-bg cursor-pointer hover:border-primary/50 transition-all duration-300 hover:scale-105 glow-effect"
+                  onClick={() => handleGenerateDocument(doc.title)}
+                >
                   <CardContent className="p-6 text-center">
                     <doc.icon className={`w-12 h-12 mx-auto mb-4 ${doc.color}`} />
                     <h3 className="font-semibold mb-2">{doc.title}</h3>
