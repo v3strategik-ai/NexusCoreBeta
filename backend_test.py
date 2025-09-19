@@ -820,6 +820,279 @@ class NexusCoreAPITester:
         
         return success1
 
+    def test_agent_configuration_functionality(self):
+        """Test comprehensive Agent Configuration functionality from Phase 3"""
+        print("\n" + "="*50)
+        print("TESTING AGENT CONFIGURATION FUNCTIONALITY")
+        print("="*50)
+        
+        # Store created agent ID for subsequent tests
+        created_agent_id = None
+        
+        # Test 1: Create an agent first for configuration testing
+        print("\n🔍 Creating Agent for Configuration Testing...")
+        agent_create_data = {
+            "name": "ConfigTest Agent",
+            "type": "Business Analyst",
+            "personality": "Professional and analytical",
+            "specialization": "Data Analysis and Reporting",
+            "autonomy_level": "High",
+            "configuration": {
+                "ai_model": "gpt-4o",
+                "temperature": 0.7,
+                "max_tokens": 1000
+            }
+        }
+        
+        success1, create_response = self.run_test(
+            "Create Agent for Config Testing", "POST", "agents/", 200, agent_create_data
+        )
+        
+        if success1:
+            created_agent_id = create_response.get('id')
+            print(f"   ✅ Agent Created: {create_response.get('name')} ({created_agent_id})")
+        
+        # Test 2: Agent Configuration Update Test with comprehensive configuration
+        success2 = False
+        if created_agent_id:
+            print("\n🔍 Testing Comprehensive Agent Configuration Update...")
+            comprehensive_config = {
+                "configuration": {
+                    # AI model settings
+                    "ai_model": "claude-3.5-sonnet",
+                    "temperature": 0.8,
+                    "max_tokens": 1500,
+                    
+                    # Performance tuning
+                    "creativity": 0.7,
+                    "responsiveness": 0.9,
+                    "accuracy": 0.85,
+                    "learning_rate": 0.6,
+                    
+                    # Behavior settings
+                    "proactive_mode": True,
+                    "auto_learn": True,
+                    "context_memory": True,
+                    "task_prioritization": True,
+                    
+                    # Security settings
+                    "max_daily_tasks": 150,
+                    "restricted_topics": ["confidential", "personal"],
+                    "allowed_actions": ["email", "document_generation", "data_analysis"],
+                    
+                    # Integration permissions
+                    "integrations": {
+                        "email": True,
+                        "calendar": True,
+                        "crm": True,
+                        "documents": True
+                    },
+                    
+                    # System instructions
+                    "system_instructions": "You are a professional business analyst focused on data-driven insights and strategic recommendations.",
+                    "autonomy_level": "Quantum"
+                }
+            }
+            
+            success2, config_response = self.run_test(
+                "Comprehensive Configuration Update", "PUT", f"agents/{created_agent_id}", 200, comprehensive_config
+            )
+            
+            if success2:
+                updated_config = config_response.get('configuration', {})
+                updated_metrics = config_response.get('metrics', {})
+                
+                print(f"   ✅ Configuration Updated Successfully")
+                print(f"   AI Model: {updated_config.get('ai_model')}")
+                print(f"   Temperature: {updated_config.get('temperature')}")
+                print(f"   Complexity Score: {updated_metrics.get('configuration_complexity', 0)}")
+                print(f"   Readiness Score: {updated_metrics.get('readiness_score', 0)}")
+                print(f"   Integrations Count: {updated_metrics.get('integrations_count', 0)}")
+                
+                # Validate configuration processing
+                if updated_config.get('ai_model') == 'claude-3.5-sonnet':
+                    print("   ✅ AI model configuration processed correctly")
+                else:
+                    print("   ❌ AI model configuration may not be processed correctly")
+                
+                # Validate metrics calculation
+                if updated_metrics.get('configuration_complexity', 0) > 0:
+                    print("   ✅ Configuration complexity metrics calculated")
+                else:
+                    print("   ❌ Configuration complexity metrics may not be calculated")
+                
+                if updated_metrics.get('readiness_score', 0) > 0:
+                    print("   ✅ Readiness score calculated")
+                else:
+                    print("   ❌ Readiness score may not be calculated")
+        
+        # Test 3: Configuration Validation Test with invalid values
+        success3 = False
+        if created_agent_id:
+            print("\n🔍 Testing Configuration Validation with Invalid Values...")
+            invalid_config = {
+                "configuration": {
+                    "temperature": 1.5,  # Invalid - should be <= 1.0
+                    "creativity": -0.2,  # Invalid - should be >= 0.0
+                    "max_daily_tasks": -10,  # Invalid - should be positive
+                    "max_tokens": 5000,  # Invalid - should be <= 2000
+                    "ai_model": "invalid_model"  # Invalid model
+                }
+            }
+            
+            success3, validation_response = self.run_test(
+                "Configuration Validation Test", "PUT", f"agents/{created_agent_id}", 200, invalid_config
+            )
+            
+            if success3:
+                validated_config = validation_response.get('configuration', {})
+                
+                # Check if validation worked correctly
+                temp_valid = 0.0 <= validated_config.get('temperature', 0.7) <= 1.0
+                creativity_valid = validated_config.get('creativity', 0.6) >= 0.0
+                tasks_valid = validated_config.get('max_daily_tasks', 100) >= 10
+                tokens_valid = validated_config.get('max_tokens', 1000) <= 2000
+                model_valid = validated_config.get('ai_model') in ["gpt-4o", "claude-3.5-sonnet", "gemini-2.0-flash"]
+                
+                print(f"   Temperature Validation: {'✅' if temp_valid else '❌'} ({validated_config.get('temperature')})")
+                print(f"   Creativity Validation: {'✅' if creativity_valid else '❌'} ({validated_config.get('creativity')})")
+                print(f"   Daily Tasks Validation: {'✅' if tasks_valid else '❌'} ({validated_config.get('max_daily_tasks')})")
+                print(f"   Max Tokens Validation: {'✅' if tokens_valid else '❌'} ({validated_config.get('max_tokens')})")
+                print(f"   AI Model Validation: {'✅' if model_valid else '❌'} ({validated_config.get('ai_model')})")
+                
+                if all([temp_valid, creativity_valid, tasks_valid, tokens_valid, model_valid]):
+                    print("   ✅ Configuration validation working correctly")
+                else:
+                    print("   ❌ Configuration validation may have issues")
+        
+        # Test 4: Configuration History Test
+        success4 = False
+        if created_agent_id:
+            print("\n🔍 Testing Configuration History Endpoint...")
+            success4, history_response = self.run_test(
+                "Configuration History", "GET", f"agents/{created_agent_id}/configuration/history"
+            )
+            
+            if success4:
+                config_history = history_response.get('configuration_history', [])
+                print(f"   Configuration History Entries: {len(config_history)}")
+                
+                if config_history:
+                    latest_entry = config_history[0]
+                    print(f"   Latest Change: {latest_entry.get('description', 'N/A')}")
+                    print(f"   Timestamp: {latest_entry.get('timestamp', 'N/A')}")
+                    print(f"   Changes: {latest_entry.get('changes', 'N/A')}")
+                    print("   ✅ Configuration history tracking working")
+                else:
+                    print("   ⚠️  No configuration history found")
+        
+        # Test 5: Configuration Analytics Test
+        success5 = False
+        if created_agent_id:
+            print("\n🔍 Testing Configuration Analytics Endpoint...")
+            success5, analytics_response = self.run_test(
+                "Configuration Analytics", "GET", f"agents/{created_agent_id}/configuration/analytics"
+            )
+            
+            if success5:
+                analytics = analytics_response.get('analytics', {})
+                
+                print(f"   Configuration Complexity: {analytics.get('configuration_complexity', 0)}")
+                print(f"   Readiness Score: {analytics.get('readiness_score', 0)}")
+                print(f"   Integrations Count: {analytics.get('integrations_count', 0)}")
+                print(f"   Security Settings Count: {analytics.get('security_settings_count', 0)}")
+                print(f"   Performance Customizations: {analytics.get('performance_customizations', 0)}")
+                print(f"   Optimization Score: {analytics.get('optimization_score', 0)}")
+                
+                # Validate analytics calculation
+                if analytics.get('configuration_complexity', 0) > 0:
+                    print("   ✅ Configuration complexity analytics working")
+                else:
+                    print("   ❌ Configuration complexity analytics may not be working")
+                
+                if analytics.get('readiness_score', 0) > 0:
+                    print("   ✅ Readiness score analytics working")
+                else:
+                    print("   ❌ Readiness score analytics may not be working")
+                
+                if analytics.get('optimization_score', 0) > 0:
+                    print("   ✅ Optimization score calculation working")
+                else:
+                    print("   ❌ Optimization score calculation may not be working")
+        
+        # Test 6: Activity Logging Verification
+        success6 = False
+        if created_agent_id:
+            print("\n🔍 Testing Activity Logging for Configuration Changes...")
+            success6, activities_response = self.run_test(
+                "Agent Activities", "GET", f"agents/{created_agent_id}/activities"
+            )
+            
+            if success6:
+                activities = activities_response.get('activities', [])
+                config_activities = [a for a in activities if a.get('activity_type') == 'configuration_updated']
+                
+                print(f"   Total Activities: {len(activities)}")
+                print(f"   Configuration Activities: {len(config_activities)}")
+                
+                if config_activities:
+                    latest_config_activity = config_activities[0]
+                    print(f"   Latest Config Activity: {latest_config_activity.get('description', 'N/A')}")
+                    print("   ✅ Configuration activity logging working")
+                else:
+                    print("   ❌ Configuration activity logging may not be working")
+        
+        # Test 7: Configuration Fallback Test
+        success7 = False
+        if created_agent_id:
+            print("\n🔍 Testing Configuration Fallback to Defaults...")
+            minimal_config = {
+                "configuration": {}  # Empty configuration to test defaults
+            }
+            
+            success7, fallback_response = self.run_test(
+                "Configuration Fallback Test", "PUT", f"agents/{created_agent_id}", 200, minimal_config
+            )
+            
+            if success7:
+                fallback_config = fallback_response.get('configuration', {})
+                
+                # Check if defaults are applied
+                has_defaults = (
+                    fallback_config.get('config_version', 0) > 0 and
+                    fallback_config.get('last_processed') is not None
+                )
+                
+                if has_defaults:
+                    print("   ✅ Configuration fallback to defaults working")
+                else:
+                    print("   ❌ Configuration fallback may not be working properly")
+        
+        # Clean up test agent
+        if created_agent_id:
+            print("\n🔍 Cleaning up test agent...")
+            cleanup_success, _ = self.run_test(
+                "Delete Test Agent", "DELETE", f"agents/{created_agent_id}", 200
+            )
+            if cleanup_success:
+                print("   ✅ Test agent cleaned up successfully")
+        
+        # Summary of Agent Configuration Tests
+        all_tests = [success1, success2, success3, success4, success5, success6, success7]
+        passed_tests = sum(all_tests)
+        total_tests = len(all_tests)
+        
+        print(f"\n📊 AGENT CONFIGURATION TEST SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        if passed_tests == total_tests:
+            print("   🎉 ALL AGENT CONFIGURATION TESTS PASSED!")
+        else:
+            print("   ⚠️  Some Agent Configuration tests failed")
+        
+        return all(all_tests)
+
     def run_all_tests(self):
         """Run all backend API tests"""
         print("🚀 Starting Nexus Core Backend API Testing")
@@ -837,6 +1110,7 @@ class NexusCoreAPITester:
             self.test_agents_endpoints(),
             self.test_crm_endpoints(),
             self.test_lead_management_crud(),  # New comprehensive Lead CRUD tests
+            self.test_agent_configuration_functionality(),  # New Agent Configuration tests
             self.test_document_generation_endpoints(),
             self.test_document_ai_integration(),
             self.test_business_logic(),
