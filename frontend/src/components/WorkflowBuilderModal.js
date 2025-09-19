@@ -107,7 +107,7 @@ export function WorkflowBuilderModal({ children, agents, onWorkflowCreated }) {
         order: 0
       }
     ],
-    agent_id: ''
+    agent_id: 'no_agent'
   })
 
   const addStep = (afterStepId = null) => {
