@@ -566,7 +566,7 @@ function App() {
                 <h2 className="text-3xl font-bold gradient-text">Document Generation</h2>
                 <p className="text-muted-foreground">AI-powered business document creation</p>
               </div>
-              <Button className="glow-effect">
+              <Button className="glow-effect" onClick={() => handleGenerateDocument('General')}>
                 <Plus className="w-4 h-4 mr-2" />
                 Generate Document
               </Button>
