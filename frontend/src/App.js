@@ -66,6 +66,9 @@ function App() {
   const [dashboardData, setDashboardData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [showCreateAgent, setShowCreateAgent] = useState(false)
+  const [showAddLead, setShowAddLead] = useState(false)
+  const [showUploadKnowledge, setShowUploadKnowledge] = useState(false)
 
   // Fetch data from backend
   useEffect(() => {
