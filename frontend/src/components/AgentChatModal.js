@@ -162,7 +162,16 @@ export function AgentChatModal({ agent, children }) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md w-[95vw] h-[400px] flex flex-col quantum-bg border border-primary/20 shadow-2xl">
+      <DialogContent 
+        className="sm:max-w-md w-[95vw] h-[400px] flex flex-col quantum-bg border border-primary/20 shadow-2xl z-[9999]"
+        style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          maxHeight: '80vh'
+        }}
+      >
         <DialogHeader className="pb-2 flex-shrink-0">
           <DialogTitle className="flex items-center gap-2 text-base">
             <Bot className="w-5 h-5 text-primary" />
