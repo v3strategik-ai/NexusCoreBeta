@@ -136,6 +136,42 @@ function App() {
     }
   }
 
+  // Event handlers for buttons
+  const handleCreateAgent = () => {
+    setShowCreateAgent(true)
+    console.log('Create new digital employee clicked')
+  }
+
+  const handleUploadKnowledge = () => {
+    setShowUploadKnowledge(true)
+    console.log('Upload knowledge clicked')
+  }
+
+  const handleAddLead = () => {
+    setShowAddLead(true)
+    console.log('Add lead clicked')
+  }
+
+  const handleGenerateDocument = (documentType) => {
+    console.log('Generate document clicked:', documentType)
+    alert(`Document generation for ${documentType} - Coming soon!`)
+  }
+
+  const handleConfigureAgent = (agent) => {
+    console.log('Configure agent clicked:', agent.name)
+    alert(`Agent configuration for ${agent.name} - Coming soon!`)
+  }
+
+  const handleEditLead = (lead) => {
+    console.log('Edit lead clicked:', lead.name)
+    alert(`Edit lead ${lead.name} - Coming soon!`)
+  }
+
+  const handleContactLead = (lead) => {
+    console.log('Contact lead clicked:', lead.name)
+    alert(`Contact ${lead.name} at ${lead.email} - Coming soon!`)
+  }
+
   const AgentCard = ({ agent }) => (
     <Card className="bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/50 transition-all duration-300 hover:scale-105 quantum-bg">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
