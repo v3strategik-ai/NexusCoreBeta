@@ -328,6 +328,221 @@ async def process_agent_configuration(agent_id: str, new_config: dict, existing_
         # Merge configurations with validation
         processed_config = {**existing_config, **new_config}
         
+        # Validate AI model configuration
+        if "ai_model" in processed_config:
+            valid_models = ["gpt-4o", "claude-3.5-sonnet", "gemini-2.0-flash"]
+            if processed_config["ai_model"] not in valid_models:
+                processed_config["ai_model"] = "gpt-4o"  # Default fallback
+        
+        # Validate temperature range
+        if "temperature" in processed_config:
+            processed_config["temperature"] = max(0.0, min(1.0, float(processed_config["temperature"])))
+        
+        # Validate performance metrics
+        for metric in ["creativity", "responsiveness", "accuracy", "learning_rate"]:
+            if metric in processed_config:
+                processed_config[metric] = max(0.0, min(1.0, float(processed_config[metric])))
+        
+        # Validate max_daily_tasks
+        if "max_daily_tasks" in processed_config:
+            processed_config["max_daily_tasks"] = max(10, min(500, int(processed_config["max_daily_tasks"])))
+        
+        # Validate max_tokens
+        if "max_tokens" in processed_config:
+            processed_config["max_tokens"] = max(100, min(2000, int(processed_config["max_tokens"])))
+        
+        # Ensure integrations structure
+        if "integrations" in processed_config and not isinstance(processed_config["integrations"], dict):
+            processed_config["integrations"] = {}
+        
+        # Add processing metadata
+        processed_config["config_version"] = processed_config.get("config_version", 0) + 1
+        processed_config["last_processed"] = datetime.utcnow().isoformat()
+        processed_config["processed_by"] = "agent_config_processor"
+        
+        logger.info(f"Processed configuration for agent {agent_id}")
+        return processed_config
+        
+    except Exception as e:
+        logger.error(f"Error processing configuration for agent {agent_id}: {e}")
+        return existing_config
+
+def calculate_configuration_metrics(config: dict) -> dict:
+    """Calculate metrics based on agent configuration complexity and settings"""
+    try:
+        metrics = {}
+        
+        # Calculate configuration complexity score
+        complexity_score = 0
+        
+        # AI model complexity
+        ai_model_scores = {
+            "gpt-4o": 30,
+            "claude-3.5-sonnet": 25,
+            "gemini-2.0-flash": 20
+        }
+        complexity_score += ai_model_scores.get(config.get("ai_model", "gpt-4o"), 20)
+        
+        # Performance tuning complexity
+        if config.get("temperature", 0.7) != 0.7:
+            complexity_score += 5
+        if config.get("max_tokens", 1000) != 1000:
+            complexity_score += 5
+        
+        # Custom system instructions
+        if config.get("system_instructions"):
+            complexity_score += len(config["system_instructions"]) // 100  # 1 point per 100 chars
+        
+        # Performance metrics customization
+        performance_defaults = {"creativity": 0.6, "responsiveness": 0.8, "accuracy": 0.8, "learning_rate": 0.5}
+        for metric, default in performance_defaults.items():
+            if config.get(metric, default) != default:
+                complexity_score += 3
+        
+        # Behavior settings
+        behavior_settings = ["proactive_mode", "auto_learn", "context_memory", "task_prioritization"]
+        for setting in behavior_settings:
+            if config.get(setting, True):
+                complexity_score += 2
+        
+        # Integration settings
+        integrations = config.get("integrations", {})
+        complexity_score += sum(2 for enabled in integrations.values() if enabled)
+        
+        # Security settings
+        if config.get("max_daily_tasks", 100) != 100:
+            complexity_score += 3
+        if config.get("restricted_topics"):
+            complexity_score += 5
+        if config.get("allowed_actions"):
+            complexity_score += len(config["allowed_actions"]) * 2
+        
+        metrics["configuration_complexity"] = complexity_score
+        
+        # Calculate readiness score based on essential configurations
+        readiness_score = 0
+        
+        # Essential configurations
+        if config.get("ai_model"):
+            readiness_score += 20
+        if config.get("autonomy_level"):
+            readiness_score += 15
+        if config.get("system_instructions"):
+            readiness_score += 10
+        
+        # Performance tuning
+        performance_configured = sum(1 for metric in performance_defaults.keys() if metric in config)
+        readiness_score += (performance_configured / len(performance_defaults)) * 20
+        
+        # Behavior settings
+        behavior_configured = sum(1 for setting in behavior_settings if setting in config)
+        readiness_score += (behavior_configured / len(behavior_settings)) * 15
+        
+        # Security settings
+        if config.get("max_daily_tasks") and config.get("allowed_actions"):
+            readiness_score += 10
+        
+        # Integration settings
+        if integrations:
+            readiness_score += 10
+        
+        metrics["readiness_score"] = min(100, readiness_score)
+        
+        # Additional metrics
+        metrics["integrations_count"] = sum(1 for enabled in integrations.values() if enabled)
+        metrics["security_settings_count"] = sum(1 for key in ["max_daily_tasks", "restricted_topics", "allowed_actions"] if config.get(key))
+        metrics["performance_customizations"] = sum(1 for metric in performance_defaults.keys() if config.get(metric, performance_defaults[metric]) != performance_defaults[metric])
+        
+        return metrics
+        
+    except Exception as e:
+        logger.error(f"Error calculating configuration metrics: {e}")
+        return {}
+
+def summarize_configuration_changes(old_config: dict, new_config: dict) -> str:
+    """Generate a human-readable summary of configuration changes"""
+    try:
+        if not new_config:
+            return "No configuration changes"
+        
+        changes = []
+        
+        # AI Model changes
+        if new_config.get("ai_model") != old_config.get("ai_model"):
+            old_model = old_config.get("ai_model", "default")
+            new_model = new_config.get("ai_model", "default")
+            changes.append(f"AI model: {old_model} → {new_model}")
+        
+        # Temperature changes
+        if new_config.get("temperature") != old_config.get("temperature"):
+            old_temp = old_config.get("temperature", 0.7)
+            new_temp = new_config.get("temperature", 0.7)
+            changes.append(f"Temperature: {old_temp} → {new_temp}")
+        
+        # Autonomy level changes
+        if new_config.get("autonomy_level") != old_config.get("autonomy_level"):
+            old_autonomy = old_config.get("autonomy_level", "High")
+            new_autonomy = new_config.get("autonomy_level", "High")
+            changes.append(f"Autonomy: {old_autonomy} → {new_autonomy}")
+        
+        # Performance metrics changes
+        performance_metrics = ["creativity", "responsiveness", "accuracy", "learning_rate"]
+        for metric in performance_metrics:
+            old_val = old_config.get(metric)
+            new_val = new_config.get(metric)
+            if old_val != new_val and new_val is not None:
+                changes.append(f"{metric.title()}: {old_val or 'default'} → {new_val}")
+        
+        # Behavior settings changes
+        behavior_settings = {
+            "proactive_mode": "Proactive Mode",
+            "auto_learn": "Auto Learning",
+            "context_memory": "Context Memory",
+            "task_prioritization": "Task Prioritization"
+        }
+        
+        for key, display_name in behavior_settings.items():
+            old_val = old_config.get(key)
+            new_val = new_config.get(key)
+            if old_val != new_val and new_val is not None:
+                status = "enabled" if new_val else "disabled"
+                changes.append(f"{display_name}: {status}")
+        
+        # Integration changes
+        old_integrations = old_config.get("integrations", {})
+        new_integrations = new_config.get("integrations", {})
+        
+        for integration, enabled in new_integrations.items():
+            old_enabled = old_integrations.get(integration)
+            if old_enabled != enabled:
+                status = "enabled" if enabled else "disabled"
+                changes.append(f"{integration.title()} integration: {status}")
+        
+        # Security settings changes
+        if new_config.get("max_daily_tasks") != old_config.get("max_daily_tasks"):
+            old_max = old_config.get("max_daily_tasks", 100)
+            new_max = new_config.get("max_daily_tasks", 100)
+            changes.append(f"Daily task limit: {old_max} → {new_max}")
+        
+        # System instructions changes
+        if new_config.get("system_instructions") != old_config.get("system_instructions"):
+            if new_config.get("system_instructions"):
+                changes.append("System instructions updated")
+            else:
+                changes.append("System instructions cleared")
+        
+        return "; ".join(changes) if changes else "Minor configuration updates"
+        
+    except Exception as e:
+        logger.error(f"Error summarizing configuration changes: {e}")
+        return "Configuration updated"
+
+async def process_agent_configuration(agent_id: str, new_config: dict, existing_config: dict) -> dict:
+    """Process and validate agent configuration updates"""
+    try:
+        # Merge configurations with validation
+        processed_config = {**existing_config, **new_config}
+        
         # Validate configuration structure
         if "capabilities" in processed_config:
             # Ensure capabilities is a list
