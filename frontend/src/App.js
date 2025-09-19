@@ -202,9 +202,14 @@ function App() {
     console.log('Lead deleted:', deletedLeadId)
   }
 
-  const handleContactLogged = (contactActivity) => {
-    console.log('Contact logged:', contactActivity)
-    // Optionally refresh lead data or show notification
+  const handleAgentConfigUpdated = (updatedAgent) => {
+    setAgents(prev => prev.map(agent => 
+      agent.id === updatedAgent.id ? updatedAgent : agent
+    ))
+    console.log('Agent configuration updated:', updatedAgent.name)
+    
+    // Show success notification
+    alert(`Configuration updated for ${updatedAgent.name}!\n\nKey changes:\n- Configuration complexity: ${updatedAgent.metrics?.configuration_complexity || 0}\n- Readiness score: ${updatedAgent.metrics?.readiness_score || 0}%`)
   }
 
   const handleCreateAgent = () => {
