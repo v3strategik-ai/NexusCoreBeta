@@ -146,6 +146,13 @@ function App() {
     console.log('New agent created:', newAgent.name)
   }
 
+  const handleAgentConfigured = (updatedAgent) => {
+    setAgents(prev => prev.map(agent => 
+      agent.id === updatedAgent.id ? updatedAgent : agent
+    ))
+    console.log('Agent configured:', updatedAgent.name)
+  }
+
   const handleKnowledgeUploaded = (knowledgeData) => {
     console.log('Knowledge uploaded:', knowledgeData.title)
     // Optionally refresh data or show success message
