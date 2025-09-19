@@ -124,7 +124,16 @@ export function AddLeadModal({ children, agents, onLeadAdded }) {
       <DialogTrigger asChild>
         {children}  
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto quantum-bg">
+      <DialogContent 
+        className="sm:max-w-2xl w-[95vw] max-h-[80vh] h-[550px] overflow-y-auto quantum-bg border border-primary/20 shadow-2xl"
+        style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          maxHeight: '85vh'
+        }}
+      >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-3">
             <Users className="w-6 h-6 text-primary" />
