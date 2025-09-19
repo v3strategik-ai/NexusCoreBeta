@@ -190,6 +190,23 @@ function App() {
     alert(`Document "${generatedDocument.title}" generated successfully!`)
   }
 
+  const handleLeadUpdated = (updatedLead) => {
+    setLeads(prev => prev.map(lead => 
+      lead.id === updatedLead.id ? updatedLead : lead
+    ))
+    console.log('Lead updated:', updatedLead.name)
+  }
+
+  const handleLeadDeleted = (deletedLeadId) => {
+    setLeads(prev => prev.filter(lead => lead.id !== deletedLeadId))
+    console.log('Lead deleted:', deletedLeadId)
+  }
+
+  const handleContactLogged = (contactActivity) => {
+    console.log('Contact logged:', contactActivity)
+    // Optionally refresh lead data or show notification
+  }
+
   const handleCreateAgent = () => {
     // This will be handled by the modal
     console.log('Create new digital employee clicked')
