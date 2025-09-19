@@ -202,6 +202,11 @@ function App() {
     console.log('Lead deleted:', deletedLeadId)
   }
 
+  const handleContactLogged = (contactActivity) => {
+    console.log('Contact logged:', contactActivity)
+    // Optionally refresh lead data or show notification
+  }
+
   const handleAgentConfigUpdated = (updatedAgent) => {
     setAgents(prev => prev.map(agent => 
       agent.id === updatedAgent.id ? updatedAgent : agent
