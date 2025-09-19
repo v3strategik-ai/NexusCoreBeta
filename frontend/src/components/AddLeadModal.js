@@ -243,7 +243,7 @@ export function AddLeadModal({ children, agents, onLeadAdded }) {
                 <SelectValue placeholder="Select an agent (optional)" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">No assignment</SelectItem>
+                <SelectItem value="unassigned">No assignment</SelectItem>
                 {agents.map((agent) => (
                   <SelectItem key={agent.id} value={agent.id}>
                     {agent.name} - {agent.type}
