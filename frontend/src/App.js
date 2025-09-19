@@ -234,12 +234,12 @@ function App() {
 
   const handleEditLead = (lead) => {
     console.log('Edit lead clicked:', lead.name)
-    alert(`Edit lead ${lead.name} - Coming soon!`)
+    // This will now be handled by the EditLeadModal
   }
 
   const handleContactLead = (lead) => {
     console.log('Contact lead clicked:', lead.name)
-    alert(`Contact ${lead.name} at ${lead.email} - Coming soon!`)
+    // This will now be handled by the ContactLeadModal
   }
 
   const AgentCard = ({ agent }) => (
