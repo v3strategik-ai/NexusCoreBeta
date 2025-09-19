@@ -150,6 +150,11 @@ function App() {
     // Optionally refresh data or show success message
   }
 
+  const handleLeadAdded = (newLead) => {
+    setLeads(prev => [...prev, newLead])
+    console.log('New lead added:', newLead.name)
+  }
+
   const handleCreateAgent = () => {
     // This will be handled by the modal
     console.log('Create new digital employee clicked')
