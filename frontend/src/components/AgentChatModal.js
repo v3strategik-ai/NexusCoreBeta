@@ -162,28 +162,22 @@ export function AgentChatModal({ agent, children }) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[80vh] h-[400px] flex flex-col quantum-bg fixed top-[10%] left-1/2 transform -translate-x-1/2">
-        <DialogHeader className="pb-3">
+      <DialogContent className="max-w-lg w-[90vw] h-[60vh] max-h-[500px] flex flex-col quantum-bg">
+        <DialogHeader className="pb-3 flex-shrink-0">
           <DialogTitle className="flex items-center gap-3">
             <div className="relative">
-              <Bot className="w-6 h-6 text-primary" />
-              <Sparkles className="w-3 h-3 absolute -top-1 -right-1 text-yellow-400" />
+              <Bot className="w-5 h-5 text-primary" />
+              <Sparkles className="w-2 h-2 absolute -top-1 -right-1 text-yellow-400" />
             </div>
-            <div>
-              <span className="gradient-text">Chat with {agent.name}</span>
-              <div className="text-sm text-muted-foreground font-normal mt-1">
-                {agent.type} • {agent.specialization}
+            <div className="flex-1 min-w-0">
+              <span className="gradient-text text-lg">{agent.name}</span>
+              <div className="text-xs text-muted-foreground mt-1 truncate">
+                {agent.type} • {agent.autonomy_level} Autonomy
               </div>
             </div>
-            <Badge 
-              variant={agent.status === 'active' ? 'default' : 'secondary'} 
-              className={`ml-auto ${getAutonomyColor(agent.autonomy_level)} quantum-pulse`}
-            >
-              {agent.autonomy_level} Autonomy
-            </Badge>
           </DialogTitle>
           <DialogDescription className="text-sm">
-            Interact with your AI agent for specialized assistance in {agent.type.toLowerCase()}.
+            Chat with your AI agent for specialized assistance.
           </DialogDescription>
         </DialogHeader>
 
