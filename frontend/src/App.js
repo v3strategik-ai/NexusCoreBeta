@@ -7,6 +7,7 @@ import { Textarea } from './components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs'
 import { Progress } from './components/ui/progress'
 import { Switch } from './components/ui/switch'
+import { AgentChatModal } from './components/AgentChatModal'
 import { 
   Brain, 
   Zap, 
