@@ -260,10 +260,12 @@ function App() {
             <BookOpen className="w-4 h-4 mr-1" />
             Details
           </Button>
-          <Button size="sm" variant="outline" onClick={() => handleConfigureAgent(agent)}>
-            <Settings className="w-4 h-4 mr-1" />
-            Configure  
-          </Button>
+          <AgentConfigModal agent={agent} onConfigUpdated={handleAgentConfigured}>
+            <Button size="sm" variant="outline">
+              <Settings className="w-4 h-4 mr-1" />
+              Configure  
+            </Button>
+          </AgentConfigModal>
         </div>
       </CardContent>
     </Card>
