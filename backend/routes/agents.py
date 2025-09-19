@@ -276,25 +276,69 @@ async def deactivate_agent(agent_id: str):
         logger.error(f"Error deactivating agent {agent_id}: {e}")
         raise HTTPException(status_code=500, detail="Failed to deactivate agent")
 
-@router.get("/{agent_id}/activities")
-async def get_agent_activities(
-    agent_id: str,
-    limit: int = Query(50, ge=1, le=200)
-):
-    """Get recent activities for a specific agent"""
+@router.get("/{agent_id}/configuration/history")
+async def get_agent_configuration_history(agent_id: str, limit: int = Query(10, ge=1, le=50)):
+    """Get configuration change history for an agent"""
     try:
         collection = await get_activities_collection()
         
-        cursor = collection.find({"agent_id": agent_id}).sort("timestamp", -1).limit(limit)
-        activities_data = await cursor.to_list(limit)
+        # Get configuration-related activities
+        cursor = collection.find({
+            "agent_id": agent_id,
+            "activity_type": "configuration_updated"
+        }).sort("timestamp", -1).limit(limit)
         
-        activities = [AgentActivity(**activity) for activity in activities_data]
+        activities = await cursor.to_list(limit)
         
-        return {"activities": activities}
+        config_history = []
+        for activity in activities:
+            config_history.append({
+                "timestamp": activity.get("timestamp"),
+                "description": activity.get("description"),
+                "changes": activity.get("metadata", {}).get("configuration_changes"),
+                "activity_id": activity.get("id")
+            })
+        
+        return {"configuration_history": config_history}
         
     except Exception as e:
-        logger.error(f"Error getting activities for agent {agent_id}: {e}")
-        raise HTTPException(status_code=500, detail="Failed to retrieve agent activities")
+        logger.error(f"Error getting configuration history for agent {agent_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve configuration history")
+
+@router.get("/{agent_id}/configuration/analytics")
+async def get_agent_configuration_analytics(agent_id: str):
+    """Get analytics and insights about agent configuration"""
+    try:
+        collection = await get_agents_collection()
+        
+        # Get agent data
+        agent_data = await collection.find_one({"id": agent_id})
+        if not agent_data:
+            raise HTTPException(status_code=404, detail="Agent not found")
+        
+        config = agent_data.get("configuration", {})
+        metrics = agent_data.get("metrics", {})
+        
+        # Generate configuration analytics
+        analytics = {
+            "configuration_complexity": metrics.get("configuration_complexity", 0),
+            "readiness_score": metrics.get("readiness_score", 0),
+            "integrations_count": metrics.get("integrations_count", 0),
+            "security_settings_count": metrics.get("security_settings_count", 0),
+            "performance_customizations": metrics.get("performance_customizations", 0),
+            "last_config_update": metrics.get("last_config_update"),
+            "config_version": config.get("config_version", 0),
+            "recommendations": [],  # Placeholder for future implementation
+            "optimization_score": min(100, metrics.get("readiness_score", 0) + metrics.get("configuration_complexity", 0) // 2)
+        }
+        
+        return {"analytics": analytics}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting configuration analytics for agent {agent_id}: {e}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve configuration analytics")
 
 async def log_agent_activity(
     agent_id: str,
