@@ -11,6 +11,7 @@ import { AgentChatModal } from './components/AgentChatModal'
 import { CreateAgentModal } from './components/CreateAgentModal'
 import { UploadKnowledgeModal } from './components/UploadKnowledgeModal'
 import { AddLeadModal } from './components/AddLeadModal'
+import { AgentConfigModal } from './components/AgentConfigModal'
 import { 
   Brain, 
   Zap, 
