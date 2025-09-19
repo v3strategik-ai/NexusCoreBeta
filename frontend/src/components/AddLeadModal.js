@@ -92,7 +92,7 @@ export function AddLeadModal({ children, agents, onLeadAdded }) {
         status: 'cold',
         value: '',
         source: '',
-        assigned_agent_id: '',
+        assigned_agent_id: 'unassigned',
         notes: ''
       })
       
