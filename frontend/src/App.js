@@ -314,7 +314,7 @@ function App() {
             <BookOpen className="w-4 h-4 mr-1" />
             Details
           </Button>
-          <AgentConfigModal agent={agent} onConfigUpdated={handleAgentConfigured}>
+          <AgentConfigModal agent={agent} onConfigUpdated={handleAgentConfigUpdated}>
             <Button size="sm" variant="outline">
               <Settings className="w-4 h-4 mr-1" />
               Configure  
