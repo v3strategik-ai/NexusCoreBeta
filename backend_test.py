@@ -324,6 +324,261 @@ class NexusCoreAPITester:
         
         return success
 
+    def test_document_generation_endpoints(self):
+        """Test document generation API endpoints with realistic data"""
+        print("\n" + "="*50)
+        print("TESTING DOCUMENT GENERATION ENDPOINTS")
+        print("="*50)
+        
+        # Test 1: Business Proposal Generation
+        proposal_data = {
+            "title": "Website Redesign Proposal for TechCorp",
+            "type": "proposal",
+            "client_name": "TechCorp Solutions",
+            "variables": {
+                "project_description": "Complete website redesign with modern UI/UX, mobile optimization, and enhanced user experience",
+                "project_value": "75000",
+                "timeline": "12 weeks",
+                "deliverables": "New responsive website, mobile app, SEO optimization, content management system, staff training"
+            },
+            "custom_instructions": "Focus on ROI and competitive advantages"
+        }
+        
+        success1, proposal_response = self.run_test(
+            "Generate Business Proposal", "POST", "documents/generate", 200, proposal_data
+        )
+        
+        if success1:
+            print(f"   Generated Proposal ID: {proposal_response.get('id', 'N/A')}")
+            print(f"   Content Length: {len(proposal_response.get('content', ''))} characters")
+            print(f"   Client: {proposal_response.get('client_name', 'N/A')}")
+            
+            # Validate proposal content quality
+            content = proposal_response.get('content', '')
+            if 'TechCorp' in content and 'Website Redesign' in content and '$75,000' in content:
+                print("   ✅ Proposal content includes key details")
+            else:
+                print("   ⚠️  Proposal content may be missing key details")
+        
+        # Test 2: Invoice Generation
+        invoice_data = {
+            "title": "Monthly Consulting Invoice - December 2024",
+            "type": "invoice",
+            "client_name": "ABC Corporation",
+            "variables": {
+                "services": "Strategic Business Consulting and Digital Transformation Services",
+                "amount": "8500.00",
+                "due_date": "January 30, 2025",
+                "tax_amount": "680.00",
+                "total_amount": "9180.00",
+                "payment_terms": "Payment due within 30 days. Late payments subject to 1.5% monthly service charge."
+            }
+        }
+        
+        success2, invoice_response = self.run_test(
+            "Generate Invoice", "POST", "documents/generate", 200, invoice_data
+        )
+        
+        if success2:
+            print(f"   Generated Invoice ID: {invoice_response.get('id', 'N/A')}")
+            print(f"   Content Length: {len(invoice_response.get('content', ''))} characters")
+            
+            # Validate invoice content
+            content = invoice_response.get('content', '')
+            if 'ABC Corporation' in content and '$8,500' in content and 'January 30, 2025' in content:
+                print("   ✅ Invoice content includes key financial details")
+            else:
+                print("   ⚠️  Invoice content may be missing key financial details")
+        
+        # Test 3: Business Plan Generation
+        business_plan_data = {
+            "title": "SaaS Startup Business Plan",
+            "type": "business_plan",
+            "client_name": "InnovateTech Ventures",
+            "variables": {
+                "executive_summary": "Revolutionary AI-powered project management platform targeting mid-market companies",
+                "target_market": "Mid-market companies (100-1000 employees) seeking project management automation",
+                "financial_projections": "Year 1: $500K, Year 2: $2.5M, Year 3: $8M revenue",
+                "market_size": "15B",
+                "competitive_advantage": "AI-powered automation, superior user experience, 50% faster implementation",
+                "funding_needed": "2500000"
+            }
+        }
+        
+        success3, business_plan_response = self.run_test(
+            "Generate Business Plan", "POST", "documents/generate", 200, business_plan_data
+        )
+        
+        if success3:
+            print(f"   Generated Business Plan ID: {business_plan_response.get('id', 'N/A')}")
+            print(f"   Content Length: {len(business_plan_response.get('content', ''))} characters")
+            
+            # Validate business plan content
+            content = business_plan_response.get('content', '')
+            if 'InnovateTech' in content and '$2,500,000' in content and 'AI-powered' in content:
+                print("   ✅ Business plan content includes strategic details")
+            else:
+                print("   ⚠️  Business plan content may be missing strategic details")
+        
+        # Test 4: Get Generated Documents
+        success4, documents_list = self.run_test("Get Generated Documents", "GET", "documents/")
+        if success4:
+            doc_count = len(documents_list)
+            print(f"   Total Documents Retrieved: {doc_count}")
+            
+            if doc_count >= 3:  # Should have at least the 3 we just created
+                print("   ✅ Document retrieval working correctly")
+                
+                # Test document types
+                doc_types = [doc.get('type') for doc in documents_list]
+                if 'proposal' in doc_types and 'invoice' in doc_types and 'business_plan' in doc_types:
+                    print("   ✅ All document types present")
+                else:
+                    print(f"   ⚠️  Document types found: {set(doc_types)}")
+            else:
+                print("   ⚠️  Expected more documents in the list")
+        
+        # Test 5: Document Statistics
+        success5, stats = self.run_test("Document Statistics", "GET", "documents/stats/summary")
+        if success5:
+            total_docs = stats.get('total_documents', 0)
+            doc_types = stats.get('document_types', {})
+            ai_success_rate = stats.get('ai_generation_success_rate', 0)
+            
+            print(f"   Total Documents: {total_docs}")
+            print(f"   Document Types: {doc_types}")
+            print(f"   AI Success Rate: {ai_success_rate}%")
+            
+            if total_docs >= 3:
+                print("   ✅ Document statistics show expected counts")
+            else:
+                print("   ⚠️  Document statistics may not reflect recent generations")
+        
+        # Test 6: Individual Document Retrieval
+        individual_doc_success = True
+        if success1:  # If we successfully created a proposal
+            proposal_id = proposal_response.get('id')
+            if proposal_id:
+                success6, individual_doc = self.run_test(
+                    "Get Individual Document", "GET", f"documents/{proposal_id}"
+                )
+                if success6:
+                    print(f"   Individual Document: {individual_doc.get('title', 'N/A')}")
+                    print(f"   Document Type: {individual_doc.get('type', 'N/A')}")
+                else:
+                    individual_doc_success = False
+        
+        # Test 7: Test all document types for comprehensive coverage
+        additional_types = ["report", "contract", "marketing"]
+        additional_success = True
+        
+        for doc_type in additional_types:
+            test_data = {
+                "title": f"Test {doc_type.title()} Document",
+                "type": doc_type,
+                "client_name": "Test Client Corp",
+                "variables": {
+                    "key_info": f"This is a test {doc_type} with important business information",
+                    "value": "25000"
+                }
+            }
+            
+            success, response = self.run_test(
+                f"Generate {doc_type.title()}", "POST", "documents/generate", 200, test_data
+            )
+            
+            if success:
+                content_length = len(response.get('content', ''))
+                print(f"   {doc_type.title()} Generated: {content_length} characters")
+            else:
+                additional_success = False
+        
+        return (success1 and success2 and success3 and success4 and 
+                success5 and individual_doc_success and additional_success)
+
+    def test_document_ai_integration(self):
+        """Test AI integration and content quality"""
+        print("\n" + "="*50)
+        print("TESTING AI INTEGRATION & CONTENT QUALITY")
+        print("="*50)
+        
+        # Test AI-powered content generation with complex requirements
+        complex_proposal = {
+            "title": "Enterprise Digital Transformation Initiative",
+            "type": "proposal",
+            "client_name": "Global Manufacturing Corp",
+            "variables": {
+                "project_description": "Complete digital transformation including ERP implementation, IoT integration, data analytics platform, and workforce training",
+                "project_value": "2500000",
+                "timeline": "18 months",
+                "deliverables": "ERP system, IoT sensors, analytics dashboard, mobile apps, training programs, documentation",
+                "competitive_advantage": "Industry-leading expertise, proven methodology, 24/7 support",
+                "roi_projection": "35% efficiency improvement, $5M annual savings"
+            },
+            "custom_instructions": "Emphasize digital transformation ROI, include implementation phases, highlight risk mitigation strategies"
+        }
+        
+        success1, ai_response = self.run_test(
+            "AI Complex Proposal Generation", "POST", "documents/generate", 200, complex_proposal
+        )
+        
+        if success1:
+            content = ai_response.get('content', '')
+            content_length = len(content)
+            print(f"   AI Generated Content Length: {content_length} characters")
+            
+            # Check for AI-quality indicators
+            quality_indicators = [
+                'Global Manufacturing Corp',
+                'digital transformation',
+                '$2,500,000',
+                '18 months',
+                'ERP',
+                'IoT',
+                'ROI',
+                'efficiency'
+            ]
+            
+            found_indicators = sum(1 for indicator in quality_indicators if indicator.lower() in content.lower())
+            quality_score = (found_indicators / len(quality_indicators)) * 100
+            
+            print(f"   Content Quality Score: {quality_score:.1f}% ({found_indicators}/{len(quality_indicators)} key terms)")
+            
+            if quality_score >= 75:
+                print("   ✅ AI-generated content meets quality standards")
+            else:
+                print("   ⚠️  AI-generated content may need improvement")
+                
+            # Check content structure
+            if '##' in content or '**' in content or '###' in content:
+                print("   ✅ Content includes professional formatting")
+            else:
+                print("   ⚠️  Content may lack professional formatting")
+                
+            # Check content length (should be substantial for complex proposals)
+            if content_length > 2000:
+                print("   ✅ Content length appropriate for complex proposal")
+            else:
+                print("   ⚠️  Content may be too brief for complex proposal")
+        
+        # Test error handling with invalid data
+        invalid_data = {
+            "title": "",  # Empty title
+            "type": "invalid_type",  # Invalid type
+            "variables": {}
+        }
+        
+        success2, error_response = self.run_test(
+            "Invalid Document Generation", "POST", "documents/generate", 422, invalid_data
+        )
+        
+        if success2:
+            print("   ✅ Proper error handling for invalid data")
+        else:
+            print("   ⚠️  Error handling may need improvement")
+        
+        return success1
+
     def run_all_tests(self):
         """Run all backend API tests"""
         print("🚀 Starting Nexus Core Backend API Testing")
@@ -340,6 +595,8 @@ class NexusCoreAPITester:
             self.test_dashboard_endpoints(),
             self.test_agents_endpoints(),
             self.test_crm_endpoints(),
+            self.test_document_generation_endpoints(),
+            self.test_document_ai_integration(),
             self.test_business_logic(),
             self.test_expected_data_values()
         ]
