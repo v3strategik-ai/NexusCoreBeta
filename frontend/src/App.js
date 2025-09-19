@@ -68,6 +68,7 @@ function App() {
   const [selectedAgent, setSelectedAgent] = useState(null)
   const [agents, setAgents] = useState([])
   const [leads, setLeads] = useState([])
+  const [workflows, setWorkflows] = useState([])
   const [dashboardData, setDashboardData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
