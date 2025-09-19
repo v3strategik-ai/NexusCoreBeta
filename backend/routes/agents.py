@@ -101,7 +101,7 @@ async def create_agent(agent_data: AgentCreate):
 
 @router.put("/{agent_id}", response_model=Agent)
 async def update_agent(agent_id: str, agent_update: AgentUpdate):
-    """Update a digital employee/agent"""
+    """Update a digital employee/agent with advanced configuration processing"""
     try:
         collection = await get_agents_collection()
         
@@ -114,6 +114,23 @@ async def update_agent(agent_id: str, agent_update: AgentUpdate):
         update_data = {k: v for k, v in agent_update.dict().items() if v is not None}
         update_data["updated_at"] = datetime.utcnow()
         
+        # Advanced configuration processing
+        if "configuration" in update_data:
+            processed_config = await process_agent_configuration(
+                agent_id, 
+                update_data["configuration"], 
+                existing_agent.get("configuration", {})
+            )
+            update_data["configuration"] = processed_config
+            
+            # Update agent metrics based on new configuration
+            metrics_update = calculate_configuration_metrics(processed_config)
+            update_data["metrics"] = {
+                **existing_agent.get("metrics", {}),
+                **metrics_update,
+                "last_config_update": datetime.utcnow().isoformat()
+            }
+        
         # Update agent
         await collection.update_one(
             {"id": agent_id},
@@ -124,16 +141,22 @@ async def update_agent(agent_id: str, agent_update: AgentUpdate):
         updated_agent_data = await collection.find_one({"id": agent_id})
         updated_agent = Agent(**updated_agent_data)
         
-        # Log activity
+        # Log configuration activity
+        config_summary = summarize_configuration_changes(
+            existing_agent.get("configuration", {}),
+            update_data.get("configuration", {})
+        )
+        
         await log_agent_activity(
             agent_id,
             updated_agent.name,
-            "agent_updated",
-            f"Digital employee configuration updated",
-            updated_agent.autonomy_level
+            "configuration_updated",
+            f"Agent configuration updated: {config_summary}",
+            updated_agent.autonomy_level,
+            {"configuration_changes": config_summary}
         )
         
-        logger.info(f"Updated agent: {agent_id}")
+        logger.info(f"Updated agent configuration: {agent_id} - {config_summary}")
         return updated_agent
         
     except HTTPException:
