@@ -166,7 +166,7 @@ function App() {
   }
 
   const handleAddLead = () => {
-    setShowAddLead(true)
+    // This will be handled by the modal
     console.log('Add lead clicked')
   }
 
