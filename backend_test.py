@@ -836,6 +836,7 @@ class NexusCoreAPITester:
             self.test_dashboard_endpoints(),
             self.test_agents_endpoints(),
             self.test_crm_endpoints(),
+            self.test_lead_management_crud(),  # New comprehensive Lead CRUD tests
             self.test_document_generation_endpoints(),
             self.test_document_ai_integration(),
             self.test_business_logic(),
