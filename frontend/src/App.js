@@ -690,12 +690,20 @@ function App() {
                 <h2 className="text-3xl font-bold gradient-text">Advanced Workflows</h2>
                 <p className="text-muted-foreground">Automate business processes with intelligent workflows</p>
               </div>
-              <WorkflowBuilderModal agents={agents} onWorkflowCreated={handleWorkflowCreated}>
-                <Button className="glow-effect">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create Workflow
-                </Button>
-              </WorkflowBuilderModal>
+              <div className="flex gap-2">
+                <EmailAutomationModal leads={leads} onEmailSent={handleEmailSent}>
+                  <Button className="glow-effect">
+                    <Mail className="w-4 h-4 mr-2" />
+                    Email Automation
+                  </Button>
+                </EmailAutomationModal>
+                <WorkflowBuilderModal agents={agents} onWorkflowCreated={handleWorkflowCreated}>
+                  <Button className="glow-effect">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Workflow
+                  </Button>
+                </WorkflowBuilderModal>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
