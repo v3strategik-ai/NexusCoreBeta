@@ -202,6 +202,247 @@ class NexusCoreAPITester:
         
         return success1 and success2 and lead_test_success
 
+    def test_lead_management_crud(self):
+        """Test comprehensive Lead Management CRUD operations as requested"""
+        print("\n" + "="*50)
+        print("TESTING LEAD MANAGEMENT CRUD OPERATIONS")
+        print("="*50)
+        
+        # Store created lead ID for subsequent tests
+        created_lead_id = None
+        agent_id = None
+        
+        # First, get available agents for assignment tests
+        success_agents, agents_response = self.run_test("Get Agents for Assignment", "GET", "agents/")
+        if success_agents:
+            agents = agents_response.get('agents', [])
+            if agents:
+                agent_id = agents[0].get('id')
+                print(f"   Available Agent for Testing: {agents[0].get('name')} ({agent_id})")
+        
+        # Test 1: Create Lead Test with specific data from review request
+        print("\n🔍 Testing Lead Creation...")
+        lead_create_data = {
+            "name": "Sarah Johnson",
+            "email": "sarah.johnson@techstartup.com",
+            "company": "TechStartup Inc",
+            "status": "warm",
+            "value": 125000,
+            "source": "LinkedIn Campaign",
+            "phone": "+1-555-0123",
+            "tags": ["enterprise", "saas"],
+            "notes": ["Initial contact via LinkedIn", "Interested in enterprise solution"]
+        }
+        
+        success1, create_response = self.run_test(
+            "Create Lead - Sarah Johnson", "POST", "crm/leads", 200, lead_create_data
+        )
+        
+        if success1:
+            created_lead_id = create_response.get('id')
+            ai_score = create_response.get('score', 0)
+            print(f"   ✅ Lead Created: {create_response.get('name')}")
+            print(f"   Lead ID: {created_lead_id}")
+            print(f"   AI Score: {ai_score}")
+            print(f"   Status: {create_response.get('status')}")
+            print(f"   Value: ${create_response.get('value'):,}")
+            
+            # Validate AI scoring
+            if ai_score > 0:
+                print("   ✅ AI-powered lead scoring is working")
+            else:
+                print("   ❌ AI-powered lead scoring may not be working")
+        
+        # Test 2: Update Lead Test - Status change from warm to hot
+        success2 = False
+        if created_lead_id:
+            print("\n🔍 Testing Lead Update - Status Change...")
+            update_data = {
+                "status": "hot",
+                "value": 150000,  # Increase value
+                "notes": ["Status updated to hot", "Increased project scope"]
+            }
+            
+            success2, update_response = self.run_test(
+                "Update Lead Status", "PUT", f"crm/leads/{created_lead_id}", 200, update_data
+            )
+            
+            if success2:
+                new_score = update_response.get('score', 0)
+                print(f"   ✅ Lead Updated: {update_response.get('name')}")
+                print(f"   New Status: {update_response.get('status')}")
+                print(f"   New Value: ${update_response.get('value'):,}")
+                print(f"   New AI Score: {new_score}")
+                
+                # Validate AI score recalculation
+                if new_score != ai_score:
+                    print("   ✅ AI score recalculation working")
+                else:
+                    print("   ⚠️  AI score may not have been recalculated")
+        
+        # Test 3: Agent Assignment Test
+        success3 = False
+        if created_lead_id and agent_id:
+            print("\n🔍 Testing Agent Assignment...")
+            
+            # First assign agent via update
+            assign_data = {"assigned_agent_id": agent_id}
+            success3, assign_response = self.run_test(
+                "Assign Agent to Lead", "PUT", f"crm/leads/{created_lead_id}", 200, assign_data
+            )
+            
+            if success3:
+                agent_name = assign_response.get('assigned_agent_name')
+                last_contact = assign_response.get('last_contact')
+                print(f"   ✅ Agent Assigned: {agent_name}")
+                print(f"   Agent ID: {assign_response.get('assigned_agent_id')}")
+                print(f"   Last Contact: {last_contact}")
+                
+                # Validate agent name resolution
+                if agent_name:
+                    print("   ✅ Agent name resolution working")
+                else:
+                    print("   ❌ Agent name resolution may not be working")
+        
+        # Test 4: Lead Filtering Tests
+        print("\n🔍 Testing Lead Filtering...")
+        
+        # Filter by status
+        success4a, hot_leads = self.run_test("Filter by Hot Status", "GET", "crm/leads?status=hot")
+        if success4a:
+            hot_count = len(hot_leads.get('leads', []))
+            print(f"   Hot Leads Found: {hot_count}")
+        
+        # Filter by assigned agent
+        success4b = True
+        if agent_id:
+            success4b, agent_leads = self.run_test(
+                "Filter by Assigned Agent", "GET", f"crm/leads?assigned_agent_id={agent_id}"
+            )
+            if success4b:
+                agent_lead_count = len(agent_leads.get('leads', []))
+                print(f"   Leads Assigned to Agent: {agent_lead_count}")
+        
+        # Search by name/email/company
+        success4c, search_results = self.run_test(
+            "Search Leads", "GET", "crm/leads?search=Sarah"
+        )
+        if success4c:
+            search_count = len(search_results.get('leads', []))
+            print(f"   Search Results for 'Sarah': {search_count}")
+            
+            # Validate search found our created lead
+            found_sarah = any(lead.get('name') == 'Sarah Johnson' for lead in search_results.get('leads', []))
+            if found_sarah:
+                print("   ✅ Search functionality working correctly")
+            else:
+                print("   ❌ Search may not be working correctly")
+        
+        success4 = success4a and success4b and success4c
+        
+        # Test 5: CRM Analytics Validation
+        print("\n🔍 Testing CRM Analytics...")
+        success5, analytics = self.run_test("CRM Analytics Summary", "GET", "crm/analytics/summary")
+        if success5:
+            total_leads = analytics.get('total_leads', 0)
+            pipeline_value = analytics.get('total_pipeline_value', 0)
+            avg_score = analytics.get('average_lead_score', 0)
+            conversion_rate = analytics.get('conversion_rate', 0)
+            
+            print(f"   Total Leads: {total_leads}")
+            print(f"   Pipeline Value: ${pipeline_value:,}")
+            print(f"   Average Lead Score: {avg_score}")
+            print(f"   Conversion Rate: {conversion_rate}%")
+            
+            # Validate analytics include our created lead
+            if total_leads > 0:
+                print("   ✅ CRM analytics showing lead data")
+            else:
+                print("   ❌ CRM analytics may not be working")
+        
+        # Test 6: Individual Lead Retrieval
+        success6 = False
+        if created_lead_id:
+            print("\n🔍 Testing Individual Lead Retrieval...")
+            success6, lead_detail = self.run_test(
+                "Get Individual Lead", "GET", f"crm/leads/{created_lead_id}"
+            )
+            
+            if success6:
+                print(f"   ✅ Retrieved Lead: {lead_detail.get('name')}")
+                print(f"   Email: {lead_detail.get('email')}")
+                print(f"   Company: {lead_detail.get('company')}")
+                print(f"   Current Status: {lead_detail.get('status')}")
+                print(f"   Current Value: ${lead_detail.get('value'):,}")
+        
+        # Test 7: Delete Lead Test
+        success7 = False
+        if created_lead_id:
+            print("\n🔍 Testing Lead Deletion...")
+            success7, delete_response = self.run_test(
+                "Delete Lead", "DELETE", f"crm/leads/{created_lead_id}", 200
+            )
+            
+            if success7:
+                print(f"   ✅ Lead Deleted: {delete_response.get('message', 'Success')}")
+                
+                # Verify deletion by trying to retrieve
+                success_verify, _ = self.run_test(
+                    "Verify Lead Deletion", "GET", f"crm/leads/{created_lead_id}", 404
+                )
+                if success_verify:
+                    print("   ✅ Lead deletion verified - lead no longer exists")
+                else:
+                    print("   ❌ Lead deletion verification failed")
+        
+        # Test 8: Agent Assignment via dedicated endpoint
+        print("\n🔍 Testing Dedicated Agent Assignment Endpoint...")
+        success8 = True
+        if agent_id:
+            # Create another lead for this test
+            test_lead_data = {
+                "name": "John Smith",
+                "email": "john.smith@example.com",
+                "company": "Example Corp",
+                "status": "cold",
+                "value": 50000
+            }
+            
+            success_temp, temp_lead = self.run_test(
+                "Create Temp Lead for Assignment", "POST", "crm/leads", 200, test_lead_data
+            )
+            
+            if success_temp:
+                temp_lead_id = temp_lead.get('id')
+                
+                # Test the dedicated assignment endpoint
+                success8, assign_result = self.run_test(
+                    "Dedicated Agent Assignment", "POST", 
+                    f"crm/leads/{temp_lead_id}/assign-agent?agent_id={agent_id}", 200
+                )
+                
+                if success8:
+                    print(f"   ✅ Agent Assignment: {assign_result.get('message', 'Success')}")
+                
+                # Clean up temp lead
+                self.run_test("Delete Temp Lead", "DELETE", f"crm/leads/{temp_lead_id}", 200)
+        
+        # Summary of Lead Management CRUD Tests
+        all_tests = [success1, success2, success3, success4, success5, success6, success7, success8]
+        passed_tests = sum(all_tests)
+        total_tests = len(all_tests)
+        
+        print(f"\n📊 LEAD MANAGEMENT CRUD TEST SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        if passed_tests == total_tests:
+            print("   🎉 ALL LEAD MANAGEMENT CRUD TESTS PASSED!")
+        else:
+            print("   ⚠️  Some Lead Management CRUD tests failed")
+        
+        return all(all_tests)
+
     def test_business_logic(self):
         """Test business logic and data consistency"""
         print("\n" + "="*50)
