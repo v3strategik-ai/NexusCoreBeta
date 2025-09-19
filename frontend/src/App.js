@@ -176,6 +176,11 @@ function App() {
     console.log('New lead added:', newLead.name)
   }
 
+  const handleWorkflowCreated = (newWorkflow) => {
+    setWorkflows(prev => [...prev, newWorkflow])
+    console.log('New workflow created:', newWorkflow.name)
+  }
+
   const handleCreateAgent = () => {
     // This will be handled by the modal
     console.log('Create new digital employee clicked')
