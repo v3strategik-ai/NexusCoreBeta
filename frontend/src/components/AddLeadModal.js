@@ -76,7 +76,8 @@ export function AddLeadModal({ children, agents, onLeadAdded }) {
         ...formData,
         value: parseFloat(formData.value) || 0,
         notes: formData.notes ? [formData.notes] : [],
-        tags: []
+        tags: [],
+        assigned_agent_id: formData.assigned_agent_id === 'unassigned' ? null : formData.assigned_agent_id
       }
 
       const response = await axios.post(`${API}/crm/leads`, submitData)
