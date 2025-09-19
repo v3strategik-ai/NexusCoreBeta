@@ -184,8 +184,8 @@ function App() {
   }
 
   const handleConfigureAgent = (agent) => {
+    // This will be handled by the AgentConfigModal
     console.log('Configure agent clicked:', agent.name)
-    alert(`Agent configuration for ${agent.name} - Coming soon!`)
   }
 
   const handleEditLead = (lead) => {
