@@ -162,8 +162,8 @@ export function AgentChatModal({ agent, children }) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="max-w-2xl h-[500px] flex flex-col quantum-bg">
-        <DialogHeader>
+      <DialogContent className="max-w-2xl max-h-[80vh] h-[400px] flex flex-col quantum-bg fixed top-[10%] left-1/2 transform -translate-x-1/2">
+        <DialogHeader className="pb-3">
           <DialogTitle className="flex items-center gap-3">
             <div className="relative">
               <Bot className="w-6 h-6 text-primary" />
@@ -182,9 +182,8 @@ export function AgentChatModal({ agent, children }) {
               {agent.autonomy_level} Autonomy
             </Badge>
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-sm">
             Interact with your AI agent for specialized assistance in {agent.type.toLowerCase()}.
-            Current efficiency: {agent.efficiency}% • Tasks completed: {agent.tasks_completed}
           </DialogDescription>
         </DialogHeader>
 
