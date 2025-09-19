@@ -13,6 +13,7 @@ import { UploadKnowledgeModal } from './components/UploadKnowledgeModal'
 import { AddLeadModal } from './components/AddLeadModal'
 import { AgentConfigModal } from './components/AgentConfigModal'
 import { WorkflowBuilderModal } from './components/WorkflowBuilderModal'
+import { DocumentGenerationModal } from './components/DocumentGenerationModal'
 import { 
   Brain, 
   Zap, 
