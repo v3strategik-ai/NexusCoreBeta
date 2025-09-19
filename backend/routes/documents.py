@@ -247,7 +247,97 @@ async def generate_document_content(
     template_content: str,
     template_variables: List[str]
 ) -> str:
-    """Generate document content using AI (mock implementation)"""
+    """Generate document content using AI with Emergent LLM integration"""
+    
+    try:
+        from emergentintegrations.llm.chat import LlmChat, UserMessage
+        
+        # Get API key from environment
+        api_key = os.environ.get('EMERGENT_LLM_KEY')
+        if not api_key:
+            raise ValueError("EMERGENT_LLM_KEY not found in environment variables")
+        
+        # Create session ID for this document generation
+        session_id = f"doc_gen_{request.type}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        
+        # Create system message based on document type
+        system_messages = {
+            DocumentType.PROPOSAL: """You are an expert business proposal writer. Create professional, compelling business proposals that win deals. Focus on clear value propositions, detailed scope of work, competitive pricing, and strong calls to action. Use professional formatting with headers, bullet points, and clear sections.""",
+            
+            DocumentType.INVOICE: """You are a professional invoice specialist. Create clear, accurate invoices that comply with business standards. Include all necessary details: invoice numbers, dates, itemized services, amounts, payment terms, and contact information. Use clean, professional formatting.""",
+            
+            DocumentType.BUSINESS_PLAN: """You are an expert business plan writer and strategic advisor. Create comprehensive business plans with detailed market analysis, financial projections, competitive analysis, and implementation strategies. Use professional business language and industry-standard sections.""",
+            
+            DocumentType.REPORT: """You are a senior business analyst specializing in data-driven reports. Create comprehensive reports with executive summaries, key findings, data analysis, insights, and actionable recommendations. Use clear headings, bullet points, and professional formatting.""",
+            
+            DocumentType.CONTRACT: """You are a legal document specialist focusing on business contracts. Create clear, professional contracts with proper legal language, defined terms, scope of work, payment terms, responsibilities, and protection clauses. Ensure clarity and enforceability.""",
+            
+            DocumentType.MARKETING: """You are a marketing copywriter and content strategist. Create compelling marketing content that resonates with target audiences, drives engagement, and achieves business objectives. Use persuasive language, clear calls to action, and brand-appropriate tone."""
+        }
+        
+        # Initialize the chat with Emergent LLM
+        chat = LlmChat(
+            api_key=api_key,
+            session_id=session_id,
+            system_message=system_messages.get(request.type, "You are a professional business document writer.")
+        )
+        
+        # Use gpt-4o for high-quality document generation
+        chat.with_model("openai", "gpt-4o")
+        
+        # Create detailed prompt for document generation
+        variables_text = ""
+        if request.variables:
+            variables_text = "\n".join([f"- {key.replace('_', ' ').title()}: {value}" for key, value in request.variables.items() if value])
+        
+        prompt_parts = [
+            f"Create a professional {request.type.replace('_', ' ').title()} document with the following specifications:",
+            f"\nDocument Title: {request.title}",
+        ]
+        
+        if request.client_name:
+            prompt_parts.append(f"Client/Company: {request.client_name}")
+        
+        if variables_text:
+            prompt_parts.append(f"\nKey Details:\n{variables_text}")
+        
+        if request.custom_instructions:
+            prompt_parts.append(f"\nSpecial Instructions: {request.custom_instructions}")
+        
+        prompt_parts.extend([
+            f"\nPlease create a comprehensive, professional {request.type.replace('_', ' ')} that:",
+            "- Follows industry best practices and standards",
+            "- Uses appropriate business language and tone",
+            "- Includes proper formatting with clear sections and headers",
+            "- Is ready for immediate business use",
+            "- Contains all necessary legal and business elements",
+            "\nGenerate the complete document content now:"
+        ])
+        
+        full_prompt = "\n".join(prompt_parts)
+        
+        # Create user message and send to AI
+        user_message = UserMessage(text=full_prompt)
+        
+        # Get AI response
+        ai_response = await chat.send_message(user_message)
+        
+        logger.info(f"AI document generation completed for {request.type} - {request.title}")
+        
+        return ai_response.strip()
+        
+    except Exception as e:
+        logger.error(f"Error in AI document generation: {e}")
+        
+        # Fallback to enhanced template-based generation
+        return generate_fallback_content(request, template_content, template_variables)
+
+def generate_fallback_content(
+    request: DocumentGenerateRequest,
+    template_content: str,
+    template_variables: List[str]
+) -> str:
+    """Enhanced fallback content generation when AI is unavailable"""
     
     # This is a mock implementation. In a real implementation, you would:
     # 1. Use the Emergent LLM integration to generate content
