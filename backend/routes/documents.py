@@ -438,7 +438,7 @@ We look forward to your favorable response and the opportunity to deliver except
 
 **Invoice Number:** INV-{datetime.now().strftime('%Y%m%d')}-{datetime.now().strftime('%H%M')}
 **Invoice Date:** {datetime.now().strftime('%B %d, %Y')}
-**Due Date:** {request.variables.get('due_date', (datetime.now() + datetime.timedelta(days=30)).strftime('%B %d, %Y'))}
+**Due Date:** {request.variables.get('due_date', (datetime.now() + timedelta(days=30)).strftime('%B %d, %Y'))}
 
 ---
 
