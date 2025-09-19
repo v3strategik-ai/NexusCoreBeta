@@ -330,14 +330,18 @@ function App() {
               <Rocket className="w-3 h-3 mr-1" />
               Quantum Level
             </Badge>
-            <Button variant="outline" size="sm" onClick={handleUploadKnowledge}>
-              <Upload className="w-4 h-4 mr-2" />
-              Upload Knowledge
-            </Button>
-            <Button size="sm" className="glow-effect" onClick={handleCreateAgent}>
-              <Plus className="w-4 h-4 mr-2" />
-              New Digital Employee
-            </Button>
+            <UploadKnowledgeModal agents={agents} onKnowledgeUploaded={handleKnowledgeUploaded}>
+              <Button variant="outline" size="sm">
+                <Upload className="w-4 h-4 mr-2" />
+                Upload Knowledge
+              </Button>
+            </UploadKnowledgeModal>
+            <CreateAgentModal onAgentCreated={handleAgentCreated}>
+              <Button size="sm" className="glow-effect">
+                <Plus className="w-4 h-4 mr-2" />
+                New Digital Employee
+              </Button>  
+            </CreateAgentModal>
           </div>
         </div>
       </header>
