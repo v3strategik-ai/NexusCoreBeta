@@ -259,11 +259,11 @@ function App() {
           <strong>Assigned to:</strong> {lead.assigned_agent_name || 'Unassigned'}
         </div>
         <div className="flex gap-2">
-          <Button size="sm" variant="outline">
+          <Button size="sm" variant="outline" onClick={() => handleContactLead(lead)}>
             <Mail className="w-4 h-4 mr-1" />
             Contact
           </Button>
-          <Button size="sm" variant="outline">
+          <Button size="sm" variant="outline" onClick={() => handleEditLead(lead)}>
             <Edit className="w-4 h-4 mr-1" />
             Edit
           </Button>
