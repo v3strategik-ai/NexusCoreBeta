@@ -234,7 +234,7 @@ function App() {
             <BookOpen className="w-4 h-4 mr-1" />
             Details
           </Button>
-          <Button size="sm" variant="outline">
+          <Button size="sm" variant="outline" onClick={() => handleConfigureAgent(agent)}>
             <Settings className="w-4 h-4 mr-1" />
             Configure  
           </Button>
