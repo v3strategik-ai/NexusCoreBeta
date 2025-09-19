@@ -8,6 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs'
 import { Progress } from './components/ui/progress'
 import { Switch } from './components/ui/switch'
 import { AgentChatModal } from './components/AgentChatModal'
+import { CreateAgentModal } from './components/CreateAgentModal'
+import { UploadKnowledgeModal } from './components/UploadKnowledgeModal'
 import { 
   Brain, 
   Zap, 
