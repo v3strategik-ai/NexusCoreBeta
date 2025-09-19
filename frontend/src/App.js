@@ -182,6 +182,12 @@ function App() {
     console.log('New workflow created:', newWorkflow.name)
   }
 
+  const handleDocumentGenerated = (generatedDocument) => {
+    console.log('Document generated:', generatedDocument.title)
+    // Optionally refresh data or show success message
+    alert(`Document "${generatedDocument.title}" generated successfully!`)
+  }
+
   const handleCreateAgent = () => {
     // This will be handled by the modal
     console.log('Create new digital employee clicked')
