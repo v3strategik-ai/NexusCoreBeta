@@ -318,11 +318,11 @@ function App() {
               <Rocket className="w-3 h-3 mr-1" />
               Quantum Level
             </Badge>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={handleUploadKnowledge}>
               <Upload className="w-4 h-4 mr-2" />
               Upload Knowledge
             </Button>
-            <Button size="sm" className="glow-effect">
+            <Button size="sm" className="glow-effect" onClick={handleCreateAgent}>
               <Plus className="w-4 h-4 mr-2" />
               New Digital Employee
             </Button>
