@@ -100,6 +100,7 @@ api_router.include_router(dashboard.router)
 api_router.include_router(knowledge.router)
 api_router.include_router(documents.router)
 api_router.include_router(workflows.router)
+api_router.include_router(ai_chat.router)
 
 # Include the main API router
 app.include_router(api_router)
