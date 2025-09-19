@@ -247,7 +247,7 @@ Please create a comprehensive, professional document that follows industry stand
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleModalOpen}>
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
