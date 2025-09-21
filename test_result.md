@@ -102,99 +102,112 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Phase 4: Email Automation with SendGrid Integration - Implement email automation system with SendGrid integration, create automated email workflows, and integrate with lead management and agent configuration for the Nexus Core AI Business Automation Platform."
+user_problem_statement: "Phase 5A+D: Real-Time Intelligence & Advanced Workflow Engine - Implement WebSocket-based real-time updates, live dashboard monitoring, visual drag-and-drop workflow builder, conditional logic workflows, and prepare integration foundations for Salesforce and Microsoft 365 in the Nexus Core AI Business Automation Platform."
 
 backend:
-  - task: "SendGrid Integration Setup"
-    implemented: true
-    working: true
-    file: "/app/backend/routes/email.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "Starting Phase 4: Need to implement SendGrid email service integration with proper API setup and authentication"
-        - working: "NA"
-          agent: "main"
-          comment: "Implemented comprehensive email automation system with SendGrid integration, professional email templates, and automated workflow triggers"
-        - working: true
-          agent: "testing"
-          comment: "✅ SendGrid integration setup working correctly. EmailService class properly initialized with API key handling, proper error handling for missing keys, and email sending functionality. Minor: SendGrid returns 401 Unauthorized due to placeholder API key, but this is expected behavior and doesn't affect core functionality."
-
-  - task: "Email Automation Engine"
-    implemented: true
-    working: true
-    file: "/app/backend/routes/email.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-        - working: "NA"
-          agent: "main"
-          comment: "Need to implement automated email workflows, templates, and trigger system for lead management and business automation"
-        - working: "NA"
-          agent: "main"
-          comment: "Created EmailService class with professional templates (welcome, follow-up, proposal), bulk email capabilities, and automation setup endpoints"
-        - working: true
-          agent: "testing"
-          comment: "✅ Email automation engine working excellently. All endpoints tested successfully: /api/email/templates (3 professional templates), /api/email/send-to-lead (template processing with variable substitution), /api/email/bulk-send (multiple leads), /api/email/automation/setup (trigger configuration), /api/email/stats (analytics), /api/email/send (custom emails). Background task queuing working, activity logging functional, template variable substitution working correctly. Success rate: 88.9% (8/9 tests passed)."
-
-frontend:
-  - task: "Email Automation UI"
-    implemented: true
+  - task: "WebSocket Real-Time System"
+    implemented: false
     working: "NA"
-    file: "/app/frontend/src/components/EmailAutomationModal.js"
+    file: "/app/backend/websocket.py"
     stuck_count: 0
     priority: "high"
     needs_retesting: true
     status_history:
         - working: "NA"
           agent: "main"
-          comment: "Need to create email automation configuration UI for setting up automated email campaigns and workflows"
+          comment: "Starting Phase 5A+D: Need to implement WebSocket server for real-time updates, live notifications, and instant data synchronization across the platform"
+
+  - task: "Real-Time Dashboard Backend"
+    implemented: false
+    working: "NA"
+    file: "/app/backend/routes/realtime.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
         - working: "NA"
           agent: "main"
-          comment: "Created comprehensive EmailAutomationModal with 4-tab interface for single emails, bulk campaigns, automation rules, and analytics"
+          comment: "Need to implement real-time metrics streaming, live agent status, lead updates, and activity feeds for dashboard"
 
-  - task: "Email Integration State Management"
-    implemented: true
-    working: "NA" 
-    file: "/app/frontend/src/App.js"
+  - task: "Advanced Workflow Engine"
+    implemented: false
+    working: "NA"
+    file: "/app/backend/routes/workflows_advanced.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Need to implement visual workflow builder backend with conditional logic, time-based triggers, and execution engine"
+
+  - task: "Integration Framework Setup"
+    implemented: false
+    working: "NA"
+    file: "/app/backend/integrations/"
     stuck_count: 0
     priority: "medium"
     needs_retesting: true
     status_history:
         - working: "NA"
           agent: "main"
-          comment: "Need to integrate email automation controls into the main application with proper state management"
+          comment: "Need to create integration framework foundation for Salesforce and Microsoft 365 connections"
+
+frontend:
+  - task: "Real-Time Dashboard UI"
+    implemented: false
+    working: "NA"
+    file: "/app/frontend/src/components/RealTimeDashboard.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
         - working: "NA"
           agent: "main"
-          comment: "Integrated EmailAutomationModal into workflows tab with proper state management, success notifications, and email tracking"
+          comment: "Need to implement live dashboard with WebSocket connections, real-time metrics, live notifications, and activity feeds"
+
+  - task: "Visual Workflow Builder"
+    implemented: false
+    working: "NA"
+    file: "/app/frontend/src/components/VisualWorkflowBuilder.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Need to create drag-and-drop workflow builder with conditional logic, triggers, and visual flow representation"
+
+  - task: "Real-Time Notifications System"
+    implemented: false
+    working: "NA"
+    file: "/app/frontend/src/components/NotificationSystem.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Need to implement toast notifications, real-time alerts, and notification management system"
 
 metadata:
   created_by: "main_agent"
-  version: "4.0"
-  test_sequence: 3
+  version: "5.0"
+  test_sequence: 4
   run_ui: false
 
 test_plan:
   current_focus:
-    - "Email Automation UI"
+    - "WebSocket Real-Time System"
+    - "Advanced Workflow Engine"
+    - "Real-Time Dashboard UI"
+    - "Visual Workflow Builder"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
 agent_communication:
   - agent: "main"
-    message: "Phase 1 Complete: Document Generation Integration successfully implemented with AI-powered document generation using Emergent LLM key."
+    message: "Phases 1-4 Complete: Full platform foundation with Document Generation, Lead Management, Agent Configuration, and Email Automation successfully implemented."
   - agent: "main"
-    message: "Phase 2 Complete: Lead Management Enhancement implemented with full CRUD operations, AI-powered lead scoring, and professional contact management system."
-  - agent: "main"
-    message: "Phase 3 Complete: AI Agent Configuration implemented with advanced configuration processing, validation, metrics calculation, and comprehensive management capabilities."
-  - agent: "main"
-    message: "Starting Phase 4: Email Automation with SendGrid Integration - focusing on automated email workflows, SendGrid service integration, and email campaign management system."
-  - agent: "main"
-    message: "Phase 4 Implementation Complete: Created comprehensive email automation system with SendGrid integration, professional email templates (welcome, follow-up, proposal), EmailAutomationModal with 4-tab interface, and integrated into workflows tab with proper state management."
-  - agent: "testing"
-    message: "Phase 4 Backend Testing Complete: Email automation system tested successfully. All backend email endpoints working correctly with 88.9% success rate. SendGrid integration properly implemented with error handling. Professional email templates (lead_welcome, lead_followup, lead_proposal) working with variable substitution. Background task queuing, bulk email sending, automation setup, and activity logging all functional. Only minor issue: template validation could be stricter, but core functionality excellent."
+    message: "Starting Phase 5A+D: Real-Time Intelligence & Advanced Workflow Engine - implementing WebSocket real-time system, live dashboard monitoring, visual workflow builder with conditional logic, and integration framework for Salesforce/Microsoft 365."
