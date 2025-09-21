@@ -133,20 +133,27 @@ logger = logging.getLogger(__name__)
 # Application lifecycle events
 @app.on_event("startup")
 async def startup_event():
-    """Initialize application on startup"""
-    try:
-        await connect_to_mongo()
-        logger.info("Nexus Core API started successfully")
-        logger.info("Available endpoints:")
-        logger.info("  - Digital Employees: /api/agents")
-        logger.info("  - CRM Intelligence: /api/crm")
-        logger.info("  - Dashboard: /api/dashboard")
-        logger.info("  - Knowledge Hub: /api/knowledge")
-        logger.info("  - Documents: /api/documents")
-        logger.info("  - Workflows: /api/workflows")
-    except Exception as e:
-        logger.error(f"Failed to start Nexus Core API: {e}")
-        raise
+    """Initialize the application on startup"""
+    logger.info("Starting Nexus Core API...")
+    
+    # Connect to MongoDB
+    await connect_to_mongo()
+    
+    # Start background tasks for real-time updates
+    start_background_tasks()
+    
+    logger.info("Nexus Core API started successfully")
+    logger.info("Available endpoints:")
+    logger.info("  - Digital Employees: /api/agents")
+    logger.info("  - CRM Intelligence: /api/crm")
+    logger.info("  - Dashboard: /api/dashboard")
+    logger.info("  - Knowledge Hub: /api/knowledge")
+    logger.info("  - Documents: /api/documents")
+    logger.info("  - Workflows: /api/workflows")
+    logger.info("  - Email Automation: /api/email")
+    logger.info("  - Real-Time: /api/realtime")
+    logger.info("  - Advanced Workflows: /api/workflows/advanced")
+    logger.info("  - WebSocket: /socket.io")
 
 @app.on_event("shutdown")
 async def shutdown_event():
