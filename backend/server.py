@@ -109,6 +109,9 @@ api_router.include_router(workflows_advanced.router)
 # Include the main API router
 app.include_router(api_router)
 
+# Mount WebSocket app for real-time connections
+app.mount("/socket.io", socketio_app)
+
 # Static file serving for uploaded files
 upload_dir = Path("/app/uploads")
 upload_dir.mkdir(exist_ok=True)
