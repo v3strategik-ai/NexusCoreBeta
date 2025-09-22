@@ -291,15 +291,18 @@ agent_communication:
 
   - task: "Predictive Lead Scoring"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/backend/routes/lead_scoring.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "IMPLEMENTED: AI-powered predictive lead scoring system using OpenAI GPT-4o-mini with Emergent LLM key. Features comprehensive AnalyticsEngine with behavioral (email engagement, website visits, demo requests), demographic (company size, job title), temporal (recency, frequency), and contextual (lead source, value, agent assignment) scoring factors. Endpoints: POST /api/lead-scoring/score (single lead), POST /api/lead-scoring/score/bulk (bulk scoring), GET /api/lead-scoring/models/available (available models). Includes AI analysis, confidence scoring, risk assessment, and actionable recommendations."
+        - working: false
+          agent: "testing"
+          comment: "CRITICAL ISSUE: Lead scoring system failing with 500 error due to database ID format mismatch. The system expects string lead IDs but database stores MongoDB ObjectIds. Available models endpoint works correctly (1 model with 6 features, 4 scoring factor categories). AI integration is properly configured with Emergent LLM key. Root cause: lead_scoring.py line 442 queries with string ID but needs ObjectId conversion. This is a database query issue, not an AI integration problem."
 
   - task: "AI-Powered Content Generation"
     implemented: true
