@@ -220,6 +220,57 @@ function App() {
     console.log('New workflow created:', newWorkflow.name)
   }
 
+  // Voice command handlers
+  const handleVoiceCommand = (command) => {
+    console.log('Voice command received:', command)
+    
+    // Additional voice command processing can be added here
+    switch (command.action) {
+      case 'navigate':
+        // Navigation is handled by the VoiceCommands component via events
+        break
+      case 'create':
+        // Creation modals are triggered via events
+        break
+      case 'search':
+        // Search functionality can be implemented here
+        break
+      default:
+        console.log('Unhandled voice command:', command)
+    }
+  }
+
+  // Voice navigation event listener
+  useEffect(() => {
+    const handleVoiceNavigate = (event) => {
+      const { tab } = event.detail
+      setActiveTab(tab)
+    }
+
+    const handleVoiceCreate = (event) => {
+      const { type } = event.detail
+      // You can trigger specific modals here based on type
+      // For now, we'll just log it
+      console.log('Voice create request:', type)
+    }
+
+    const handleVoiceSearch = (event) => {
+      const { target, query } = event.detail
+      console.log('Voice search request:', target, query)
+      // Implement search functionality here
+    }
+
+    window.addEventListener('voiceNavigate', handleVoiceNavigate)
+    window.addEventListener('voiceCreate', handleVoiceCreate)
+    window.addEventListener('voiceSearch', handleVoiceSearch)
+
+    return () => {
+      window.removeEventListener('voiceNavigate', handleVoiceNavigate)
+      window.removeEventListener('voiceCreate', handleVoiceCreate)
+      window.removeEventListener('voiceSearch', handleVoiceSearch)
+    }
+  }, [])
+
   const handleDocumentGenerated = (generatedDocument) => {
     console.log('Document generated:', generatedDocument.title)
     // Optionally refresh data or show success message
