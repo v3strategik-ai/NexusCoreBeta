@@ -526,6 +526,10 @@ function App() {
               <BarChart3 className="w-4 h-4" />
               Analytics
             </TabsTrigger>
+            <TabsTrigger value="integrations" className="flex items-center gap-2">
+              <Plug className="w-4 h-4" />
+              Integrations
+            </TabsTrigger>
           </TabsList>
 
           {/* Dashboard Tab */}
