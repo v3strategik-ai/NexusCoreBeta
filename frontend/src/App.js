@@ -540,6 +540,10 @@ function App() {
             {/* Theme Toggle */}
             <ThemeToggle />
             
+            {/* Voice Commands */}
+            <VoiceCommands onCommand={handleVoiceCommand} />
+            <VoiceCommandsHelp />
+            
             <UploadKnowledgeModal agents={agents} onKnowledgeUploaded={handleKnowledgeUploaded}>
               <Button variant="outline" size="sm">
                 <Upload className="w-4 h-4 mr-2" />
