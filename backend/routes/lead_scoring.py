@@ -491,16 +491,10 @@ async def score_bulk_leads(request: BulkLeadScoringRequest, background_tasks: Ba
     try:
         leads_collection = await get_leads_collection()
         
-        # Get leads to score - convert string IDs to ObjectIds
+        # Get leads to score - leads use UUID strings as IDs
         if request.lead_ids:
-            # Convert string IDs to ObjectIds for MongoDB query
-            object_ids = []
-            for lead_id in request.lead_ids:
-                if ObjectId.is_valid(lead_id):
-                    object_ids.append(ObjectId(lead_id))
-                else:
-                    object_ids.append(lead_id)  # Keep as string if not valid ObjectId
-            query = {"_id": {"$in": object_ids}}
+            # Query using UUID string IDs directly
+            query = {"id": {"$in": request.lead_ids}}
         else:
             query = request.filters
         
