@@ -1920,7 +1920,9 @@ class NexusCoreAPITester:
             self.test_document_generation_endpoints(),
             self.test_document_ai_integration(),
             self.test_business_logic(),
-            self.test_expected_data_values()
+            self.test_expected_data_values(),
+            self.test_realtime_intelligence_system(),  # Phase 5A+D Real-Time Intelligence
+            self.test_advanced_workflow_engine()  # Phase 5A+D Advanced Workflow Engine
         ]
         
         # Print summary
