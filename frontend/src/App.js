@@ -481,6 +481,9 @@ function App() {
               onNotificationDismiss={dismissNotification}
             />
             
+            {/* Theme Toggle */}
+            <ThemeToggle />
+            
             <UploadKnowledgeModal agents={agents} onKnowledgeUploaded={handleKnowledgeUploaded}>
               <Button variant="outline" size="sm">
                 <Upload className="w-4 h-4 mr-2" />
