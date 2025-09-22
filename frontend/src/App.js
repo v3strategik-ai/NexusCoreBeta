@@ -17,6 +17,9 @@ import { AgentConfigModal } from './components/AgentConfigModal'
 import { WorkflowBuilderModal } from './components/WorkflowBuilderModal'
 import { DocumentGenerationModal } from './components/DocumentGenerationModal'
 import { EmailAutomationModal } from './components/EmailAutomationModal'
+import { RealTimeDashboard } from './components/RealTimeDashboard'
+import { VisualWorkflowBuilder } from './components/VisualWorkflowBuilder'
+import { NotificationSystem, useNotifications } from './components/NotificationSystem'
 import { 
   Brain, 
   Zap, 
