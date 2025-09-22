@@ -155,12 +155,8 @@ class AIContentGenerator:
         if agent_id:
             try:
                 agents_collection = await get_agents_collection()
-                # Convert string agent_id to ObjectId for MongoDB query
-                query_id = agent_id
-                if ObjectId.is_valid(agent_id):
-                    query_id = ObjectId(agent_id)
-                
-                agent = await agents_collection.find_one({"_id": query_id})
+                # Query using UUID string ID directly
+                agent = await agents_collection.find_one({"id": agent_id})
                 if agent:
                     data.update({
                         "sender_name": agent.get('name', 'AI Assistant'),
