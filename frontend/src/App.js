@@ -447,7 +447,8 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background neural-pattern">
+    <ThemeProvider>
+      <div className="min-h-screen bg-background neural-pattern">
       {/* Header */}
       <header className="border-b border-border/50 backdrop-blur-sm bg-background/80 sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
