@@ -105,8 +105,15 @@ class PredictiveLeadScorer:
             # Calculate final score
             score = await self._calculate_final_score(features, ai_analysis)
             
+            # Ensure lead_id is properly formatted
+            lead_id = lead_data.get('_id')
+            if isinstance(lead_id, ObjectId):
+                lead_id = str(lead_id)
+            elif not lead_id:
+                lead_id = str(lead_data.get('id', 'unknown'))
+            
             return LeadScore(
-                lead_id=str(lead_data.get('_id', lead_data.get('id'))),
+                lead_id=lead_id,
                 score=score['score'],
                 confidence=score['confidence'],
                 factors=score['factors'],
