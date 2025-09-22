@@ -23,6 +23,8 @@ import { NotificationSystem, useNotifications } from './components/NotificationS
 import { AnalyticsDashboard } from './components/AnalyticsDashboard'
 import { ReportBuilder } from './components/ReportBuilder'
 import { ABTestingManager } from './components/ABTestingManager'
+import { IntegrationsManager } from './components/IntegrationsManager'
+import { EditAgentModal } from './components/EditAgentModal'
 import { 
   Brain, 
   Zap, 
