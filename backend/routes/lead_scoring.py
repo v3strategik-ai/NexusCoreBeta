@@ -445,9 +445,15 @@ lead_scorer = PredictiveLeadScorer()
 async def score_single_lead(request: LeadScoringRequest):
     """Score a single lead with AI-powered analysis"""
     try:
-        # Get lead data
+        # Get lead data - convert string ID to ObjectId for MongoDB query
         leads_collection = await get_leads_collection()
-        lead = await leads_collection.find_one({"_id": request.lead_id})
+        
+        # Try to convert to ObjectId if it's a valid ObjectId string
+        query_id = request.lead_id
+        if ObjectId.is_valid(request.lead_id):
+            query_id = ObjectId(request.lead_id)
+        
+        lead = await leads_collection.find_one({"_id": query_id})
         
         if not lead:
             raise HTTPException(status_code=404, detail="Lead not found")
