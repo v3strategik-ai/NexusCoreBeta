@@ -105,6 +105,8 @@ api_router.include_router(ai_chat.router)
 api_router.include_router(email.router)
 api_router.include_router(realtime.router)
 api_router.include_router(workflows_advanced.router)
+api_router.include_router(analytics.router)
+api_router.include_router(ab_testing.router)
 
 # Include the main API router
 app.include_router(api_router)
