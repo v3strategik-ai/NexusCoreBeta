@@ -204,10 +204,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Advanced Analytics Engine"
-    - "Custom Reporting System"
     - "Analytics Dashboard UI"
     - "Custom Report Builder"
+    - "A/B Testing Manager"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
