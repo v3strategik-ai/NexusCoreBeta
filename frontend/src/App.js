@@ -25,6 +25,8 @@ import { ReportBuilder } from './components/ReportBuilder'
 import { ABTestingManager } from './components/ABTestingManager'
 import { IntegrationsManager } from './components/IntegrationsManager'
 import { EditAgentModal } from './components/EditAgentModal'
+import { ThemeProvider } from './contexts/ThemeContext'
+import { ThemeToggle, ThemeToggleButton } from './components/ThemeToggle'
 import { 
   Brain, 
   Zap, 
