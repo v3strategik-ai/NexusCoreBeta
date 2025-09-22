@@ -445,10 +445,24 @@ function App() {
             </div>
           </div>
           <div className="flex items-center space-x-4">
+            {/* Real-time Connection Status */}
+            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+              <div className={`w-2 h-2 rounded-full ${connectionStatus === 'connected' ? 'bg-green-400 animate-pulse' : 'bg-gray-400'}`}></div>
+              <span>{connectionStatus === 'connected' ? 'Real-time Active' : 'Offline'}</span>
+            </div>
+            
             <Badge variant="outline" className="quantum-pulse">
               <Rocket className="w-3 h-3 mr-1" />
               Quantum Level
             </Badge>
+            
+            {/* Notification System */}
+            <NotificationSystem 
+              notifications={notifications}
+              onNotificationRead={markAsRead}
+              onNotificationDismiss={dismissNotification}
+            />
+            
             <UploadKnowledgeModal agents={agents} onKnowledgeUploaded={handleKnowledgeUploaded}>
               <Button variant="outline" size="sm">
                 <Upload className="w-4 h-4 mr-2" />
