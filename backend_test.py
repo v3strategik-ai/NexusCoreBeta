@@ -1395,6 +1395,509 @@ class NexusCoreAPITester:
         
         return all(all_tests)
 
+    def test_realtime_intelligence_system(self):
+        """Test comprehensive Real-Time Intelligence System from Phase 5A+D"""
+        print("\n" + "="*50)
+        print("TESTING REAL-TIME INTELLIGENCE SYSTEM (PHASE 5A+D)")
+        print("="*50)
+        
+        # Test 1: Real-Time Live Metrics
+        print("\n🔍 Testing Real-Time Live Metrics...")
+        success1, metrics_response = self.run_test("Real-Time Live Metrics", "GET", "realtime/metrics/live")
+        
+        if success1:
+            metrics = metrics_response
+            print(f"   ✅ Live Metrics Retrieved")
+            print(f"   Timestamp: {metrics.get('timestamp', 'N/A')}")
+            
+            # Validate lead metrics
+            lead_metrics = metrics.get('leads', {})
+            print(f"   Lead Metrics - Total: {lead_metrics.get('total', 0)}, Hot: {lead_metrics.get('hot_leads', 0)}, Pipeline: ${lead_metrics.get('pipeline_value', 0):,}")
+            
+            # Validate agent metrics
+            agent_metrics = metrics.get('agents', {})
+            print(f"   Agent Metrics - Total: {agent_metrics.get('total', 0)}, Active: {agent_metrics.get('active', 0)}, Utilization: {agent_metrics.get('utilization', 0)}%")
+            
+            # Validate system metrics
+            system_metrics = metrics.get('system', {})
+            print(f"   System Metrics - WebSocket Connections: {system_metrics.get('websocket_connections', 0)}, Health: {system_metrics.get('system_health', 'unknown')}")
+            
+            # Check required fields
+            required_sections = ['leads', 'agents', 'documents', 'activities', 'system']
+            missing_sections = [section for section in required_sections if section not in metrics]
+            
+            if not missing_sections:
+                print("   ✅ All required metric sections present")
+            else:
+                print(f"   ❌ Missing metric sections: {missing_sections}")
+        
+        # Test 2: Activity Stream
+        print("\n🔍 Testing Real-Time Activity Stream...")
+        success2, activities_response = self.run_test("Activity Stream", "GET", "realtime/activities/stream?limit=10")
+        
+        if success2:
+            activities = activities_response.get('activities', [])
+            total_count = activities_response.get('total_count', 0)
+            print(f"   ✅ Activity Stream Retrieved: {total_count} activities")
+            
+            if activities:
+                latest_activity = activities[0]
+                print(f"   Latest Activity: {latest_activity.get('agent_name', 'Unknown')} - {latest_activity.get('description', 'No description')}")
+                print(f"   Activity Type: {latest_activity.get('activity_type', 'unknown')}")
+                
+                # Validate activity structure
+                required_fields = ['id', 'agent_name', 'activity_type', 'description', 'timestamp']
+                missing_fields = [field for field in required_fields if field not in latest_activity]
+                
+                if not missing_fields:
+                    print("   ✅ Activity structure complete")
+                else:
+                    print(f"   ❌ Missing activity fields: {missing_fields}")
+        
+        # Test 3: Agent Status Monitoring
+        print("\n🔍 Testing Agent Status Monitoring...")
+        success3, agent_status_response = self.run_test("Agent Status Monitoring", "GET", "realtime/agents/status")
+        
+        if success3:
+            agents = agent_status_response.get('agents', [])
+            summary = agent_status_response.get('summary', {})
+            
+            print(f"   ✅ Agent Status Retrieved: {len(agents)} agents")
+            print(f"   Summary - Total: {summary.get('total', 0)}, Active: {summary.get('active', 0)}, Average Readiness: {summary.get('average_readiness', 0)}")
+            
+            if agents:
+                active_agents = [a for a in agents if a.get('status') == 'active']
+                print(f"   Active Agents: {len(active_agents)}")
+                
+                if active_agents:
+                    agent = active_agents[0]
+                    print(f"   Sample Agent: {agent.get('name', 'Unknown')} - {agent.get('type', 'Unknown')} - Readiness: {agent.get('readiness_score', 0)}")
+        
+        # Test 4: Pipeline Analytics
+        print("\n🔍 Testing Pipeline Analytics...")
+        success4, pipeline_response = self.run_test("Pipeline Analytics", "GET", "realtime/leads/pipeline")
+        
+        if success4:
+            pipeline = pipeline_response.get('pipeline', [])
+            summary = pipeline_response.get('summary', {})
+            recent_leads = pipeline_response.get('recent_leads', [])
+            
+            print(f"   ✅ Pipeline Analytics Retrieved")
+            print(f"   Summary - Total Leads: {summary.get('total_leads', 0)}, Conversion Rate: {summary.get('conversion_rate', 0)}%")
+            print(f"   Pipeline Value: ${summary.get('total_pipeline_value', 0):,}")
+            print(f"   Recent Leads: {len(recent_leads)}")
+            
+            if pipeline:
+                for stage in pipeline:
+                    print(f"   Stage '{stage.get('status', 'unknown')}': {stage.get('count', 0)} leads, ${stage.get('total_value', 0):,} value")
+        
+        # Test 5: WebSocket Statistics
+        print("\n🔍 Testing WebSocket Statistics...")
+        success5, websocket_response = self.run_test("WebSocket Statistics", "GET", "realtime/websocket/stats")
+        
+        if success5:
+            connections = websocket_response.get('connections', {})
+            status = websocket_response.get('status', 'unknown')
+            
+            print(f"   ✅ WebSocket Stats Retrieved")
+            print(f"   Status: {status}")
+            print(f"   Total Connections: {connections.get('total_connections', 0)}")
+            
+            channels = connections.get('channels', {})
+            if channels:
+                print(f"   Active Channels: {len([c for c, count in channels.items() if count > 0])}")
+                for channel, count in channels.items():
+                    if count > 0:
+                        print(f"     - {channel}: {count} subscribers")
+        
+        # Test 6: System Alerts
+        print("\n🔍 Testing System Alerts...")
+        success6, alerts_response = self.run_test("System Alerts", "GET", "realtime/system/alerts")
+        
+        if success6:
+            alerts = alerts_response.get('alerts', [])
+            total_alerts = alerts_response.get('total_alerts', 0)
+            critical_count = alerts_response.get('critical_count', 0)
+            
+            print(f"   ✅ System Alerts Retrieved: {total_alerts} alerts")
+            print(f"   Critical Alerts: {critical_count}")
+            
+            if alerts:
+                for alert in alerts[:3]:  # Show first 3 alerts
+                    print(f"   Alert: {alert.get('title', 'Unknown')} - {alert.get('severity', 'unknown')} severity")
+        
+        # Test 7: Performance Metrics
+        print("\n🔍 Testing Performance Metrics...")
+        success7, performance_response = self.run_test("Performance Metrics", "GET", "realtime/performance/metrics")
+        
+        if success7:
+            response_times = performance_response.get('response_times', {})
+            throughput = performance_response.get('throughput', {})
+            resource_usage = performance_response.get('resource_usage', {})
+            error_rates = performance_response.get('error_rates', {})
+            
+            print(f"   ✅ Performance Metrics Retrieved")
+            print(f"   Avg API Response: {response_times.get('avg_api_response', 0)}ms")
+            print(f"   API Requests/min: {throughput.get('api_requests_per_minute', 0)}")
+            print(f"   CPU Usage: {resource_usage.get('cpu_usage', 0)}%")
+            print(f"   API Error Rate: {error_rates.get('api_error_rate', 0)}%")
+        
+        # Test 8: Real-Time Notifications (POST endpoint)
+        print("\n🔍 Testing Real-Time Notifications...")
+        notification_data = {
+            "title": "Test Notification",
+            "message": "This is a test notification from the real-time system",
+            "type": "info",
+            "category": "system"
+        }
+        
+        success8, notification_response = self.run_test(
+            "Send Real-Time Notification", "POST", "realtime/notifications/send", 200, notification_data
+        )
+        
+        if success8:
+            print(f"   ✅ Notification Sent: {notification_response.get('message', 'Success')}")
+            print(f"   Status: {notification_response.get('status', 'unknown')}")
+        
+        # Summary of Real-Time Intelligence Tests
+        all_tests = [success1, success2, success3, success4, success5, success6, success7, success8]
+        passed_tests = sum(all_tests)
+        total_tests = len(all_tests)
+        
+        print(f"\n📊 REAL-TIME INTELLIGENCE TEST SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        if passed_tests == total_tests:
+            print("   🎉 ALL REAL-TIME INTELLIGENCE TESTS PASSED!")
+        else:
+            print("   ⚠️  Some Real-Time Intelligence tests failed")
+        
+        return all(all_tests)
+
+    def test_advanced_workflow_engine(self):
+        """Test comprehensive Advanced Workflow Engine from Phase 5A+D"""
+        print("\n" + "="*50)
+        print("TESTING ADVANCED WORKFLOW ENGINE (PHASE 5A+D)")
+        print("="*50)
+        
+        # Store created workflow ID for subsequent tests
+        created_workflow_id = None
+        
+        # Test 1: Get Workflow Templates
+        print("\n🔍 Testing Workflow Templates...")
+        success1, templates_response = self.run_test("Get Workflow Templates", "GET", "workflows/advanced/templates/list")
+        
+        if success1:
+            templates = templates_response.get('templates', [])
+            categories = templates_response.get('categories', [])
+            total_templates = templates_response.get('total_templates', 0)
+            
+            print(f"   ✅ Workflow Templates Retrieved: {total_templates} templates")
+            print(f"   Categories: {', '.join(categories)}")
+            
+            if templates:
+                for template in templates[:3]:  # Show first 3 templates
+                    print(f"   Template: {template.get('name', 'Unknown')} - {template.get('category', 'Unknown')} - {template.get('complexity', 'Unknown')}")
+                    print(f"     Description: {template.get('description', 'No description')}")
+                    print(f"     Setup Time: {template.get('estimated_setup_time', 'Unknown')}")
+        
+        # Test 2: Create Workflow from Template
+        print("\n🔍 Testing Create Workflow from Template...")
+        success2, template_workflow_response = self.run_test(
+            "Create from Template", "POST", "workflows/advanced/templates/lead_nurture_sequence/create?workflow_name=Test Lead Nurturing Workflow"
+        )
+        
+        template_workflow_id = None
+        if success2:
+            template_workflow_id = template_workflow_response.get('id')
+            print(f"   ✅ Workflow Created from Template: {template_workflow_response.get('name')}")
+            print(f"   Workflow ID: {template_workflow_id}")
+            print(f"   Status: {template_workflow_response.get('status', 'unknown')}")
+            print(f"   Nodes: {len(template_workflow_response.get('nodes', []))}")
+            print(f"   Edges: {len(template_workflow_response.get('edges', []))}")
+        
+        # Test 3: Create Advanced Workflow
+        print("\n🔍 Testing Advanced Workflow Creation...")
+        advanced_workflow_data = {
+            "name": "Advanced Test Workflow",
+            "description": "Comprehensive test workflow with conditional logic and multiple node types",
+            "status": "active",
+            "nodes": [
+                {
+                    "id": "trigger_1",
+                    "type": "trigger",
+                    "label": "Lead Status Changed",
+                    "position": {"x": 100, "y": 100},
+                    "data": {
+                        "trigger_type": "lead_status_change",
+                        "conditions": {
+                            "from_status": "warm",
+                            "to_status": "hot"
+                        }
+                    }
+                },
+                {
+                    "id": "condition_1",
+                    "type": "condition",
+                    "label": "Check Lead Value",
+                    "position": {"x": 300, "y": 100},
+                    "data": {
+                        "condition": {
+                            "field": "lead_value",
+                            "operator": "greater_than",
+                            "value": 50000
+                        }
+                    }
+                },
+                {
+                    "id": "action_1",
+                    "type": "action",
+                    "label": "Send High-Value Lead Email",
+                    "position": {"x": 500, "y": 50},
+                    "data": {
+                        "action_type": "send_email",
+                        "parameters": {
+                            "template": "high_value_lead",
+                            "to": "{{lead_email}}",
+                            "subject": "High-Value Lead Alert: {{lead_name}}"
+                        }
+                    }
+                },
+                {
+                    "id": "action_2",
+                    "type": "action",
+                    "label": "Send Standard Follow-up",
+                    "position": {"x": 500, "y": 150},
+                    "data": {
+                        "action_type": "send_email",
+                        "parameters": {
+                            "template": "standard_followup",
+                            "to": "{{lead_email}}"
+                        }
+                    }
+                },
+                {
+                    "id": "delay_1",
+                    "type": "delay",
+                    "label": "Wait 2 Hours",
+                    "position": {"x": 700, "y": 100},
+                    "data": {
+                        "delay_hours": 2
+                    }
+                },
+                {
+                    "id": "action_3",
+                    "type": "action",
+                    "label": "Send Notification",
+                    "position": {"x": 900, "y": 100},
+                    "data": {
+                        "action_type": "send_notification",
+                        "parameters": {
+                            "title": "Workflow Completed",
+                            "message": "Lead nurturing workflow completed for {{lead_name}}",
+                            "type": "success"
+                        }
+                    }
+                }
+            ],
+            "edges": [
+                {"source": "trigger_1", "target": "condition_1"},
+                {
+                    "source": "condition_1", 
+                    "target": "action_1",
+                    "data": {"condition": {"field": "condition_1_result", "operator": "equals", "value": True}}
+                },
+                {
+                    "source": "condition_1", 
+                    "target": "action_2",
+                    "data": {"condition": {"field": "condition_1_result", "operator": "equals", "value": False}}
+                },
+                {"source": "action_1", "target": "delay_1"},
+                {"source": "action_2", "target": "delay_1"},
+                {"source": "delay_1", "target": "action_3"}
+            ],
+            "variables": {
+                "lead_name": "Test Lead",
+                "lead_email": "test@example.com",
+                "lead_value": 75000
+            },
+            "tags": ["test", "conditional_logic", "email_automation"]
+        }
+        
+        success3, create_response = self.run_test(
+            "Create Advanced Workflow", "POST", "workflows/advanced/create", 200, advanced_workflow_data
+        )
+        
+        if success3:
+            created_workflow_id = create_response.get('id')
+            print(f"   ✅ Advanced Workflow Created: {create_response.get('name')}")
+            print(f"   Workflow ID: {created_workflow_id}")
+            print(f"   Status: {create_response.get('status')}")
+            print(f"   Nodes: {len(create_response.get('nodes', []))}")
+            print(f"   Edges: {len(create_response.get('edges', []))}")
+            print(f"   Variables: {len(create_response.get('variables', {}))}")
+            print(f"   Tags: {', '.join(create_response.get('tags', []))}")
+        
+        # Test 4: Get All Workflows
+        print("\n🔍 Testing Get All Workflows...")
+        success4, workflows_response = self.run_test("Get All Workflows", "GET", "workflows/advanced/")
+        
+        if success4:
+            workflows = workflows_response if isinstance(workflows_response, list) else []
+            print(f"   ✅ Workflows Retrieved: {len(workflows)} workflows")
+            
+            if workflows:
+                for workflow in workflows[:3]:  # Show first 3 workflows
+                    print(f"   Workflow: {workflow.get('name', 'Unknown')} - {workflow.get('status', 'unknown')} - {workflow.get('execution_count', 0)} executions")
+        
+        # Test 5: Get Individual Workflow
+        success5 = False
+        if created_workflow_id:
+            print("\n🔍 Testing Get Individual Workflow...")
+            success5, individual_response = self.run_test(
+                "Get Individual Workflow", "GET", f"workflows/advanced/{created_workflow_id}"
+            )
+            
+            if success5:
+                print(f"   ✅ Individual Workflow Retrieved: {individual_response.get('name')}")
+                print(f"   Description: {individual_response.get('description', 'No description')}")
+                print(f"   Version: {individual_response.get('version', 'unknown')}")
+                print(f"   Created: {individual_response.get('created_at', 'unknown')}")
+                print(f"   Last Executed: {individual_response.get('last_executed', 'Never')}")
+        
+        # Test 6: Execute Workflow
+        success6 = False
+        if created_workflow_id:
+            print("\n🔍 Testing Workflow Execution...")
+            execution_data = {
+                "lead_name": "Sarah Johnson",
+                "lead_email": "sarah.johnson@example.com",
+                "lead_value": 85000,
+                "lead_status": "hot"
+            }
+            
+            success6, execution_response = self.run_test(
+                "Execute Workflow", "POST", f"workflows/advanced/{created_workflow_id}/execute", 200, execution_data
+            )
+            
+            if success6:
+                execution_id = execution_response.get('execution_id')
+                execution_status = execution_response.get('status')
+                execution_details = execution_response.get('execution', {})
+                
+                print(f"   ✅ Workflow Execution Started: {execution_id}")
+                print(f"   Status: {execution_status}")
+                print(f"   Message: {execution_response.get('message', 'No message')}")
+                
+                # Check execution details
+                if execution_details:
+                    print(f"   Trigger Type: {execution_details.get('trigger_type', 'unknown')}")
+                    print(f"   Variables: {len(execution_details.get('variables', {}))}")
+                    print(f"   Execution Log Entries: {len(execution_details.get('execution_log', []))}")
+                    
+                    # Show execution log if available
+                    execution_log = execution_details.get('execution_log', [])
+                    if execution_log:
+                        print("   Execution Log:")
+                        for log_entry in execution_log[:5]:  # Show first 5 log entries
+                            print(f"     - {log_entry.get('timestamp', 'unknown')}: {log_entry.get('action', 'unknown')} on {log_entry.get('node_type', 'unknown')} node")
+        
+        # Test 7: Get Workflow Executions History
+        success7 = False
+        if created_workflow_id:
+            print("\n🔍 Testing Workflow Execution History...")
+            success7, executions_response = self.run_test(
+                "Get Workflow Executions", "GET", f"workflows/advanced/{created_workflow_id}/executions"
+            )
+            
+            if success7:
+                executions = executions_response.get('executions', [])
+                total_executions = executions_response.get('total_executions', 0)
+                success_rate = executions_response.get('success_rate', 0)
+                
+                print(f"   ✅ Execution History Retrieved: {len(executions)} recent executions")
+                print(f"   Total Executions: {total_executions}")
+                print(f"   Success Rate: {success_rate}%")
+                
+                if executions:
+                    for execution in executions[:3]:  # Show first 3 executions
+                        print(f"   Execution: {execution.get('id', 'unknown')} - {execution.get('status', 'unknown')} - {execution.get('duration_seconds', 0)}s")
+        
+        # Test 8: Update Workflow
+        success8 = False
+        if created_workflow_id:
+            print("\n🔍 Testing Workflow Update...")
+            update_data = {
+                "name": "Updated Advanced Test Workflow",
+                "description": "Updated description with new functionality",
+                "status": "active",
+                "nodes": advanced_workflow_data["nodes"],  # Keep same nodes
+                "edges": advanced_workflow_data["edges"],  # Keep same edges
+                "variables": {
+                    **advanced_workflow_data["variables"],
+                    "updated_field": "new_value"
+                },
+                "tags": ["test", "conditional_logic", "email_automation", "updated"]
+            }
+            
+            success8, update_response = self.run_test(
+                "Update Workflow", "PUT", f"workflows/advanced/{created_workflow_id}", 200, update_data
+            )
+            
+            if success8:
+                print(f"   ✅ Workflow Updated: {update_response.get('name')}")
+                print(f"   New Description: {update_response.get('description', 'No description')}")
+                print(f"   Updated Tags: {', '.join(update_response.get('tags', []))}")
+                print(f"   Variables Count: {len(update_response.get('variables', {}))}")
+        
+        # Test 9: Workflow Filtering
+        print("\n🔍 Testing Workflow Filtering...")
+        success9, filtered_response = self.run_test("Filter Active Workflows", "GET", "workflows/advanced/?status=active")
+        
+        if success9:
+            active_workflows = filtered_response if isinstance(filtered_response, list) else []
+            print(f"   ✅ Active Workflows Retrieved: {len(active_workflows)} workflows")
+            
+            if active_workflows:
+                for workflow in active_workflows[:2]:  # Show first 2 active workflows
+                    print(f"   Active Workflow: {workflow.get('name', 'Unknown')} - {workflow.get('execution_count', 0)} executions")
+        
+        # Clean up test workflows
+        cleanup_success = True
+        if created_workflow_id:
+            print("\n🔍 Cleaning up test workflow...")
+            cleanup_success, _ = self.run_test(
+                "Delete Test Workflow", "DELETE", f"workflows/advanced/{created_workflow_id}", 200
+            )
+            if cleanup_success:
+                print("   ✅ Test workflow cleaned up successfully")
+        
+        if template_workflow_id:
+            print("🔍 Cleaning up template workflow...")
+            cleanup_success2, _ = self.run_test(
+                "Delete Template Workflow", "DELETE", f"workflows/advanced/{template_workflow_id}", 200
+            )
+            if cleanup_success2:
+                print("   ✅ Template workflow cleaned up successfully")
+            cleanup_success = cleanup_success and cleanup_success2
+        
+        # Summary of Advanced Workflow Engine Tests
+        all_tests = [success1, success2, success3, success4, success5, success6, success7, success8, success9, cleanup_success]
+        passed_tests = sum(all_tests)
+        total_tests = len(all_tests)
+        
+        print(f"\n📊 ADVANCED WORKFLOW ENGINE TEST SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        if passed_tests == total_tests:
+            print("   🎉 ALL ADVANCED WORKFLOW ENGINE TESTS PASSED!")
+        else:
+            print("   ⚠️  Some Advanced Workflow Engine tests failed")
+        
+        return all(all_tests)
+
     def run_all_tests(self):
         """Run all backend API tests"""
         print("🚀 Starting Nexus Core Backend API Testing")
