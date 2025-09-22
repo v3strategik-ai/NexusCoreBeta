@@ -510,6 +510,10 @@ function App() {
               <FileText className="w-4 h-4" />
               Documents
             </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Analytics
+            </TabsTrigger>
           </TabsList>
 
           {/* Dashboard Tab */}
