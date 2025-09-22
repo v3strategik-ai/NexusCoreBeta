@@ -18,7 +18,7 @@ class NexusCoreAPITester:
         self.tests_passed = 0
         self.failed_tests = []
 
-    def run_test(self, name: str, method: str, endpoint: str, expected_status: int = 200, data: Dict[Any, Any] = None, headers: Dict[str, str] = None) -> tuple:
+    def run_test(self, name: str, method: str, endpoint: str, expected_status: int = 200, data: Dict[Any, Any] = None, headers: Dict[str, str] = None, timeout: int = 10) -> tuple:
         """Run a single API test"""
         url = f"{self.api_url}/{endpoint}" if not endpoint.startswith('http') else endpoint
         if headers is None:
