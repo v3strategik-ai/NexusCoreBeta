@@ -78,7 +78,14 @@
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #00d4ff, #0099cc, #ffffff);
+  background: linear-gradient(135deg, #00d4ff, #0099cc, hsl(var(--primary)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .gradient-text {
+  background: linear-gradient(135deg, #00d4ff, #60a5fa, #ffffff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -88,6 +95,12 @@
   background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.1) 0%, rgba(0, 153, 204, 0.05) 50%, transparent 100%);
   border: 1px solid rgba(0, 212, 255, 0.2);
   backdrop-filter: blur(8px);
+}
+
+.dark .quantum-bg {
+  background: radial-gradient(ellipse at center, rgba(0, 212, 255, 0.15) 0%, rgba(96, 165, 250, 0.1) 50%, transparent 100%);
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  backdrop-filter: blur(12px);
 }
 
 .neural-pattern {
