@@ -2901,7 +2901,8 @@ class NexusCoreAPITester:
             self.test_advanced_workflow_engine(),  # Phase 5A+D Advanced Workflow Engine
             self.test_advanced_analytics_engine(),  # Phase 5B Advanced Analytics Engine
             self.test_custom_reporting_system(),  # Phase 5B Custom Reporting System
-            self.test_ab_testing_framework()  # Phase 5B A/B Testing Framework
+            self.test_ab_testing_framework(),  # Phase 5B A/B Testing Framework
+            self.test_phase_6a_ai_features()  # Phase 6A Foundation & AI Core Features
         ]
         
         # Print summary
