@@ -349,13 +349,19 @@ function App() {
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <AgentChatModal agent={agent}>
             <Button size="sm" variant="outline" className="glow-effect">
               <MessageSquare className="w-4 h-4 mr-1" />
               Chat
             </Button>
           </AgentChatModal>
+          <EditAgentModal agent={agent} onAgentUpdated={handleAgentConfigUpdated}>
+            <Button size="sm" variant="outline">
+              <Edit className="w-4 h-4 mr-1" />
+              Edit
+            </Button>
+          </EditAgentModal>
           <Button size="sm" variant="outline" onClick={() => setSelectedAgent(agent)}>
             <BookOpen className="w-4 h-4 mr-1" />
             Details
