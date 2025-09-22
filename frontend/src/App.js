@@ -977,6 +977,7 @@ function App() {
         </Tabs>
       </div>
     </div>
+    </ThemeProvider>
   )
 }
 
