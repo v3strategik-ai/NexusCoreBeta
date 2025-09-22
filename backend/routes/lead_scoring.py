@@ -472,9 +472,9 @@ async def score_single_lead(request: LeadScoringRequest):
         # Generate new score
         score = await lead_scorer.score_lead(lead)
         
-        # Update lead with new score
+        # Update lead with new score - use same query_id format
         await leads_collection.update_one(
-            {"_id": request.lead_id},
+            {"_id": query_id},
             {"$set": {"lead_score": score.dict(), "score": score.score, "updated_at": datetime.utcnow()}}
         )
         
