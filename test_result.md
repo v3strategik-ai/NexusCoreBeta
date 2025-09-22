@@ -250,6 +250,30 @@ frontend:
           agent: "testing"
           comment: "TESTED: Integrations Manager fully functional with complete 4-tab interface. Active tab shows 2 connected integrations (Gmail Integration and Team Slack) with proper status indicators, connection dates, and management buttons. Popular tab displays 3+ popular integrations with Connect buttons that open proper configuration dialogs. Browse All tab includes search functionality and category filtering. Custom tab provides 4 integration types (REST API, GraphQL, Webhooks, Database) with Create Custom Integration dialog. All dialogs open/close properly, form fields work, and Add Integration button in header is functional. User's request for 'integrations section to plug into 3rd party platforms' has been fully implemented and working."
 
+  - task: "Dark/Light Theme System"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/contexts/ThemeContext.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "PHASE 6A IMPLEMENTATION: Dark/Light Theme System with ThemeProvider context, localStorage persistence, CSS custom properties, ThemeToggle dropdown component with 3 options (Light, Dark, System), automatic system theme detection, and theme-aware CSS variables for all components."
+
+  - task: "Voice Commands Foundation"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/VoiceCommands.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "PHASE 6A IMPLEMENTATION: Voice Commands Foundation with VoiceCommands component using speech recognition, voice command patterns for navigation/creation/search, speech synthesis for responses, VoiceCommandsHelp component with available commands, and integration with app navigation via custom events."
+
 metadata:
   created_by: "main_agent"
   version: "5.1"
