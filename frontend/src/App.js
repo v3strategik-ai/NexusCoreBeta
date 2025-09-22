@@ -66,7 +66,8 @@ import {
   Layers,
   Trash2,
   RefreshCw,
-  Minimize
+  Minimize,
+  Plug
 } from 'lucide-react'
 import axios from 'axios'
 import './App.css'
