@@ -8,6 +8,7 @@ import os
 from dotenv import load_dotenv
 from statistics import mean
 import asyncio
+from bson import ObjectId
 from emergentintegrations.llm.chat import LlmChat, UserMessage
 
 from database import (
