@@ -7,7 +7,7 @@ import requests
 import json
 
 def test_all_document_types():
-    base_url = "https://ai-workforce-hub.preview.emergentagent.com/api"
+    base_url = "https://ai-workflow-hub-21.preview.emergentagent.com/api"
     
     document_types = [
         {

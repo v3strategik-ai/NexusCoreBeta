@@ -16,7 +16,7 @@ from datetime import datetime
 from typing import Dict, Any
 
 class ModalBackendTester:
-    def __init__(self, base_url="https://ai-workforce-hub.preview.emergentagent.com"):
+    def __init__(self, base_url="https://ai-workflow-hub-21.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
         self.tests_run = 0
