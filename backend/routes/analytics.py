@@ -766,8 +766,9 @@ class AnalyticsEngine:
         else:
             return TrendDirection.STABLE
 
-# Global analytics engine instance
+# Global engine instances
 analytics_engine = AnalyticsEngine()
+reporting_engine = CustomReportingEngine()
 
 # API Endpoints
 @router.get("/kpis", response_model=List[KPIMetric])
