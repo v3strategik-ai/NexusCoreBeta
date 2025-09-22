@@ -920,6 +920,32 @@ function App() {
               ))}
             </div>
           </TabsContent>
+
+          {/* Analytics Tab */}
+          <TabsContent value="analytics" className="space-y-6">
+            <Tabs defaultValue="dashboard" className="w-full">
+              <TabsList className="grid w-full grid-cols-3 mb-6">
+                <TabsTrigger value="dashboard">Analytics Dashboard</TabsTrigger>
+                <TabsTrigger value="reports">Report Builder</TabsTrigger>
+                <TabsTrigger value="testing">A/B Testing</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="dashboard">
+                <AnalyticsDashboard />
+              </TabsContent>
+
+              <TabsContent value="reports">
+                <ReportBuilder onReportGenerated={(report) => {
+                  console.log('Report generated:', report.report_name)
+                  // Handle report generation success
+                }} />
+              </TabsContent>
+
+              <TabsContent value="testing">
+                <ABTestingManager />
+              </TabsContent>
+            </Tabs>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
