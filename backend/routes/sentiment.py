@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 import json
 import os
 from statistics import mean
+from bson import ObjectId
 from dotenv import load_dotenv
 from emergentintegrations.llm.chat import LlmChat, UserMessage
 
