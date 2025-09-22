@@ -740,10 +740,16 @@ function App() {
                     Email Automation
                   </Button>
                 </EmailAutomationModal>
-                <WorkflowBuilderModal agents={agents} onWorkflowCreated={handleWorkflowCreated}>
+                <VisualWorkflowBuilder onWorkflowCreated={handleWorkflowCreated}>
                   <Button className="glow-effect">
                     <Plus className="w-4 h-4 mr-2" />
-                    Create Workflow
+                    Visual Workflow Builder
+                  </Button>
+                </VisualWorkflowBuilder>
+                <WorkflowBuilderModal agents={agents} onWorkflowCreated={handleWorkflowCreated}>
+                  <Button variant="outline">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Simple Builder
                   </Button>
                 </WorkflowBuilderModal>
               </div>
