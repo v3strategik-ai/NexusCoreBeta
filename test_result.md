@@ -287,9 +287,7 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "Dark/Light Theme System"
-    - "Voice Commands Foundation"
+  current_focus: []
   stuck_tasks:
     - "Predictive Lead Scoring"
   test_all: false
