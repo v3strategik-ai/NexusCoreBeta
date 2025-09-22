@@ -76,6 +76,22 @@ function App() {
   const [agents, setAgents] = useState([])
   const [leads, setLeads] = useState([])
   const [workflows, setWorkflows] = useState([])
+  
+  // Initialize notification system
+  const { 
+    notifications, 
+    addNotification, 
+    markAsRead, 
+    dismissNotification,
+    clearAll,
+    markAllAsRead,
+    unreadCount 
+  } = useNotifications()
+
+  // Add real-time features
+  const [isRealTimeEnabled, setIsRealTimeEnabled] = useState(true)
+  const [connectionStatus, setConnectionStatus] = useState('disconnected')
+  
   const [dashboardData, setDashboardData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
