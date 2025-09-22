@@ -614,6 +614,26 @@ function App() {
             </div>
           </TabsContent>
 
+          {/* Real-Time Intelligence Tab */}
+          <TabsContent value="realtime" className="space-y-6">
+            <RealTimeDashboard 
+              agents={agents}
+              leads={leads}
+              workflows={workflows}
+              isRealTimeEnabled={isRealTimeEnabled}
+              setIsRealTimeEnabled={setIsRealTimeEnabled}
+              connectionStatus={connectionStatus}
+              setConnectionStatus={setConnectionStatus}
+              notifications={notifications}
+              addNotification={addNotification}
+              markAsRead={markAsRead}
+              dismissNotification={dismissNotification}
+              clearAll={clearAll}
+              markAllAsRead={markAllAsRead}
+              unreadCount={unreadCount}
+            />
+          </TabsContent>
+
           {/* Digital Employees Tab */}
           <TabsContent value="agents" className="space-y-6">
             <div className="flex justify-between items-center">
