@@ -108,6 +108,7 @@ api_router.include_router(workflows_advanced.router)
 api_router.include_router(analytics.router)
 api_router.include_router(ab_testing.router)
 api_router.include_router(lead_scoring.router)
+api_router.include_router(ai_content.router)
 
 # Include the main API router
 app.include_router(api_router)
