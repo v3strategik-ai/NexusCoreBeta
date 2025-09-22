@@ -128,9 +128,14 @@ class PredictiveLeadScorer:
     
     async def _extract_lead_features(self, lead_data: Dict[str, Any]) -> Dict[str, Any]:
         """Extract relevant features from lead data"""
-        lead_id = str(lead_data.get('_id', lead_data.get('id')))
+        # Get lead_id and ensure it's a string for activities query
+        lead_id = lead_data.get('_id')
+        if isinstance(lead_id, ObjectId):
+            lead_id = str(lead_id)
+        elif not lead_id:
+            lead_id = str(lead_data.get('id', 'unknown'))
         
-        # Get lead activities
+        # Get lead activities - activities collection uses string lead_id
         activities_collection = await get_activities_collection()
         activities = await activities_collection.find({
             "lead_id": lead_id,
