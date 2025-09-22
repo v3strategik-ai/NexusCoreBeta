@@ -105,6 +105,9 @@ function App() {
   const [generatedReports, setGeneratedReports] = useState([])
   const [activeABTests, setActiveABTests] = useState([])
   
+  // Voice commands state
+  const [voiceEnabled, setVoiceEnabled] = useState(false)
+  
   const [dashboardData, setDashboardData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
