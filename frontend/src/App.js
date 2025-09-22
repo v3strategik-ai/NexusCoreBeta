@@ -20,6 +20,9 @@ import { EmailAutomationModal } from './components/EmailAutomationModal'
 import { RealTimeDashboard } from './components/RealTimeDashboard'
 import { VisualWorkflowBuilder } from './components/VisualWorkflowBuilder'
 import { NotificationSystem, useNotifications } from './components/NotificationSystem'
+import { AnalyticsDashboard } from './components/AnalyticsDashboard'
+import { ReportBuilder } from './components/ReportBuilder'
+import { ABTestingManager } from './components/ABTestingManager'
 import { 
   Brain, 
   Zap, 
