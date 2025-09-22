@@ -962,6 +962,11 @@ function App() {
               </TabsContent>
             </Tabs>
           </TabsContent>
+
+          {/* Integrations Tab */}
+          <TabsContent value="integrations" className="space-y-6">
+            <IntegrationsManager />
+          </TabsContent>
         </Tabs>
       </div>
     </div>
