@@ -126,7 +126,12 @@ class AIContentGenerator:
         if lead_id:
             try:
                 leads_collection = await get_leads_collection()
-                lead = await leads_collection.find_one({"_id": lead_id})
+                # Convert string lead_id to ObjectId for MongoDB query
+                query_id = lead_id
+                if ObjectId.is_valid(lead_id):
+                    query_id = ObjectId(lead_id)
+                
+                lead = await leads_collection.find_one({"_id": query_id})
                 if lead:
                     data.update({
                         "name": lead.get('name', 'there'),
