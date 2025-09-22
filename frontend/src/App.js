@@ -95,6 +95,10 @@ function App() {
   const [isRealTimeEnabled, setIsRealTimeEnabled] = useState(true)
   const [connectionStatus, setConnectionStatus] = useState('disconnected')
   
+  // Analytics state
+  const [generatedReports, setGeneratedReports] = useState([])
+  const [activeABTests, setActiveABTests] = useState([])
+  
   const [dashboardData, setDashboardData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
