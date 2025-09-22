@@ -80,6 +80,54 @@ class CustomKPI(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     created_by: Optional[str] = None
 
+class ReportType(str, Enum):
+    PERFORMANCE = "performance"
+    REVENUE = "revenue"
+    CONVERSION = "conversion"
+    PIPELINE = "pipeline"
+    AGENT_ACTIVITY = "agent_activity"
+    CUSTOM = "custom"
+
+class ReportFormat(str, Enum):
+    JSON = "json"
+    CSV = "csv"
+    PDF = "pdf"
+    EXCEL = "excel"
+
+class ReportFilter(BaseModel):
+    field: str
+    operator: str  # eq, ne, gt, lt, gte, lte, in, nin
+    value: Any
+
+class CustomReport(BaseModel):
+    id: str = Field(default_factory=lambda: f"report_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
+    name: str
+    description: str
+    report_type: ReportType
+    data_sources: List[str]  # Collections to query: leads, agents, activities, etc.
+    metrics: List[str]  # Specific metrics to include
+    filters: List[ReportFilter] = []
+    time_range: TimeRange = TimeRange.LAST_30_DAYS
+    custom_start_date: Optional[datetime] = None
+    custom_end_date: Optional[datetime] = None
+    grouping: Optional[str] = None  # Group by field (e.g., "status", "agent_id")
+    sorting: Optional[Dict[str, str]] = None  # {"field": "asc/desc"}
+    visualization_config: Optional[Dict[str, Any]] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_by: Optional[str] = None
+    is_scheduled: bool = False
+    schedule_frequency: Optional[str] = None  # daily, weekly, monthly
+
+class ReportResult(BaseModel):
+    report_id: str
+    report_name: str
+    generated_at: datetime
+    data: List[Dict[str, Any]]
+    summary: Dict[str, Any]
+    total_records: int
+    filters_applied: List[ReportFilter]
+    metadata: Dict[str, Any]
+
 class AnalyticsEngine:
     """Advanced analytics engine for business intelligence"""
     
