@@ -128,6 +128,223 @@ class ReportResult(BaseModel):
     filters_applied: List[ReportFilter]
     metadata: Dict[str, Any]
 
+class CustomReportingEngine:
+    """Advanced custom reporting system for business intelligence"""
+    
+    def __init__(self):
+        self.supported_data_sources = [
+            "leads", "agents", "activities", "documents", "workflows", "emails"
+        ]
+        self.supported_operators = {
+            "eq": lambda x, y: x == y,
+            "ne": lambda x, y: x != y,
+            "gt": lambda x, y: x > y,
+            "lt": lambda x, y: x < y,
+            "gte": lambda x, y: x >= y,
+            "lte": lambda x, y: x <= y,
+            "in": lambda x, y: x in y,
+            "nin": lambda x, y: x not in y
+        }
+    
+    async def create_custom_report(self, report: CustomReport) -> str:
+        """Create and save a custom report configuration"""
+        try:
+            # In a real app, this would save to a reports collection
+            # For now, we'll just validate and return the ID
+            if not report.data_sources:
+                raise ValueError("At least one data source must be specified")
+            
+            for source in report.data_sources:
+                if source not in self.supported_data_sources:
+                    raise ValueError(f"Unsupported data source: {source}")
+            
+            return report.id
+        except Exception as e:
+            logger.error(f"Error creating custom report: {e}")
+            raise HTTPException(status_code=400, detail=str(e))
+    
+    async def generate_report(self, report: CustomReport) -> ReportResult:
+        """Generate report data based on configuration"""
+        try:
+            # Get date range
+            if report.custom_start_date and report.custom_end_date:
+                start_date = report.custom_start_date
+                end_date = report.custom_end_date
+            else:
+                end_date = datetime.utcnow()
+                start_date = self._get_start_date(report.time_range, end_date)
+            
+            # Collect data from all specified sources
+            all_data = []
+            summary = {}
+            
+            for source in report.data_sources:
+                source_data = await self._fetch_source_data(
+                    source, start_date, end_date, report.filters, report.metrics
+                )
+                all_data.extend(source_data)
+            
+            # Apply grouping if specified
+            if report.grouping:
+                grouped_data = self._group_data(all_data, report.grouping)
+                all_data = grouped_data
+            
+            # Apply sorting if specified
+            if report.sorting:
+                all_data = self._sort_data(all_data, report.sorting)
+            
+            # Generate summary statistics
+            summary = self._generate_summary(all_data, report.metrics)
+            
+            return ReportResult(
+                report_id=report.id,
+                report_name=report.name,
+                generated_at=datetime.utcnow(),
+                data=all_data,
+                summary=summary,
+                total_records=len(all_data),
+                filters_applied=report.filters,
+                metadata={
+                    "data_sources": report.data_sources,
+                    "time_range": f"{start_date.isoformat()} to {end_date.isoformat()}",
+                    "grouping": report.grouping,
+                    "sorting": report.sorting
+                }
+            )
+            
+        except Exception as e:
+            logger.error(f"Error generating report: {e}")
+            raise HTTPException(status_code=500, detail="Failed to generate report")
+    
+    async def _fetch_source_data(
+        self, 
+        source: str, 
+        start_date: datetime, 
+        end_date: datetime,
+        filters: List[ReportFilter],
+        metrics: List[str]
+    ) -> List[Dict[str, Any]]:
+        """Fetch data from a specific source with filters"""
+        
+        # Build MongoDB query
+        query = {"created_at": {"$gte": start_date, "$lte": end_date}}
+        
+        # Apply custom filters
+        for filter_item in filters:
+            if filter_item.operator == "eq":
+                query[filter_item.field] = filter_item.value
+            elif filter_item.operator == "ne":
+                query[filter_item.field] = {"$ne": filter_item.value}
+            elif filter_item.operator == "gt":
+                query[filter_item.field] = {"$gt": filter_item.value}
+            elif filter_item.operator == "lt":
+                query[filter_item.field] = {"$lt": filter_item.value}
+            elif filter_item.operator == "gte":
+                query[filter_item.field] = {"$gte": filter_item.value}
+            elif filter_item.operator == "lte":
+                query[filter_item.field] = {"$lte": filter_item.value}
+            elif filter_item.operator == "in":
+                query[filter_item.field] = {"$in": filter_item.value}
+            elif filter_item.operator == "nin":
+                query[filter_item.field] = {"$nin": filter_item.value}
+        
+        # Get appropriate collection
+        if source == "leads":
+            collection = await get_leads_collection()
+        elif source == "agents":
+            collection = await get_agents_collection()
+        elif source == "activities":
+            collection = await get_activities_collection()
+        elif source == "documents":
+            collection = await get_documents_collection()
+        elif source == "workflows":
+            collection = await get_workflows_collection()
+        else:
+            return []
+        
+        # Fetch data
+        cursor = collection.find(query)
+        data = await cursor.to_list(length=None)
+        
+        # Convert ObjectId to string for JSON serialization
+        for item in data:
+            if "_id" in item:
+                item["_id"] = str(item["_id"])
+            # Add source identifier
+            item["_source"] = source
+        
+        return data
+    
+    def _group_data(self, data: List[Dict[str, Any]], grouping_field: str) -> List[Dict[str, Any]]:
+        """Group data by specified field"""
+        grouped = {}
+        
+        for item in data:
+            key = item.get(grouping_field, "Unknown")
+            if key not in grouped:
+                grouped[key] = []
+            grouped[key].append(item)
+        
+        # Convert to list format with group statistics
+        result = []
+        for group_key, group_items in grouped.items():
+            result.append({
+                "group": group_key,
+                "count": len(group_items),
+                "items": group_items
+            })
+        
+        return result
+    
+    def _sort_data(self, data: List[Dict[str, Any]], sorting: Dict[str, str]) -> List[Dict[str, Any]]:
+        """Sort data based on sorting configuration"""
+        for field, direction in sorting.items():
+            reverse = direction.lower() == "desc"
+            data.sort(key=lambda x: x.get(field, 0), reverse=reverse)
+        
+        return data
+    
+    def _generate_summary(self, data: List[Dict[str, Any]], metrics: List[str]) -> Dict[str, Any]:
+        """Generate summary statistics for the report"""
+        summary = {
+            "total_records": len(data),
+            "metrics": {}
+        }
+        
+        # Calculate basic statistics for numeric fields
+        numeric_fields = ["value", "score", "revenue", "cost"]
+        
+        for field in numeric_fields:
+            values = [item.get(field, 0) for item in data if isinstance(item.get(field), (int, float))]
+            if values:
+                summary["metrics"][field] = {
+                    "total": sum(values),
+                    "average": round(mean(values), 2),
+                    "max": max(values),
+                    "min": min(values),
+                    "count": len(values)
+                }
+        
+        return summary
+    
+    def _get_start_date(self, time_range: TimeRange, end_date: datetime) -> datetime:
+        """Get start date based on time range"""
+        if time_range == TimeRange.TODAY:
+            return end_date.replace(hour=0, minute=0, second=0, microsecond=0)
+        elif time_range == TimeRange.YESTERDAY:
+            yesterday = end_date - timedelta(days=1)
+            return yesterday.replace(hour=0, minute=0, second=0, microsecond=0)
+        elif time_range == TimeRange.LAST_7_DAYS:
+            return end_date - timedelta(days=7)
+        elif time_range == TimeRange.LAST_30_DAYS:
+            return end_date - timedelta(days=30)
+        elif time_range == TimeRange.LAST_90_DAYS:
+            return end_date - timedelta(days=90)
+        elif time_range == TimeRange.LAST_YEAR:
+            return end_date - timedelta(days=365)
+        else:
+            return end_date - timedelta(days=30)  # Default to last 30 days
+
 class AnalyticsEngine:
     """Advanced analytics engine for business intelligence"""
     
