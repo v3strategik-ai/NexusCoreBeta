@@ -234,8 +234,13 @@ Focus on practical business insights and actionable recommendations.
             # Update lead with latest sentiment data
             if result.lead_id:
                 leads_collection = await get_leads_collection()
+                # Convert string lead_id to ObjectId for MongoDB query
+                query_id = result.lead_id
+                if ObjectId.is_valid(result.lead_id):
+                    query_id = ObjectId(result.lead_id)
+                
                 await leads_collection.update_one(
-                    {"_id": result.lead_id},
+                    {"_id": query_id},
                     {
                         "$set": {
                             "latest_sentiment": {
