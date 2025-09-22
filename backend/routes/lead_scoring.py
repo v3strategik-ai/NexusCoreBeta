@@ -588,9 +588,9 @@ async def _process_bulk_scoring(batch_id: str, leads: List[Dict[str, Any]], forc
                 score = await lead_scorer.score_lead(lead)
                 scores.append(score.score)
                 
-                # Update lead
+                # Update lead - use the original ObjectId from the lead document
                 await leads_collection.update_one(
-                    {"_id": lead['_id']},
+                    {"_id": lead['_id']},  # lead['_id'] is already an ObjectId from the database
                     {"$set": {"lead_score": score.dict(), "score": score.score, "updated_at": datetime.utcnow()}}
                 )
                 
