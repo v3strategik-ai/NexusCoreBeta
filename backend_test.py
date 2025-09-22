@@ -2542,6 +2542,338 @@ class NexusCoreAPITester:
         
         return all(all_tests)
 
+    def test_phase_6a_ai_features(self):
+        """Test comprehensive Phase 6A AI-powered features"""
+        print("\n" + "="*50)
+        print("TESTING PHASE 6A: FOUNDATION & AI CORE FEATURES")
+        print("="*50)
+        
+        # Test 1: Predictive Lead Scoring
+        print("\n🔍 Testing Predictive Lead Scoring System...")
+        
+        # First, create a test lead for scoring
+        lead_data = {
+            "name": "Michael Chen",
+            "email": "michael.chen@innovatetech.com",
+            "company": "InnovateTech Solutions Inc",
+            "title": "VP of Engineering",
+            "status": "warm",
+            "value": 150000,
+            "source": "demo_request",
+            "industry": "technology",
+            "phone": "+1-555-0167",
+            "tags": ["enterprise", "ai", "automation"],
+            "notes": ["Interested in AI automation", "Large team", "Budget approved"]
+        }
+        
+        success_lead, lead_response = self.run_test(
+            "Create Lead for AI Scoring", "POST", "crm/leads", 200, lead_data
+        )
+        
+        lead_id = None
+        if success_lead:
+            lead_id = lead_response.get('id')
+            print(f"   ✅ Test Lead Created: {lead_response.get('name')} ({lead_id})")
+        
+        # Test available scoring models
+        success1, models_response = self.run_test(
+            "Get Available Scoring Models", "GET", "lead-scoring/models/available"
+        )
+        
+        if success1:
+            models = models_response.get('models', [])
+            scoring_factors = models_response.get('scoring_factors', {})
+            print(f"   Available Models: {len(models)}")
+            if models:
+                model = models[0]
+                print(f"   Primary Model: {model.get('name')} - {model.get('accuracy')}")
+                print(f"   Features: {len(model.get('features', []))}")
+            print(f"   Scoring Factors: {len(scoring_factors)} categories")
+        
+        # Test single lead scoring
+        success2 = False
+        if lead_id:
+            scoring_request = {
+                "lead_id": lead_id,
+                "force_refresh": True
+            }
+            
+            success2, scoring_response = self.run_test(
+                "AI Lead Scoring - Single Lead", "POST", "lead-scoring/score", 200, scoring_request
+            )
+            
+            if success2:
+                score = scoring_response.get('score', 0)
+                confidence = scoring_response.get('confidence', 0)
+                factors = scoring_response.get('factors', [])
+                recommendations = scoring_response.get('recommendations', [])
+                risk_factors = scoring_response.get('risk_factors', [])
+                
+                print(f"   ✅ Lead Scored Successfully")
+                print(f"   Score: {score}/100 (Confidence: {confidence:.2f})")
+                print(f"   Factors Analyzed: {len(factors)}")
+                print(f"   Recommendations: {len(recommendations)}")
+                print(f"   Risk Factors: {len(risk_factors)}")
+                
+                # Validate AI scoring quality
+                if score > 0 and confidence > 0:
+                    print("   ✅ AI-powered scoring is working")
+                else:
+                    print("   ❌ AI-powered scoring may have issues")
+                
+                if recommendations:
+                    print(f"   ✅ AI recommendations generated: {recommendations[0][:50]}...")
+                else:
+                    print("   ❌ No AI recommendations generated")
+        
+        # Test 2: AI-Powered Content Generation
+        print("\n🔍 Testing AI-Powered Content Generation...")
+        
+        # Test available content types
+        success3, types_response = self.run_test(
+            "Get Available Content Types", "GET", "ai-content/types"
+        )
+        
+        if success3:
+            content_types = types_response.get('content_types', [])
+            tones = types_response.get('tones', [])
+            lengths = types_response.get('lengths', [])
+            
+            print(f"   Available Content Types: {len(content_types)}")
+            print(f"   Available Tones: {tones}")
+            print(f"   Available Lengths: {lengths}")
+            
+            # Show content types
+            for ct in content_types[:3]:
+                print(f"   - {ct.get('name')}: {ct.get('description')}")
+        
+        # Test email content generation
+        email_request = {
+            "content_type": "email",
+            "target_audience": "VP of Engineering at mid-size tech companies",
+            "key_points": [
+                "AI-powered business automation",
+                "Reduce manual tasks by 70%",
+                "ROI within 6 months",
+                "Enterprise-grade security"
+            ],
+            "tone": "professional",
+            "length": "medium",
+            "personalization_data": {
+                "name": "Michael Chen",
+                "company": "InnovateTech Solutions",
+                "title": "VP of Engineering",
+                "industry": "technology"
+            },
+            "lead_id": lead_id
+        }
+        
+        success4, email_response = self.run_test(
+            "AI Email Content Generation", "POST", "ai-content/generate", 200, email_request
+        )
+        
+        if success4:
+            content = email_response.get('content', '')
+            title = email_response.get('title', '')
+            word_count = email_response.get('word_count', 0)
+            personalization_applied = email_response.get('personalization_applied', False)
+            alternatives = email_response.get('alternatives', [])
+            suggestions = email_response.get('suggestions', [])
+            
+            print(f"   ✅ Email Content Generated")
+            print(f"   Title: {title}")
+            print(f"   Word Count: {word_count}")
+            print(f"   Personalization Applied: {personalization_applied}")
+            print(f"   Alternatives Generated: {len(alternatives)}")
+            print(f"   AI Suggestions: {len(suggestions)}")
+            
+            # Validate content quality
+            if 'Michael Chen' in content and 'InnovateTech' in content:
+                print("   ✅ Personalization working correctly")
+            else:
+                print("   ❌ Personalization may not be working")
+            
+            if word_count > 50:
+                print("   ✅ Content length appropriate")
+            else:
+                print("   ❌ Content may be too short")
+            
+            if alternatives:
+                print(f"   ✅ Alternative versions: {alternatives[0].get('description', 'N/A')}")
+        
+        # Test proposal content generation
+        proposal_request = {
+            "content_type": "proposal",
+            "target_audience": "Technology executives seeking automation solutions",
+            "key_points": [
+                "Complete digital transformation",
+                "AI-powered workflow automation",
+                "Custom integration capabilities",
+                "24/7 support and monitoring"
+            ],
+            "tone": "professional",
+            "length": "long",
+            "personalization_data": {
+                "company": "InnovateTech Solutions",
+                "project_value": "150000",
+                "timeline": "3 months"
+            }
+        }
+        
+        success5, proposal_response = self.run_test(
+            "AI Proposal Content Generation", "POST", "ai-content/generate", 200, proposal_request
+        )
+        
+        if success5:
+            proposal_content = proposal_response.get('content', '')
+            proposal_word_count = proposal_response.get('word_count', 0)
+            
+            print(f"   ✅ Proposal Content Generated")
+            print(f"   Word Count: {proposal_word_count}")
+            
+            # Validate proposal content
+            if proposal_word_count > 200:
+                print("   ✅ Proposal length appropriate for business document")
+            else:
+                print("   ❌ Proposal may be too brief")
+        
+        # Test 3: Sentiment Analysis Integration
+        print("\n🔍 Testing Sentiment Analysis Integration...")
+        
+        # Test positive sentiment
+        positive_text = "I'm absolutely thrilled with the demo! The AI automation features are exactly what we need. Our team is excited to move forward with implementation. When can we schedule the next meeting?"
+        
+        positive_request = {
+            "text": positive_text,
+            "context": "Follow-up email after product demo",
+            "lead_id": lead_id,
+            "source_type": "email"
+        }
+        
+        success6, positive_response = self.run_test(
+            "Sentiment Analysis - Positive", "POST", "sentiment/analyze", 200, positive_request
+        )
+        
+        if success6:
+            sentiment = positive_response.get('sentiment', '')
+            confidence = positive_response.get('confidence', 0)
+            emotions = positive_response.get('emotions', {})
+            urgency_level = positive_response.get('urgency_level', '')
+            satisfaction_score = positive_response.get('satisfaction_score')
+            intent = positive_response.get('intent', '')
+            recommendations = positive_response.get('recommendations', [])
+            action_required = positive_response.get('action_required', False)
+            
+            print(f"   ✅ Positive Sentiment Analysis")
+            print(f"   Sentiment: {sentiment} (Confidence: {confidence:.2f})")
+            print(f"   Urgency Level: {urgency_level}")
+            print(f"   Satisfaction Score: {satisfaction_score}")
+            print(f"   Intent: {intent}")
+            print(f"   Action Required: {action_required}")
+            print(f"   Recommendations: {len(recommendations)}")
+            
+            # Validate sentiment accuracy
+            if sentiment == 'positive':
+                print("   ✅ Positive sentiment detected correctly")
+            else:
+                print(f"   ❌ Expected positive sentiment, got {sentiment}")
+            
+            if confidence > 0.7:
+                print("   ✅ High confidence in sentiment analysis")
+            else:
+                print(f"   ⚠️  Lower confidence: {confidence:.2f}")
+        
+        # Test negative sentiment
+        negative_text = "I'm very disappointed with the service. The system keeps crashing and we're losing productivity. This is not what was promised. We need immediate resolution or we'll have to consider other options."
+        
+        negative_request = {
+            "text": negative_text,
+            "context": "Customer complaint email",
+            "lead_id": lead_id,
+            "source_type": "email"
+        }
+        
+        success7, negative_response = self.run_test(
+            "Sentiment Analysis - Negative", "POST", "sentiment/analyze", 200, negative_request
+        )
+        
+        if success7:
+            neg_sentiment = negative_response.get('sentiment', '')
+            neg_confidence = negative_response.get('confidence', 0)
+            neg_urgency = negative_response.get('urgency_level', '')
+            neg_action_required = negative_response.get('action_required', False)
+            
+            print(f"   ✅ Negative Sentiment Analysis")
+            print(f"   Sentiment: {neg_sentiment} (Confidence: {neg_confidence:.2f})")
+            print(f"   Urgency Level: {neg_urgency}")
+            print(f"   Action Required: {neg_action_required}")
+            
+            # Validate negative sentiment detection
+            if neg_sentiment == 'negative':
+                print("   ✅ Negative sentiment detected correctly")
+            else:
+                print(f"   ❌ Expected negative sentiment, got {neg_sentiment}")
+            
+            if neg_urgency in ['high', 'medium']:
+                print("   ✅ Appropriate urgency level detected")
+            else:
+                print(f"   ⚠️  Urgency level may be underestimated: {neg_urgency}")
+            
+            if neg_action_required:
+                print("   ✅ Action requirement correctly identified")
+            else:
+                print("   ❌ Action requirement not identified for complaint")
+        
+        # Test sentiment dashboard
+        success8, dashboard_response = self.run_test(
+            "Sentiment Analysis Dashboard", "GET", "sentiment/dashboard"
+        )
+        
+        if success8:
+            summary = dashboard_response.get('summary', {})
+            recent_analyses = dashboard_response.get('recent_analyses', [])
+            
+            total_analyses = summary.get('total_analyses', 0)
+            sentiment_dist = summary.get('sentiment_distribution', {})
+            avg_confidence = summary.get('average_confidence', 0)
+            high_urgency = summary.get('high_urgency_count', 0)
+            
+            print(f"   ✅ Sentiment Dashboard Data")
+            print(f"   Total Analyses: {total_analyses}")
+            print(f"   Sentiment Distribution: {sentiment_dist}")
+            print(f"   Average Confidence: {avg_confidence}")
+            print(f"   High Urgency Count: {high_urgency}")
+            print(f"   Recent Analyses: {len(recent_analyses)}")
+            
+            if total_analyses >= 2:  # Should have at least our 2 test analyses
+                print("   ✅ Dashboard reflecting recent analyses")
+            else:
+                print("   ⚠️  Dashboard may not be reflecting all analyses")
+        
+        # Clean up test lead
+        if lead_id:
+            cleanup_success, _ = self.run_test(
+                "Delete AI Test Lead", "DELETE", f"crm/leads/{lead_id}", 200
+            )
+            if cleanup_success:
+                print("   ✅ AI test lead cleaned up successfully")
+        
+        # Summary of Phase 6A AI Features Tests
+        all_tests = [success1, success2, success3, success4, success5, success6, success7, success8]
+        passed_tests = sum(all_tests)
+        total_tests = len(all_tests)
+        
+        print(f"\n📊 PHASE 6A AI FEATURES TEST SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        if passed_tests == total_tests:
+            print("   🎉 ALL PHASE 6A AI FEATURES TESTS PASSED!")
+        else:
+            print("   ⚠️  Some Phase 6A AI features tests failed")
+        
+        return all(all_tests)
+
     def run_all_tests(self):
         """Run all backend API tests"""
         print("🚀 Starting Nexus Core Backend API Testing")
