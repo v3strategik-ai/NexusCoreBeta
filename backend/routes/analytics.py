@@ -847,3 +847,169 @@ async def get_analytics_dashboard_summary(time_range: TimeRange = TimeRange.LAST
     except Exception as e:
         logger.error(f"Error getting analytics dashboard summary: {e}")
         raise HTTPException(status_code=500, detail="Failed to retrieve analytics dashboard summary")
+
+# Custom Reporting System Endpoints
+@router.post("/reports/create", response_model=dict)
+async def create_custom_report(report: CustomReport):
+    """Create a new custom report configuration"""
+    try:
+        report_id = await reporting_engine.create_custom_report(report)
+        return {
+            "report_id": report_id,
+            "message": "Custom report created successfully",
+            "status": "success"
+        }
+    except Exception as e:
+        logger.error(f"Error creating custom report: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create custom report")
+
+@router.post("/reports/generate", response_model=ReportResult)
+async def generate_custom_report(report: CustomReport):
+    """Generate a custom report based on configuration"""
+    try:
+        return await reporting_engine.generate_report(report)
+    except Exception as e:
+        logger.error(f"Error generating custom report: {e}")
+        raise HTTPException(status_code=500, detail="Failed to generate custom report")
+
+@router.get("/reports/templates")
+async def get_report_templates():
+    """Get predefined report templates"""
+    templates = [
+        {
+            "id": "leads_performance",
+            "name": "Leads Performance Report",
+            "description": "Comprehensive analysis of lead generation and conversion",
+            "report_type": "performance",
+            "data_sources": ["leads", "activities"],
+            "metrics": ["total_leads", "conversion_rate", "pipeline_value"],
+            "default_time_range": "last_30_days"
+        },
+        {
+            "id": "revenue_analysis",
+            "name": "Revenue Analysis Report",
+            "description": "Detailed revenue breakdown and trends",
+            "report_type": "revenue",
+            "data_sources": ["leads"],
+            "metrics": ["revenue", "average_deal_size", "pipeline_value"],
+            "default_time_range": "last_90_days"
+        },
+        {
+            "id": "agent_productivity",
+            "name": "Agent Productivity Report",
+            "description": "Analysis of agent performance and efficiency",
+            "report_type": "agent_activity",
+            "data_sources": ["agents", "activities", "leads"],
+            "metrics": ["agent_efficiency", "tasks_completed", "leads_handled"],
+            "default_time_range": "last_30_days"
+        },
+        {
+            "id": "pipeline_analysis",
+            "name": "Sales Pipeline Analysis",
+            "description": "Detailed pipeline health and conversion funnel",
+            "report_type": "pipeline",
+            "data_sources": ["leads"],
+            "metrics": ["pipeline_value", "conversion_rate", "stage_progression"],
+            "default_time_range": "last_60_days"
+        },
+        {
+            "id": "workflow_performance",
+            "name": "Workflow Performance Report",
+            "description": "Analysis of automated workflow efficiency",
+            "report_type": "performance",
+            "data_sources": ["workflows", "activities"],
+            "metrics": ["workflow_success_rate", "execution_time", "completion_rate"],
+            "default_time_range": "last_30_days"
+        }
+    ]
+    
+    return {
+        "templates": templates,
+        "available_data_sources": reporting_engine.supported_data_sources,
+        "available_time_ranges": [range_type.value for range_type in TimeRange],
+        "available_report_types": [report_type.value for report_type in ReportType],
+        "available_formats": [format_type.value for format_type in ReportFormat]
+    }
+
+@router.get("/reports/data-sources")
+async def get_available_data_sources():
+    """Get available data sources for custom reports"""
+    return {
+        "data_sources": [
+            {
+                "name": "leads",
+                "description": "Customer leads and prospects",
+                "available_fields": ["name", "email", "status", "value", "score", "source", "agent_id", "created_at"]
+            },
+            {
+                "name": "agents",
+                "description": "AI agents and their configurations",
+                "available_fields": ["name", "type", "status", "capabilities", "performance_score", "created_at"]
+            },
+            {
+                "name": "activities",
+                "description": "System and user activities",
+                "available_fields": ["activity_type", "user_id", "agent_id", "description", "timestamp", "status"]
+            },
+            {
+                "name": "documents",
+                "description": "Generated documents and files",
+                "available_fields": ["title", "type", "status", "agent_id", "file_path", "created_at"]
+            },
+            {
+                "name": "workflows",
+                "description": "Automated workflows and processes",
+                "available_fields": ["name", "status", "trigger_type", "success_count", "failure_count", "created_at"]
+            }
+        ],
+        "supported_operators": ["eq", "ne", "gt", "lt", "gte", "lte", "in", "nin"],
+        "grouping_options": ["status", "agent_id", "source", "type", "date"],
+        "sorting_options": ["asc", "desc"]
+    }
+
+@router.post("/reports/preview")
+async def preview_report_data(report: CustomReport):
+    """Preview report data (limited to first 100 records)"""
+    try:
+        # Generate full report
+        full_report = await reporting_engine.generate_report(report)
+        
+        # Return preview with limited data
+        preview_data = full_report.data[:100] if len(full_report.data) > 100 else full_report.data
+        
+        return {
+            "preview_data": preview_data,
+            "total_records": full_report.total_records,
+            "showing_records": len(preview_data),
+            "summary": full_report.summary,
+            "metadata": full_report.metadata
+        }
+    except Exception as e:
+        logger.error(f"Error previewing report data: {e}")
+        raise HTTPException(status_code=500, detail="Failed to preview report data")
+
+@router.get("/reports/export/{report_id}")
+async def export_report(
+    report_id: str,
+    format: ReportFormat = ReportFormat.JSON,
+    background_tasks: BackgroundTasks = None
+):
+    """Export report in specified format"""
+    try:
+        # In a real implementation, this would:
+        # 1. Retrieve the report configuration by ID
+        # 2. Generate the report data
+        # 3. Convert to requested format (CSV, PDF, Excel)
+        # 4. Return file or download link
+        
+        # For now, return a placeholder response
+        return {
+            "message": f"Report export initiated for format: {format.value}",
+            "report_id": report_id,
+            "format": format.value,
+            "status": "processing",
+            "estimated_completion": "2-5 minutes"
+        }
+    except Exception as e:
+        logger.error(f"Error exporting report: {e}")
+        raise HTTPException(status_code=500, detail="Failed to export report")
