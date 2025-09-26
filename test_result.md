@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Phase 6A: Foundation & AI Core - Implement predictive lead scoring, AI-powered content generation, and sentiment analysis integration with comprehensive AI-powered features using Emergent LLM key for the Nexus Core AI Business Automation Platform."
+user_problem_statement: "Phase 6B: Advanced Workflows & Automation - Continue implementation with Conditional Logic Builder (frontend), Time-Based Triggers, Multi-Step Approval Processes, Webhook & API Automation, and Natural Language Workflow Creation (frontend components) for the Nexus Core AI Business Automation Platform."
 
 backend:
   - task: "Advanced Analytics Engine"
