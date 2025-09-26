@@ -329,15 +329,18 @@ agent_communication:
 
   - task: "Phase 6B Frontend Implementation"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/frontend/src/components/*"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "IMPLEMENTED: Complete Phase 6B frontend with 5 comprehensive components integrated into workflows tab. ConditionalLogicBuilder (visual if/then/else interface), TimeBasedTriggers (cron scheduling UI), MultiStepApprovalProcesses (role-based approval workflows), WebhookApiAutomation (external integrations), NaturalLanguageWorkflows (AI-powered workflow creation). All components integrated into main App.js with new tabbed interface."
+        - working: false
+          agent: "testing"
+          comment: "CRITICAL ISSUE: JavaScript runtime errors preventing workflow components from loading. Error: 'op.replace is not a function' occurring in ConditionalLogicBuilder and other components. The 5-category tabbed interface (Conditional Logic, Time Triggers, Approvals, APIs & Webhooks, AI Workflows) is not rendering due to JavaScript errors. Backend API endpoints added successfully (/api/workflow-engine/workflows GET, /api/workflow-engine/triggers GET) but frontend components fail to load. Root cause: .replace() method being called on undefined/null values in multiple components. Fixed some instances in ConditionalLogicBuilder but errors persist in other components. Requires comprehensive debugging of all 5 workflow components to identify and fix all undefined value handling issues."
 
   - task: "Conditional Logic Builder Backend"
     implemented: true
