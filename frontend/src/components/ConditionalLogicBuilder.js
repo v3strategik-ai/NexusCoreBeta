@@ -389,7 +389,7 @@ export function ConditionalLogicBuilder() {
                           <XCircle className="w-5 h-5 text-red-500" />
                         )}
                         <code className="text-sm">
-                          {result.condition.field} {result.condition.operator.replace(/_/g, ' ')} {result.condition.value}
+                          {result.condition.field} {(result.condition.operator || '').replace(/_/g, ' ')} {result.condition.value}
                         </code>
                       </div>
                       <div className="text-right">
