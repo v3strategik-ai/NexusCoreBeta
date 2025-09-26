@@ -277,9 +277,9 @@ export function ConditionalLogicBuilder() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {dataTypes.map((type) => (
+                      {(dataTypes || []).filter(type => type && typeof type === 'string').map((type) => (
                         <SelectItem key={type} value={type}>
-                          {(type || '').charAt(0).toUpperCase() + (type || '').slice(1)}
+                          {type.charAt(0).toUpperCase() + type.slice(1)}
                         </SelectItem>
                       ))}
                     </SelectContent>
