@@ -593,6 +593,43 @@ async def test_condition(condition: WorkflowCondition, context_data: Dict[str, A
         logger.error(f"Error testing condition: {e}")
         raise HTTPException(status_code=500, detail="Failed to test condition")
 
+@router.get("/triggers")
+async def get_triggers():
+    """Get all time-based triggers"""
+    try:
+        workflows_collection = await get_workflows_collection()
+        
+        # Get workflows with time-based triggers
+        triggers_cursor = workflows_collection.find({
+            "trigger.type": "time_based",
+            "created_by": {"$in": [
+                "time_trigger_builder",
+                "conditional_logic_builder",
+                "nl_workflow_generator"
+            ]}
+        })
+        
+        triggers = []
+        async for trigger in triggers_cursor:
+            trigger["id"] = str(trigger["_id"])
+            trigger.pop("_id", None)
+            triggers.append(trigger)
+        
+        return {
+            "triggers": triggers,
+            "count": len(triggers),
+            "status": "success"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting triggers: {e}")
+        return {
+            "triggers": [],
+            "count": 0,
+            "status": "error",
+            "message": str(e)
+        }
+
 @router.get("/triggers/scheduler/status")
 async def get_scheduler_status():
     """Get status of the time-based trigger scheduler"""
