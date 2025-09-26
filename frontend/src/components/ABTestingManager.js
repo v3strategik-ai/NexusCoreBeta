@@ -699,7 +699,7 @@ export function ABTestingManager() {
                           min_sample_size: template.min_sample_size,
                           metrics: template.suggested_metrics?.map(metric => ({
                             metric_type: metric,
-                            name: metric.replace('_', ' ').toUpperCase(),
+                            name: (metric || '').replace('_', ' ').toUpperCase(),
                             description: '',
                             is_primary: metric === template.suggested_metrics[0]
                           })) || newTest.metrics
