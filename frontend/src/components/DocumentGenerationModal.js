@@ -384,7 +384,7 @@ Please create a comprehensive, professional document that follows industry stand
                     {selectedDocType.variables.map((variable) => (
                       <div key={variable}>
                         <Label htmlFor={variable} className="capitalize">
-                          {variable.replace('_', ' ')}
+                          {(variable || '').replace('_', ' ')}
                         </Label>
                         {['description', 'summary', 'instructions', 'details'].some(keyword => 
                           variable.includes(keyword)) ? (
@@ -392,7 +392,7 @@ Please create a comprehensive, professional document that follows industry stand
                             id={variable}
                             value={formData.variables[variable] || ''}
                             onChange={(e) => handleVariableChange(variable, e.target.value)}
-                            placeholder={`Enter ${variable.replace('_', ' ')}`}
+                            placeholder={`Enter ${(variable || '').replace('_', ' ')}`}
                             rows={3}
                           />
                         ) : (
@@ -400,7 +400,7 @@ Please create a comprehensive, professional document that follows industry stand
                             id={variable}
                             value={formData.variables[variable] || ''}
                             onChange={(e) => handleVariableChange(variable, e.target.value)}
-                            placeholder={`Enter ${variable.replace('_', ' ')}`}
+                            placeholder={`Enter ${(variable || '').replace('_', ' ')}`}
                           />
                         )}
                       </div>
