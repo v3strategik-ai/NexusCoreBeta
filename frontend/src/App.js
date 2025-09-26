@@ -834,136 +834,54 @@ function App() {
             </div>
           </TabsContent>
 
-          {/* Workflows Tab */}
+          {/* Workflows Tab - Phase 6B: Advanced Workflows & Automation */}
           <TabsContent value="workflows" className="space-y-6">
             <div className="flex justify-between items-center">
               <div>
-                <h2 className="text-3xl font-bold gradient-text">Advanced Workflows</h2>
-                <p className="text-muted-foreground">Automate business processes with intelligent workflows</p>
+                <h2 className="text-3xl font-bold gradient-text">Advanced Workflows & Automation</h2>
+                <p className="text-muted-foreground">Build sophisticated automation with AI-powered tools and visual builders</p>
               </div>
               <div className="flex gap-2">
-                <EmailAutomationModal leads={leads} onEmailSent={handleEmailSent}>
-                  <Button className="glow-effect">
-                    <Mail className="w-4 h-4 mr-2" />
-                    Email Automation
-                  </Button>
-                </EmailAutomationModal>
-                <VisualWorkflowBuilder onWorkflowCreated={handleWorkflowCreated}>
-                  <Button className="glow-effect">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Visual Workflow Builder
-                  </Button>
-                </VisualWorkflowBuilder>
-                <WorkflowBuilderModal agents={agents} onWorkflowCreated={handleWorkflowCreated}>
-                  <Button variant="outline">
-                    <Settings className="w-4 h-4 mr-2" />
-                    Simple Builder
-                  </Button>
-                </WorkflowBuilderModal>
+                <Badge variant="outline" className="flex items-center gap-1">
+                  <Brain className="w-3 h-3" />
+                  Phase 6B
+                </Badge>
+                <Badge variant="outline" className="flex items-center gap-1">
+                  <Zap className="w-3 h-3" />
+                  {workflows.length} Workflows
+                </Badge>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-              <Card className="quantum-bg glow-effect">
-                <CardHeader>
-                  <CardTitle className="text-sm">Total Workflows</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold gradient-text">{workflows.length}</div>
-                  <p className="text-xs text-muted-foreground">Active automations</p>
-                </CardContent>
-              </Card>
-              
-              <Card className="quantum-bg glow-effect">
-                <CardHeader>
-                  <CardTitle className="text-sm">Running Now</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold gradient-text">
-                    {workflows.filter(w => w.status === 'active').length}
-                  </div>
-                  <p className="text-xs text-muted-foreground">Currently executing</p>
-                </CardContent>
-              </Card>
-              
-              <Card className="quantum-bg glow-effect">
-                <CardHeader>
-                  <CardTitle className="text-sm">Time Saved</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold gradient-text">147h</div>
-                  <p className="text-xs text-muted-foreground">This month</p>
-                </CardContent>
-              </Card>
+            <Tabs defaultValue="conditional" className="w-full">
+              <TabsList className="grid w-full grid-cols-5">
+                <TabsTrigger value="conditional">Conditional Logic</TabsTrigger>
+                <TabsTrigger value="scheduling">Time Triggers</TabsTrigger>
+                <TabsTrigger value="approvals">Approvals</TabsTrigger>
+                <TabsTrigger value="webhooks">APIs & Webhooks</TabsTrigger>
+                <TabsTrigger value="natural-language">AI Workflows</TabsTrigger>
+              </TabsList>
 
-              <Card className="quantum-bg glow-effect">
-                <CardHeader>
-                  <CardTitle className="text-sm">Success Rate</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-3xl font-bold gradient-text">98.5%</div>
-                  <p className="text-xs text-muted-foreground">Execution success</p>
-                </CardContent>
-              </Card>
-            </div>
+              <TabsContent value="conditional" className="mt-6">
+                <ConditionalLogicBuilder />
+              </TabsContent>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {workflows.length === 0 ? (
-                <div className="col-span-full text-center py-12">
-                  <Workflow className="w-16 h-16 mx-auto mb-4 opacity-30" />
-                  <h3 className="text-lg font-semibold mb-2">No Workflows Yet</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Create your first automated workflow to streamline business processes
-                  </p>
-                  <WorkflowBuilderModal agents={agents} onWorkflowCreated={handleWorkflowCreated}>
-                    <Button className="glow-effect">
-                      <Plus className="w-4 h-4 mr-2" />
-                      Create Your First Workflow
-                    </Button>
-                  </WorkflowBuilderModal>
-                </div>
-              ) : (
-                workflows.map(workflow => (
-                  <Card key={workflow.id} className="quantum-bg">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-sm font-semibold">{workflow.name}</CardTitle>
-                        <Badge variant={workflow.status === 'active' ? 'default' : 'secondary'}>
-                          {workflow.status}
-                        </Badge>
-                      </div>
-                      <CardDescription className="text-xs">{workflow.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        <div className="text-sm">
-                          <span className="text-muted-foreground">Trigger:</span>
-                          <span className="ml-2 capitalize">{workflow.trigger_type.replace('_', ' ')}</span>
-                        </div>
-                        <div className="text-sm">
-                          <span className="text-muted-foreground">Steps:</span>
-                          <span className="ml-2">{workflow.steps?.length || 0}</span>
-                        </div>
-                        <div className="text-sm">
-                          <span className="text-muted-foreground">Runs:</span>
-                          <span className="ml-2">{workflow.run_count || 0}</span>
-                        </div>
-                        <div className="flex gap-2 mt-4">
-                          <Button size="sm" variant="outline">
-                            <Play className="w-3 h-3 mr-1" />
-                            Run
-                          </Button>
-                          <Button size="sm" variant="outline">
-                            <Settings className="w-3 h-3 mr-1" />
-                            Edit
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-              )}
-            </div>
+              <TabsContent value="scheduling" className="mt-6">
+                <TimeBasedTriggers />
+              </TabsContent>
+
+              <TabsContent value="approvals" className="mt-6">
+                <MultiStepApprovalProcesses />
+              </TabsContent>
+
+              <TabsContent value="webhooks" className="mt-6">
+                <WebhookApiAutomation />
+              </TabsContent>
+
+              <TabsContent value="natural-language" className="mt-6">
+                <NaturalLanguageWorkflows />
+              </TabsContent>
+            </Tabs>
           </TabsContent>
 
           {/* Documents Tab */}
