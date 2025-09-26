@@ -306,8 +306,7 @@ class Phase6BWorkflowTester:
         test_description = "When a lead's score exceeds 80, assign them to our best sales rep and send a follow-up email"
         
         success3, analysis_response = self.run_test(
-            "Analyze Workflow Description", "POST", "nl-workflows/analyze", 200,
-            {"description": test_description, "context": "High-value enterprise leads"}
+            "Analyze Workflow Description", "GET", f"nl-workflows/analyze?description={test_description}&context=High-value enterprise leads"
         )
         
         if success3:
