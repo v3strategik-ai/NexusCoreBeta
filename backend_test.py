@@ -565,6 +565,572 @@ class NexusCoreAPITester:
         
         return success
 
+    def test_conditional_logic_builder(self):
+        """Test Phase 6B Conditional Logic Builder endpoints"""
+        print("\n" + "="*50)
+        print("TESTING CONDITIONAL LOGIC BUILDER")
+        print("="*50)
+        
+        # Test 1: Get Available Condition Operators
+        success1, operators_response = self.run_test("Get Condition Operators", "GET", "workflow-engine/conditions/operators")
+        if success1:
+            operators = operators_response.get('operators', [])
+            data_types = operators_response.get('data_types', [])
+            common_fields = operators_response.get('common_fields', [])
+            
+            print(f"   Available Operators: {len(operators)}")
+            print(f"   Data Types: {data_types}")
+            print(f"   Common Fields: {len(common_fields)}")
+            
+            # Validate expected operators
+            expected_operators = ['equals', 'greater_than', 'contains', 'is_empty']
+            found_operators = [op.get('operator') for op in operators]
+            if all(op in found_operators for op in expected_operators):
+                print("   ✅ All expected operators available")
+            else:
+                print("   ⚠️  Some expected operators missing")
+        
+        # Test 2: Test Individual Condition Evaluation
+        test_condition = {
+            "field": "lead.score",
+            "operator": "greater_than",
+            "value": 75,
+            "data_type": "number"
+        }
+        
+        test_context = {
+            "lead": {
+                "score": 85,
+                "status": "hot",
+                "value": 50000,
+                "source": "website"
+            }
+        }
+        
+        success2, condition_result = self.run_test(
+            "Test Condition Evaluation", "POST", "workflow-engine/conditions/test", 200, 
+            {"condition": test_condition, "context_data": test_context}
+        )
+        
+        if success2:
+            result = condition_result.get('condition_result')
+            field_value = condition_result.get('field_value')
+            print(f"   Condition Result: {result}")
+            print(f"   Field Value: {field_value}")
+            print(f"   Comparison: {field_value} > {test_condition['value']} = {result}")
+            
+            if result == True and field_value == 85:
+                print("   ✅ Condition evaluation working correctly")
+            else:
+                print("   ❌ Condition evaluation failed")
+        
+        # Test 3: Create Advanced Workflow with Conditional Logic
+        workflow_data = {
+            "name": "High-Value Lead Automation",
+            "description": "Automated workflow for high-value leads with conditional logic",
+            "trigger": {
+                "type": "event_based",
+                "name": "Lead Score Updated",
+                "parameters": {"event": "lead_score_changed"},
+                "conditions": [
+                    {
+                        "field": "lead.score",
+                        "operator": "greater_than",
+                        "value": 80,
+                        "data_type": "number"
+                    }
+                ]
+            },
+            "actions": [
+                {
+                    "type": "assign_agent",
+                    "name": "Assign Senior Sales Rep",
+                    "parameters": {
+                        "agent_criteria": "senior_sales",
+                        "priority": "high"
+                    },
+                    "conditions": [
+                        {
+                            "field": "lead.value",
+                            "operator": "greater_than",
+                            "value": 25000,
+                            "data_type": "number"
+                        }
+                    ]
+                },
+                {
+                    "type": "send_email",
+                    "name": "Send Personalized Email",
+                    "parameters": {
+                        "template": "high_value_lead",
+                        "personalization": True
+                    },
+                    "delay_minutes": 15
+                },
+                {
+                    "type": "notification",
+                    "name": "Notify Sales Manager",
+                    "parameters": {
+                        "message": "High-value lead {{lead.name}} requires attention",
+                        "recipients": ["sales_manager"]
+                    }
+                }
+            ],
+            "created_by": "test_user",
+            "category": "lead_management",
+            "approval_required": False,
+            "tags": ["high-value", "automation", "conditional"]
+        }
+        
+        success3, workflow_response = self.run_test(
+            "Create Advanced Workflow", "POST", "workflow-engine/workflows", 200, workflow_data
+        )
+        
+        workflow_id = None
+        if success3:
+            workflow_id = workflow_response.get('workflow_id')
+            print(f"   Created Workflow ID: {workflow_id}")
+            print(f"   Status: {workflow_response.get('status')}")
+            
+            if workflow_id:
+                print("   ✅ Advanced workflow creation successful")
+            else:
+                print("   ❌ Workflow creation failed - no ID returned")
+        
+        # Test 4: Validate Workflow Logic
+        success4 = True
+        if workflow_id:
+            success4, validation_result = self.run_test(
+                "Validate Workflow Logic", "GET", f"workflow-engine/workflows/{workflow_id}/validate"
+            )
+            
+            if success4:
+                is_valid = validation_result.get('valid')
+                issues = validation_result.get('issues', [])
+                warnings = validation_result.get('warnings', [])
+                action_count = validation_result.get('action_count', 0)
+                condition_count = validation_result.get('condition_count', 0)
+                
+                print(f"   Workflow Valid: {is_valid}")
+                print(f"   Actions: {action_count}, Conditions: {condition_count}")
+                print(f"   Issues: {len(issues)}, Warnings: {len(warnings)}")
+                
+                if is_valid and action_count == 3:
+                    print("   ✅ Workflow validation successful")
+                else:
+                    print("   ❌ Workflow validation failed")
+                    if issues:
+                        print(f"      Issues: {issues}")
+        
+        # Test 5: Scheduler Status and Management
+        success5, scheduler_status = self.run_test("Get Scheduler Status", "GET", "workflow-engine/triggers/scheduler/status")
+        if success5:
+            running = scheduler_status.get('running')
+            scheduled_count = scheduler_status.get('scheduled_workflows', 0)
+            supported_schedules = scheduler_status.get('supported_schedules', [])
+            
+            print(f"   Scheduler Running: {running}")
+            print(f"   Scheduled Workflows: {scheduled_count}")
+            print(f"   Supported Schedules: {len(supported_schedules)}")
+            
+            if isinstance(supported_schedules, list) and len(supported_schedules) > 0:
+                print("   ✅ Scheduler status retrieved successfully")
+            else:
+                print("   ❌ Scheduler status incomplete")
+        
+        # Test 6: Start Scheduler
+        success6, start_result = self.run_test("Start Scheduler", "POST", "workflow-engine/triggers/scheduler/start")
+        if success6:
+            message = start_result.get('message')
+            status = start_result.get('status')
+            print(f"   Start Result: {message}")
+            print(f"   Status: {status}")
+            
+            if status == "running":
+                print("   ✅ Scheduler started successfully")
+            else:
+                print("   ⚠️  Scheduler start status unclear")
+        
+        # Summary
+        all_tests = [success1, success2, success3, success4, success5, success6]
+        passed_tests = sum(all_tests)
+        total_tests = len(all_tests)
+        
+        print(f"\n📊 CONDITIONAL LOGIC BUILDER TEST SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        return all(all_tests)
+
+    def test_workflow_execution_engine(self):
+        """Test Phase 6B Workflow Execution Engine endpoints"""
+        print("\n" + "="*50)
+        print("TESTING WORKFLOW EXECUTION ENGINE")
+        print("="*50)
+        
+        # Test 1: Get Execution Engine Status
+        success1, engine_status = self.run_test("Get Engine Status", "GET", "workflow-execution/engine/status")
+        if success1:
+            running = engine_status.get('running')
+            active_executions = engine_status.get('active_executions', 0)
+            queue_size = engine_status.get('queue_size', 0)
+            max_concurrent = engine_status.get('max_concurrent', 0)
+            
+            print(f"   Engine Running: {running}")
+            print(f"   Active Executions: {active_executions}")
+            print(f"   Queue Size: {queue_size}")
+            print(f"   Max Concurrent: {max_concurrent}")
+            
+            if isinstance(running, bool) and isinstance(max_concurrent, int):
+                print("   ✅ Engine status retrieved successfully")
+            else:
+                print("   ❌ Engine status format incorrect")
+        
+        # Test 2: Start Execution Engine
+        success2, start_result = self.run_test("Start Execution Engine", "POST", "workflow-execution/engine/start")
+        if success2:
+            message = start_result.get('message')
+            status = start_result.get('status')
+            print(f"   Start Message: {message}")
+            print(f"   Engine Status: {status}")
+            
+            if status == "running":
+                print("   ✅ Execution engine started successfully")
+            else:
+                print("   ⚠️  Engine start status unclear")
+        
+        # Test 3: Execute Workflow (requires a workflow ID)
+        # First, create a simple workflow for execution testing
+        simple_workflow = {
+            "name": "Test Execution Workflow",
+            "description": "Simple workflow for testing execution engine",
+            "trigger": {
+                "type": "manual",
+                "name": "Manual Trigger",
+                "parameters": {}
+            },
+            "actions": [
+                {
+                    "type": "notification",
+                    "name": "Send Test Notification",
+                    "parameters": {
+                        "message": "Test workflow executed successfully",
+                        "type": "info"
+                    }
+                },
+                {
+                    "type": "wait_delay",
+                    "name": "Wait 1 Minute",
+                    "parameters": {
+                        "delay_minutes": 1
+                    }
+                }
+            ],
+            "created_by": "test_user",
+            "category": "testing"
+        }
+        
+        # Create workflow first
+        success_create, create_response = self.run_test(
+            "Create Test Workflow", "POST", "workflow-engine/workflows", 200, simple_workflow
+        )
+        
+        execution_id = None
+        workflow_id = None
+        success3 = False
+        
+        if success_create:
+            workflow_id = create_response.get('workflow_id')
+            print(f"   Test Workflow Created: {workflow_id}")
+            
+            # Now execute the workflow
+            execution_request = {
+                "workflow_id": workflow_id,
+                "context_data": {
+                    "lead": {
+                        "name": "Test Lead",
+                        "email": "test@example.com",
+                        "score": 75
+                    },
+                    "trigger_source": "api_test"
+                },
+                "triggered_by": "backend_test"
+            }
+            
+            success3, execution_response = self.run_test(
+                "Execute Workflow", "POST", "workflow-execution/execute", 200, execution_request
+            )
+            
+            if success3:
+                execution_id = execution_response.get('execution_id')
+                status = execution_response.get('status')
+                message = execution_response.get('message')
+                
+                print(f"   Execution ID: {execution_id}")
+                print(f"   Initial Status: {status}")
+                print(f"   Message: {message}")
+                
+                if execution_id and status == "queued":
+                    print("   ✅ Workflow execution started successfully")
+                else:
+                    print("   ❌ Workflow execution failed to start")
+        
+        # Test 4: Get Execution Status
+        success4 = False
+        if execution_id:
+            # Wait a moment for execution to process
+            import time
+            time.sleep(2)
+            
+            success4, status_response = self.run_test(
+                "Get Execution Status", "GET", f"workflow-execution/status/{execution_id}"
+            )
+            
+            if success4:
+                exec_status = status_response.get('status')
+                current_action = status_response.get('current_action')
+                progress = status_response.get('progress', {})
+                started_at = status_response.get('started_at')
+                runtime_seconds = status_response.get('runtime_seconds', 0)
+                
+                print(f"   Execution Status: {exec_status}")
+                print(f"   Current Action: {current_action}")
+                print(f"   Runtime: {runtime_seconds} seconds")
+                
+                if progress:
+                    executed = progress.get('executed_actions', 0)
+                    failed = progress.get('failed_actions', 0)
+                    pending_approvals = progress.get('pending_approvals', 0)
+                    print(f"   Progress: {executed} executed, {failed} failed, {pending_approvals} pending approvals")
+                
+                if exec_status in ['running', 'completed', 'pending']:
+                    print("   ✅ Execution status tracking working")
+                else:
+                    print("   ⚠️  Execution status unclear")
+            else:
+                # Try to get from completed executions
+                print("   ⚠️  Execution may have completed - checking activities")
+        
+        # Test 5: Test Error Handling - Invalid Workflow ID
+        success5, error_response = self.run_test(
+            "Execute Invalid Workflow", "POST", "workflow-execution/execute", 500,
+            {
+                "workflow_id": "invalid-workflow-id",
+                "context_data": {},
+                "triggered_by": "error_test"
+            }
+        )
+        
+        if success5:  # We expect this to fail (500 error)
+            print("   ✅ Error handling for invalid workflow working")
+        else:
+            print("   ❌ Error handling test failed")
+        
+        # Test 6: Get Status for Non-existent Execution
+        success6, not_found_response = self.run_test(
+            "Get Invalid Execution Status", "GET", "workflow-execution/status/invalid-execution-id", 404
+        )
+        
+        if success6:  # We expect 404
+            print("   ✅ Error handling for invalid execution ID working")
+        else:
+            print("   ❌ Error handling for invalid execution failed")
+        
+        # Summary
+        all_tests = [success1, success2, success3, success4, success5, success6]
+        passed_tests = sum(all_tests)
+        total_tests = len(all_tests)
+        
+        print(f"\n📊 WORKFLOW EXECUTION ENGINE TEST SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        return all(all_tests)
+
+    def test_natural_language_workflows(self):
+        """Test Phase 6B Natural Language Workflow Creation endpoints"""
+        print("\n" + "="*50)
+        print("TESTING NATURAL LANGUAGE WORKFLOW CREATION")
+        print("="*50)
+        
+        # Test 1: Get Workflow Templates
+        success1, templates_response = self.run_test("Get Workflow Templates", "GET", "nl-workflows/templates")
+        if success1:
+            templates = templates_response.get('templates', [])
+            categories = templates_response.get('categories', [])
+            difficulty_levels = templates_response.get('difficulty_levels', [])
+            supported_patterns = templates_response.get('supported_patterns', [])
+            
+            print(f"   Available Templates: {len(templates)}")
+            print(f"   Categories: {categories}")
+            print(f"   Difficulty Levels: {difficulty_levels}")
+            print(f"   Supported Patterns: {len(supported_patterns)}")
+            
+            # Validate template structure
+            if templates and len(templates) >= 3:
+                first_template = templates[0]
+                required_fields = ['id', 'name', 'description', 'example', 'category']
+                if all(field in first_template for field in required_fields):
+                    print("   ✅ Workflow templates retrieved successfully")
+                else:
+                    print("   ❌ Template structure incomplete")
+            else:
+                print("   ❌ Insufficient templates returned")
+        
+        # Test 2: Get NL Workflow Examples
+        success2, examples_response = self.run_test("Get NL Examples", "GET", "nl-workflows/examples")
+        if success2:
+            examples = examples_response.get('examples', [])
+            tips = examples_response.get('tips', [])
+            common_triggers = examples_response.get('common_triggers', [])
+            common_actions = examples_response.get('common_actions', [])
+            
+            print(f"   Example Categories: {len(examples)}")
+            print(f"   Tips: {len(tips)}")
+            print(f"   Common Triggers: {len(common_triggers)}")
+            print(f"   Common Actions: {len(common_actions)}")
+            
+            if examples and tips and common_triggers:
+                print("   ✅ NL workflow examples retrieved successfully")
+            else:
+                print("   ❌ NL examples incomplete")
+        
+        # Test 3: Analyze Workflow Description
+        test_description = "When a lead's score exceeds 80, assign them to our best sales representative and send a personalized follow-up email within 30 minutes"
+        test_context = "This is for high-value enterprise leads in our CRM system"
+        
+        success3, analysis_response = self.run_test(
+            "Analyze Workflow Description", "POST", "nl-workflows/analyze", 200,
+            {"description": test_description, "context": test_context}
+        )
+        
+        if success3:
+            analysis = analysis_response.get('analysis', {})
+            feasibility = analysis_response.get('feasibility')
+            setup_time = analysis_response.get('estimated_setup_time')
+            data_requirements = analysis_response.get('data_requirements', [])
+            suggestions = analysis_response.get('suggestions', [])
+            
+            print(f"   Feasibility: {feasibility}")
+            print(f"   Setup Time: {setup_time}")
+            print(f"   Data Requirements: {len(data_requirements)}")
+            print(f"   Suggestions: {len(suggestions)}")
+            
+            # Check analysis structure
+            if analysis and 'workflow_name' in analysis:
+                workflow_name = analysis.get('workflow_name')
+                confidence = analysis.get('confidence', 0)
+                trigger_analysis = analysis.get('trigger_analysis', {})
+                actions_analysis = analysis.get('actions_analysis', [])
+                
+                print(f"   Workflow Name: {workflow_name}")
+                print(f"   AI Confidence: {confidence}")
+                print(f"   Trigger Type: {trigger_analysis.get('type')}")
+                print(f"   Actions Count: {len(actions_analysis)}")
+                
+                if confidence > 0.5 and len(actions_analysis) >= 2:
+                    print("   ✅ Workflow analysis successful")
+                else:
+                    print("   ⚠️  Workflow analysis quality concerns")
+            else:
+                print("   ❌ Workflow analysis failed")
+        
+        # Test 4: Create Workflow from Natural Language (AI Integration Test)
+        nl_request = {
+            "description": "Create a lead nurturing sequence that sends welcome email immediately when new lead is created, waits 3 days, then sends product demo email if lead hasn't converted yet",
+            "context": "For B2B SaaS leads from website signup form",
+            "creator_id": "test_user_nl"
+        }
+        
+        success4, creation_response = self.run_test(
+            "Create Workflow from NL", "POST", "nl-workflows/create", 200, nl_request, timeout=30
+        )
+        
+        if success4:
+            workflow = creation_response.get('workflow', {})
+            confidence = creation_response.get('confidence', 0)
+            suggestions = creation_response.get('suggestions', [])
+            warnings = creation_response.get('warnings', [])
+            
+            print(f"   AI Confidence: {confidence}")
+            print(f"   Suggestions: {len(suggestions)}")
+            print(f"   Warnings: {len(warnings)}")
+            
+            if workflow:
+                workflow_name = workflow.get('name')
+                workflow_actions = workflow.get('actions', [])
+                workflow_trigger = workflow.get('trigger', {})
+                
+                print(f"   Generated Workflow: {workflow_name}")
+                print(f"   Actions Generated: {len(workflow_actions)}")
+                print(f"   Trigger Type: {workflow_trigger.get('type')}")
+                
+                # Validate workflow structure
+                if workflow_name and len(workflow_actions) >= 2:
+                    print("   ✅ AI workflow generation successful")
+                    
+                    # Check for expected actions based on description
+                    action_types = [action.get('type') for action in workflow_actions]
+                    if 'send_email' in action_types and 'wait_delay' in action_types:
+                        print("   ✅ Generated workflow includes expected action types")
+                    else:
+                        print(f"   ⚠️  Action types: {action_types}")
+                else:
+                    print("   ❌ Generated workflow structure incomplete")
+            else:
+                print("   ❌ No workflow generated")
+        else:
+            print("   ❌ AI workflow creation failed - may be timeout or AI integration issue")
+        
+        # Test 5: Test Complex NL Description
+        complex_description = "When deal value exceeds $50,000, require approval from sales manager, then from director if approved by manager, send notification to finance team, and create onboarding task if final approval is granted"
+        
+        success5, complex_analysis = self.run_test(
+            "Analyze Complex Description", "POST", "nl-workflows/analyze", 200,
+            {"description": complex_description, "context": "Enterprise sales approval process"}
+        )
+        
+        if success5:
+            analysis = complex_analysis.get('analysis', {})
+            complexity = analysis.get('estimated_complexity')
+            approval_required = analysis.get('approval_required')
+            
+            print(f"   Complex Workflow Complexity: {complexity}")
+            print(f"   Approval Required: {approval_required}")
+            
+            if complexity in ['medium', 'high'] and approval_required:
+                print("   ✅ Complex workflow analysis working")
+            else:
+                print("   ⚠️  Complex workflow analysis may need improvement")
+        
+        # Test 6: Error Handling - Empty Description
+        success6, error_response = self.run_test(
+            "Empty Description Test", "POST", "nl-workflows/create", 422,
+            {"description": "", "creator_id": "test_user"}
+        )
+        
+        if success6:  # We expect validation error
+            print("   ✅ Input validation working correctly")
+        else:
+            print("   ❌ Input validation failed")
+        
+        # Summary
+        all_tests = [success1, success2, success3, success4, success5, success6]
+        passed_tests = sum(all_tests)
+        total_tests = len(all_tests)
+        
+        print(f"\n📊 NATURAL LANGUAGE WORKFLOWS TEST SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        # Special note about AI integration
+        if success4:
+            print("   🤖 AI Integration: WORKING - Emergent LLM key functional")
+        else:
+            print("   🤖 AI Integration: ISSUE - Check Emergent LLM key or timeout")
+        
+        return all(all_tests)
+
     def test_document_generation_endpoints(self):
         """Test document generation API endpoints with realistic data"""
         print("\n" + "="*50)
