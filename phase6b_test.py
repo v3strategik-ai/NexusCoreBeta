@@ -205,6 +205,7 @@ class Phase6BWorkflowTester:
         simple_workflow = {
             "name": "Test Execution Workflow",
             "description": "Simple workflow for testing execution",
+            "status": "active",  # Make sure workflow is active
             "trigger": {
                 "type": "manual",
                 "name": "Manual Trigger",
@@ -221,7 +222,8 @@ class Phase6BWorkflowTester:
                 }
             ],
             "created_by": "test_user",
-            "category": "testing"
+            "category": "testing",
+            "enabled": True  # Make sure workflow is enabled
         }
         
         success_create, create_response = self.run_test(
