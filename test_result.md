@@ -338,6 +338,9 @@ agent_communication:
         - working: true
           agent: "testing"
           comment: "TESTED: Conditional Logic Builder mostly functional (75% success rate). Working features: condition operators (13 available), condition evaluation engine (boolean logic working correctly), workflow validation, scheduler management (running with 4 supported schedules). Minor issue: condition counting in complex workflows may be inaccurate but core conditional logic evaluation is working perfectly. All 13 operators functional including equals, greater_than, contains, regex matching, etc."
+        - working: true
+          agent: "testing"
+          comment: "RE-TESTED: CONDITION COUNTING FIX FULLY VERIFIED (100% success rate). Comprehensive testing confirms the fix is working perfectly: 1) Mixed conditions workflow (2 trigger + 3 action = 5 total) ✅, 2) Zero conditions workflow (0 trigger + 0 action = 0 total) ✅, 3) Complex conditions workflow (3 trigger + 6 action = 9 total) ✅. All 4 test categories now pass: operators (13 available), evaluation (boolean logic working), workflow creation/validation (condition_count field accurate), scheduler (running with 4 supported schedules). The condition counting logic now correctly includes both trigger.conditions + sum(action.conditions) as requested. System upgraded from 75% to 100% success rate."
 
   - task: "Workflow Execution Engine Backend"
     implemented: true
