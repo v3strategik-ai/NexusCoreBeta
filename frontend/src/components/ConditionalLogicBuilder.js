@@ -251,7 +251,7 @@ export function ConditionalLogicBuilder() {
                       <SelectValue placeholder="Select operator" />
                     </SelectTrigger>
                     <SelectContent>
-                      {(operators || []).map((op) => (
+                      {operators.map((op) => (
                         <SelectItem key={op} value={op}>
                           {(op || '').replace(/_/g, ' ').toUpperCase()}
                         </SelectItem>
@@ -277,9 +277,9 @@ export function ConditionalLogicBuilder() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {(dataTypes || []).map((type) => (
+                      {dataTypes.map((type) => (
                         <SelectItem key={type} value={type}>
-                          {type.charAt(0).toUpperCase() + type.slice(1)}
+                          {(type || '').charAt(0).toUpperCase() + (type || '').slice(1)}
                         </SelectItem>
                       ))}
                     </SelectContent>
