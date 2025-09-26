@@ -611,7 +611,7 @@ export function ABTestingManager() {
                     <CardContent>
                       <div className="space-y-4">
                         <div className="text-sm text-muted-foreground">
-                          {test.test_type.replace('_', ' ').toUpperCase()}
+                          {(test.test_type || '').replace('_', ' ').toUpperCase()}
                         </div>
                         
                         <div className="grid grid-cols-2 gap-4 text-sm">
