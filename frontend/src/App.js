@@ -249,7 +249,7 @@ function App() {
   useEffect(() => {
     const handleVoiceNavigate = (event) => {
       const { tab } = event.detail
-      setActiveTab(tab)
+      setCurrentTab(tab)
     }
 
     const handleVoiceCreate = (event) => {
