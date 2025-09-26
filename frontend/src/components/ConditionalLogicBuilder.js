@@ -253,7 +253,7 @@ export function ConditionalLogicBuilder() {
                     <SelectContent>
                       {operators.map((op) => (
                         <SelectItem key={op} value={op}>
-                          {op.replace(/_/g, ' ').toUpperCase()}
+                          {(op || '').replace(/_/g, ' ').toUpperCase()}
                         </SelectItem>
                       ))}
                     </SelectContent>
