@@ -441,6 +441,44 @@ conditional_logic_engine = ConditionalLogicEngine()
 time_trigger_engine = TimeBasedTriggerEngine()
 
 # API Endpoints
+@router.get("/workflows", response_model=Dict[str, Any])
+async def get_workflows():
+    """Get all workflows from the workflow engine"""
+    try:
+        workflows_collection = await get_workflows_collection()
+        
+        # Get workflows created by workflow engine components
+        workflows_cursor = workflows_collection.find({
+            "created_by": {"$in": [
+                "conditional_logic_builder",
+                "time_trigger_builder", 
+                "approval_process_builder",
+                "webhook_automation_builder",
+                "nl_workflow_generator"
+            ]}
+        })
+        
+        workflows = []
+        async for workflow in workflows_cursor:
+            workflow["id"] = str(workflow["_id"])
+            workflow.pop("_id", None)
+            workflows.append(workflow)
+        
+        return {
+            "workflows": workflows,
+            "count": len(workflows),
+            "status": "success"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting workflows: {e}")
+        return {
+            "workflows": [],
+            "count": 0,
+            "status": "error",
+            "message": str(e)
+        }
+
 @router.post("/workflows", response_model=Dict[str, Any])
 async def create_advanced_workflow(workflow: AdvancedWorkflow):
     """Create a new advanced workflow with conditional logic"""
