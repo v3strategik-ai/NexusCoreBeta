@@ -607,7 +607,7 @@ export function ReportBuilder({ onReportGenerated = () => {} }) {
                               {typeof value === 'object' ? value.total || 0 : value}
                             </div>
                             <div className="text-sm text-muted-foreground">
-                              {key.replace('_', ' ').toUpperCase()}
+                              {(key || '').replace('_', ' ').toUpperCase()}
                             </div>
                           </div>
                         ))}
