@@ -310,7 +310,7 @@ export function ConditionalLogicBuilder() {
                       <div className="flex items-center gap-3">
                         <Badge variant="secondary">{index + 1}</Badge>
                         <code className="text-sm bg-muted px-2 py-1 rounded">
-                          {condition.field} {condition.operator.replace(/_/g, ' ')} {condition.value}
+                          {condition.field} {(condition.operator || '').replace(/_/g, ' ')} {condition.value}
                         </code>
                         <Badge variant="outline">{condition.data_type}</Badge>
                       </div>
