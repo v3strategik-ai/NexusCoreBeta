@@ -91,7 +91,7 @@ function ActionNode({ data, selected }) {
         {getActionIcon(data.action_type)}
         <div className="font-bold">{data.label}</div>
       </div>
-      <div className="text-xs opacity-90 mt-1">{data.action_type?.replace('_', ' ') || 'Action'}</div>
+      <div className="text-xs opacity-90 mt-1">{(data.action_type || '').replace('_', ' ') || 'Action'}</div>
     </div>
   )
 }
