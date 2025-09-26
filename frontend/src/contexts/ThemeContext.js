@@ -60,11 +60,11 @@ export const ThemeProvider = ({ children }) => {
     // Update CSS custom properties for theme
     if (theme === 'dark') {
       // Dark theme variables
-      root.style.setProperty('--background', '222.2% 84% 4.9%')
+      root.style.setProperty('--background', '222.2 84% 4.9%')
       root.style.setProperty('--foreground', '210 40% 98%')
-      root.style.setProperty('--card', '222.2% 84% 4.9%')
+      root.style.setProperty('--card', '222.2 84% 4.9%')
       root.style.setProperty('--card-foreground', '210 40% 98%')
-      root.style.setProperty('--popover', '222.2% 84% 4.9%')
+      root.style.setProperty('--popover', '222.2 84% 4.9%')
       root.style.setProperty('--popover-foreground', '210 40% 98%')
       root.style.setProperty('--primary', '217.2 91.2% 59.8%')
       root.style.setProperty('--primary-foreground', '222.2 84% 4.9%')
