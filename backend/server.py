@@ -112,6 +112,7 @@ api_router.include_router(ai_content.router)
 api_router.include_router(sentiment.router)
 api_router.include_router(workflow_engine.router)
 api_router.include_router(workflow_execution.router)
+api_router.include_router(nl_workflows.router)
 
 # Include the main API router
 app.include_router(api_router)
