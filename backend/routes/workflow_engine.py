@@ -486,13 +486,20 @@ async def validate_workflow_logic(workflow_id: str):
         
         workflow = AdvancedWorkflow(**workflow_doc)
         
+        # Calculate total condition count across all workflow components
+        trigger_conditions = len(workflow.trigger.conditions) if workflow.trigger.conditions else 0
+        action_conditions = sum(len(action.conditions) for action in workflow.actions)
+        total_condition_count = trigger_conditions + action_conditions
+        
         # Validation results
         validation_results = {
             "valid": True,
             "issues": [],
             "warnings": [],
             "action_count": len(workflow.actions),
-            "condition_count": sum(len(action.conditions) for action in workflow.actions),
+            "condition_count": total_condition_count,
+            "trigger_conditions": trigger_conditions,
+            "action_conditions": action_conditions,
             "has_approval_process": workflow.approval_required,
             "estimated_complexity": "low"
         }
