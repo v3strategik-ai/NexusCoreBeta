@@ -565,6 +565,303 @@ class NexusCoreAPITester:
         
         return success
 
+    def test_conditional_logic_builder_condition_counting(self):
+        """Test SPECIFIC condition counting fix in Conditional Logic Builder"""
+        print("\n" + "="*50)
+        print("TESTING CONDITIONAL LOGIC BUILDER - CONDITION COUNTING FIX")
+        print("="*50)
+        
+        # Test 1: Create workflow with conditions in BOTH trigger AND actions
+        workflow_with_mixed_conditions = {
+            "name": "Condition Counting Test Workflow",
+            "description": "Test workflow to verify condition counting includes both trigger and action conditions",
+            "trigger": {
+                "type": "event_based",
+                "name": "Lead Score Updated",
+                "parameters": {"event": "lead_score_changed"},
+                "conditions": [
+                    {
+                        "field": "lead.score",
+                        "operator": "greater_than",
+                        "value": 80,
+                        "data_type": "number"
+                    },
+                    {
+                        "field": "lead.status",
+                        "operator": "equals",
+                        "value": "hot",
+                        "data_type": "string"
+                    }
+                ]
+            },
+            "actions": [
+                {
+                    "type": "assign_agent",
+                    "name": "Assign Senior Sales Rep",
+                    "parameters": {
+                        "agent_criteria": "senior_sales",
+                        "priority": "high"
+                    },
+                    "conditions": [
+                        {
+                            "field": "lead.value",
+                            "operator": "greater_than",
+                            "value": 25000,
+                            "data_type": "number"
+                        },
+                        {
+                            "field": "lead.source",
+                            "operator": "contains",
+                            "value": "enterprise",
+                            "data_type": "string"
+                        }
+                    ]
+                },
+                {
+                    "type": "send_email",
+                    "name": "Send Personalized Email",
+                    "parameters": {
+                        "template": "high_value_lead",
+                        "personalization": True
+                    },
+                    "conditions": [
+                        {
+                            "field": "lead.email",
+                            "operator": "is_not_empty",
+                            "value": "",
+                            "data_type": "string"
+                        }
+                    ]
+                },
+                {
+                    "type": "notification",
+                    "name": "Notify Sales Manager",
+                    "parameters": {
+                        "message": "High-value lead {{lead.name}} requires attention",
+                        "recipients": ["sales_manager"]
+                    }
+                    # This action has NO conditions - should not affect count
+                }
+            ],
+            "created_by": "test_user",
+            "category": "condition_counting_test",
+            "approval_required": False,
+            "tags": ["condition-counting", "test"]
+        }
+        
+        success1, workflow_response = self.run_test(
+            "Create Workflow with Mixed Conditions", "POST", "workflow-engine/workflows", 200, workflow_with_mixed_conditions
+        )
+        
+        workflow_id = None
+        if success1:
+            workflow_id = workflow_response.get('workflow_id')
+            print(f"   Created Test Workflow ID: {workflow_id}")
+        
+        # Test 2: Validate condition counting accuracy
+        success2 = False
+        if workflow_id:
+            success2, validation_result = self.run_test(
+                "Validate Condition Counting", "GET", f"workflow-engine/workflows/{workflow_id}/validate"
+            )
+            
+            if success2:
+                trigger_conditions = validation_result.get('trigger_conditions', 0)
+                action_conditions = validation_result.get('action_conditions', 0)
+                total_condition_count = validation_result.get('condition_count', 0)
+                action_count = validation_result.get('action_count', 0)
+                
+                print(f"   Trigger Conditions: {trigger_conditions}")
+                print(f"   Action Conditions: {action_conditions}")
+                print(f"   Total Condition Count: {total_condition_count}")
+                print(f"   Action Count: {action_count}")
+                
+                # Expected counts based on our test workflow:
+                # Trigger: 2 conditions (lead.score > 80, lead.status = "hot")
+                # Action 1: 2 conditions (lead.value > 25000, lead.source contains "enterprise")
+                # Action 2: 1 condition (lead.email is_not_empty)
+                # Action 3: 0 conditions
+                # Total: 2 + 2 + 1 + 0 = 5 conditions
+                
+                expected_trigger_conditions = 2
+                expected_action_conditions = 3  # 2 + 1 + 0
+                expected_total_conditions = 5   # 2 + 3
+                expected_action_count = 3
+                
+                print(f"\n   EXPECTED vs ACTUAL:")
+                print(f"   Trigger Conditions: {expected_trigger_conditions} vs {trigger_conditions}")
+                print(f"   Action Conditions: {expected_action_conditions} vs {action_conditions}")
+                print(f"   Total Conditions: {expected_total_conditions} vs {total_condition_count}")
+                print(f"   Action Count: {expected_action_count} vs {action_count}")
+                
+                # Verify condition counting accuracy
+                trigger_correct = trigger_conditions == expected_trigger_conditions
+                action_correct = action_conditions == expected_action_conditions
+                total_correct = total_condition_count == expected_total_conditions
+                action_count_correct = action_count == expected_action_count
+                
+                if trigger_correct and action_correct and total_correct and action_count_correct:
+                    print("   ✅ CONDITION COUNTING FIX VERIFIED - All counts are accurate!")
+                    print("   ✅ Fix successfully includes both trigger AND action conditions")
+                else:
+                    print("   ❌ CONDITION COUNTING ISSUE DETECTED:")
+                    if not trigger_correct:
+                        print(f"      - Trigger condition count incorrect: expected {expected_trigger_conditions}, got {trigger_conditions}")
+                    if not action_correct:
+                        print(f"      - Action condition count incorrect: expected {expected_action_conditions}, got {action_conditions}")
+                    if not total_correct:
+                        print(f"      - Total condition count incorrect: expected {expected_total_conditions}, got {total_condition_count}")
+                    if not action_count_correct:
+                        print(f"      - Action count incorrect: expected {expected_action_count}, got {action_count}")
+        
+        # Test 3: Test workflow with NO conditions (edge case)
+        workflow_no_conditions = {
+            "name": "No Conditions Test Workflow",
+            "description": "Test workflow with no conditions to verify zero counting",
+            "trigger": {
+                "type": "manual",
+                "name": "Manual Trigger",
+                "parameters": {}
+                # No conditions array
+            },
+            "actions": [
+                {
+                    "type": "notification",
+                    "name": "Simple Notification",
+                    "parameters": {
+                        "message": "Simple workflow executed",
+                        "type": "info"
+                    }
+                    # No conditions
+                }
+            ],
+            "created_by": "test_user",
+            "category": "zero_conditions_test"
+        }
+        
+        success3, no_conditions_response = self.run_test(
+            "Create Workflow with No Conditions", "POST", "workflow-engine/workflows", 200, workflow_no_conditions
+        )
+        
+        success4 = False
+        if success3:
+            no_conditions_workflow_id = no_conditions_response.get('workflow_id')
+            success4, no_conditions_validation = self.run_test(
+                "Validate Zero Conditions", "GET", f"workflow-engine/workflows/{no_conditions_workflow_id}/validate"
+            )
+            
+            if success4:
+                zero_trigger_conditions = no_conditions_validation.get('trigger_conditions', -1)
+                zero_action_conditions = no_conditions_validation.get('action_conditions', -1)
+                zero_total_conditions = no_conditions_validation.get('condition_count', -1)
+                
+                print(f"\n   ZERO CONDITIONS TEST:")
+                print(f"   Trigger Conditions: {zero_trigger_conditions}")
+                print(f"   Action Conditions: {zero_action_conditions}")
+                print(f"   Total Conditions: {zero_total_conditions}")
+                
+                if zero_trigger_conditions == 0 and zero_action_conditions == 0 and zero_total_conditions == 0:
+                    print("   ✅ Zero conditions handling working correctly")
+                else:
+                    print("   ❌ Zero conditions handling may have issues")
+        
+        # Test 4: Test complex workflow with many conditions
+        complex_workflow = {
+            "name": "Complex Conditions Test Workflow",
+            "description": "Complex workflow with multiple conditions per action",
+            "trigger": {
+                "type": "condition_based",
+                "name": "Complex Trigger",
+                "parameters": {"evaluation_frequency": "real_time"},
+                "conditions": [
+                    {"field": "lead.score", "operator": "greater_than", "value": 90, "data_type": "number"},
+                    {"field": "lead.value", "operator": "greater_than", "value": 100000, "data_type": "number"},
+                    {"field": "lead.status", "operator": "in_list", "value": ["hot", "qualified"], "data_type": "array"}
+                ]
+            },
+            "actions": [
+                {
+                    "type": "assign_agent",
+                    "name": "Assign Top Agent",
+                    "parameters": {"agent_tier": "platinum"},
+                    "conditions": [
+                        {"field": "lead.industry", "operator": "equals", "value": "technology", "data_type": "string"},
+                        {"field": "lead.company_size", "operator": "greater_than", "value": 500, "data_type": "number"}
+                    ]
+                },
+                {
+                    "type": "send_email",
+                    "name": "Send Executive Email",
+                    "parameters": {"template": "executive_outreach"},
+                    "conditions": [
+                        {"field": "lead.title", "operator": "contains", "value": "CEO", "data_type": "string"},
+                        {"field": "lead.title", "operator": "contains", "value": "CTO", "data_type": "string"},
+                        {"field": "lead.title", "operator": "contains", "value": "VP", "data_type": "string"}
+                    ]
+                },
+                {
+                    "type": "create_task",
+                    "name": "Create Follow-up Task",
+                    "parameters": {"priority": "urgent"},
+                    "conditions": [
+                        {"field": "lead.last_contact", "operator": "less_than", "value": "2024-01-01", "data_type": "string"}
+                    ]
+                }
+            ],
+            "created_by": "test_user",
+            "category": "complex_conditions_test"
+        }
+        
+        success5, complex_response = self.run_test(
+            "Create Complex Workflow", "POST", "workflow-engine/workflows", 200, complex_workflow
+        )
+        
+        success6 = False
+        if success5:
+            complex_workflow_id = complex_response.get('workflow_id')
+            success6, complex_validation = self.run_test(
+                "Validate Complex Conditions", "GET", f"workflow-engine/workflows/{complex_workflow_id}/validate"
+            )
+            
+            if success6:
+                complex_trigger_conditions = complex_validation.get('trigger_conditions', 0)
+                complex_action_conditions = complex_validation.get('action_conditions', 0)
+                complex_total_conditions = complex_validation.get('condition_count', 0)
+                
+                print(f"\n   COMPLEX CONDITIONS TEST:")
+                print(f"   Trigger Conditions: {complex_trigger_conditions}")
+                print(f"   Action Conditions: {complex_action_conditions}")
+                print(f"   Total Conditions: {complex_total_conditions}")
+                
+                # Expected: Trigger=3, Action1=2, Action2=3, Action3=1, Total=9
+                expected_complex_trigger = 3
+                expected_complex_action = 6  # 2 + 3 + 1
+                expected_complex_total = 9   # 3 + 6
+                
+                if (complex_trigger_conditions == expected_complex_trigger and 
+                    complex_action_conditions == expected_complex_action and 
+                    complex_total_conditions == expected_complex_total):
+                    print("   ✅ Complex condition counting working correctly")
+                else:
+                    print(f"   ❌ Complex condition counting issue - Expected T:{expected_complex_trigger}, A:{expected_complex_action}, Total:{expected_complex_total}")
+        
+        # Summary
+        all_tests = [success1, success2, success3, success4, success5, success6]
+        passed_tests = sum(all_tests)
+        total_tests = len(all_tests)
+        
+        print(f"\n📊 CONDITION COUNTING FIX TEST SUMMARY:")
+        print(f"   Tests Passed: {passed_tests}/{total_tests}")
+        print(f"   Success Rate: {(passed_tests/total_tests*100):.1f}%")
+        
+        if passed_tests == total_tests:
+            print("   🎉 CONDITION COUNTING FIX FULLY VERIFIED!")
+            print("   ✅ All condition counting scenarios working correctly")
+        else:
+            print("   ⚠️  Some condition counting tests failed")
+        
+        return all(all_tests)
+
     def test_conditional_logic_builder(self):
         """Test Phase 6B Conditional Logic Builder endpoints"""
         print("\n" + "="*50)
