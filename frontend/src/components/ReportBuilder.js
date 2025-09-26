@@ -622,7 +622,7 @@ export function ReportBuilder({ onReportGenerated = () => {} }) {
                             <tr>
                               {previewData.preview_data[0] && Object.keys(previewData.preview_data[0]).map(key => (
                                 <th key={key} className="px-4 py-2 text-left font-medium">
-                                  {key.replace('_', ' ').toUpperCase()}
+                                  {(key || '').replace('_', ' ').toUpperCase()}
                                 </th>
                               ))}
                             </tr>
