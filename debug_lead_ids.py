@@ -7,7 +7,7 @@ import requests
 import json
 
 def debug_lead_ids():
-    base_url = "https://ai-workflow-hub-21.preview.emergentagent.com"
+    base_url = "https://smartagent-nexus.preview.emergentagent.com"
     api_url = f"{base_url}/api"
     
     # Get leads

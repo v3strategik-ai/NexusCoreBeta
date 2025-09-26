@@ -7,7 +7,7 @@ import requests
 import json
 
 def test_error_handling():
-    base_url = "https://ai-workflow-hub-21.preview.emergentagent.com/api"
+    base_url = "https://smartagent-nexus.preview.emergentagent.com/api"
     
     print("🔍 Testing Error Handling & Edge Cases")
     print("=" * 50)
