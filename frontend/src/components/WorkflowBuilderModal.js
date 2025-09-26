@@ -280,10 +280,10 @@ export function WorkflowBuilderModal({ children, agents, onWorkflowCreated }) {
               {/* Dynamic configuration fields based on action type */}
               {actionType?.fields?.map((field) => (
                 <div key={field}>
-                  <Label className="text-xs capitalize">{field.replace('_', ' ')}</Label>
+                  <Label className="text-xs capitalize">{(field || '').replace('_', ' ')}</Label>
                   <Input
                     className="h-8 text-xs"
-                    placeholder={`Enter ${field.replace('_', ' ')}`}
+                    placeholder={`Enter ${(field || '').replace('_', ' ')}`}
                     value={step.configuration[field] || ''}
                     onChange={(e) => updateStep(step.id, {
                       configuration: { ...step.configuration, [field]: e.target.value }
