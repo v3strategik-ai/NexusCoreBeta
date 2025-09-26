@@ -323,7 +323,41 @@ agent_communication:
   - agent: "testing"
     message: "PHASE 6A FRONTEND TESTING COMPLETE: Dark/Light Theme System and Voice Commands Foundation both fully functional (100% success rate). THEME SYSTEM: Theme toggle with 3 options (Light, Dark, System) working correctly, CSS custom properties applied, localStorage persistence functional, system theme detection implemented, mobile/tablet responsive. VOICE COMMANDS: Voice recognition button working, Voice Help with comprehensive command examples, mobile/tablet accessible, integration with app navigation via custom events. INTEGRATION: Both features coexist in header without conflicts, responsive design maintains functionality across all screen sizes (desktop 1920x1080, tablet 768x1024, mobile 390x844). All Phase 6A frontend features operational and ready for production use."
 
-  - task: "Predictive Lead Scoring"
+  - task: "Conditional Logic Builder Backend"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/routes/workflow_engine.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "IMPLEMENTED: Advanced conditional logic builder with workflow condition creation, evaluation, and management. Supports complex boolean logic, data filtering, temporal conditions, and multi-level conditional structures."
+
+  - task: "Workflow Execution Engine Backend"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/routes/workflow_execution.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "IMPLEMENTED: Comprehensive workflow execution engine with runtime management, step-by-step execution, error handling, retry mechanisms, and execution monitoring."
+
+  - task: "Natural Language Workflow Creation Backend"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/routes/nl_workflows.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "IMPLEMENTED: AI-powered natural language workflow creation using Emergent LLM key. Converts plain text descriptions into structured workflows with confidence scoring, suggestions, and validation. Added to server.py and ready for testing."
     implemented: true
     working: true
     file: "/app/backend/routes/lead_scoring.py"
