@@ -410,7 +410,7 @@ export function AnalyticsDashboard() {
                     ROI Analysis Summary
                   </CardTitle>
                   <CardDescription>
-                    Investment performance and return analysis for {selectedTimeRange.replace('_', ' ')}
+                    Investment performance and return analysis for {(selectedTimeRange || '').replace('_', ' ')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
