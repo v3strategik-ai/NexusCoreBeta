@@ -20,7 +20,9 @@ import {
   PlayCircle,
   PauseCircle,
   RotateCcw,
-  Send
+  Send,
+  XCircle,
+  CheckCircle
 } from 'lucide-react'
 
 // Realtime Audio Chat Class
