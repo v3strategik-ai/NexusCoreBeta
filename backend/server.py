@@ -173,6 +173,24 @@ async def startup_event():
     # Connect to MongoDB
     await connect_to_mongo()
     
+    # Phase 7: Initialize performance optimization systems
+    logger.info("Initializing performance optimization systems...")
+    
+    # Setup Redis cache
+    cache_success = await setup_redis_cache()
+    logger.info(f"Redis cache: {'enabled' if cache_success else 'fallback mode'}")
+    
+    # Setup rate limiter
+    await setup_rate_limiter()
+    logger.info("Rate limiter: enabled")
+    
+    # Run initial database optimization
+    try:
+        optimization_results = await performance_optimizer.optimize_database_indexes()
+        logger.info(f"Database optimization: {len(optimization_results)} collections optimized")
+    except Exception as e:
+        logger.warning(f"Database optimization skipped: {e}")
+    
     # Start background tasks for real-time updates
     start_background_tasks()
     
@@ -187,6 +205,7 @@ async def startup_event():
     logger.info("  - Email Automation: /api/email")
     logger.info("  - Real-Time: /api/realtime")
     logger.info("  - Advanced Workflows: /api/workflows/advanced")
+    logger.info("  - Performance Optimization: /api/performance")
     logger.info("  - WebSocket: /socket.io")
 
 @app.on_event("shutdown")
