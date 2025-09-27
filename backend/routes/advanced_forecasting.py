@@ -529,7 +529,7 @@ async def generate_seasonal_analysis(request: SeasonalAnalysisRequest):
         )
         
         try:
-            seasonal_analysis = json.loads(ai_response.content)
+            seasonal_analysis = json.loads(ai_response)
         except:
             seasonal_analysis = {
                 "seasonal_patterns": ["Q4 typically shows increased activity"],
