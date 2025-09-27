@@ -58,6 +58,7 @@ import {
   Edit,
   Home,
   Briefcase,
+  TrendingUp,
   Target,
   BookOpen,
   Upload,
