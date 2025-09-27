@@ -8,7 +8,7 @@ import time
 import logging
 from typing import Callable
 from fastapi import Request, Response
-from fastapi.middleware.base import BaseHTTPMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi.responses import JSONResponse
 
 from rate_limiter import rate_limiter, RateLimitExceededException
