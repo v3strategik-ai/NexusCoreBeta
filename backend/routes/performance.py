@@ -67,7 +67,7 @@ class CacheStats(BaseModel):
     timestamp: str
 
 # Router
-router = APIRouter(prefix="/api/performance", tags=["Performance"])
+router = APIRouter(prefix="/performance", tags=["Performance"])
 
 @router.get("/health", summary="Performance system health check")
 async def get_performance_health():
