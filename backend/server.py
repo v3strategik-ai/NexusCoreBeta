@@ -212,6 +212,12 @@ async def startup_event():
 async def shutdown_event():
     """Cleanup on application shutdown"""
     try:
+        # Phase 7: Cleanup performance optimization systems
+        logger.info("Shutting down performance optimization systems...")
+        await cleanup_rate_limiter()
+        await cleanup_redis_cache()
+        logger.info("Performance systems shut down successfully")
+        
         await close_mongo_connection()
         logger.info("Nexus Core API shut down successfully")
     except Exception as e:
