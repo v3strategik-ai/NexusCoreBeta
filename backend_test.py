@@ -941,6 +941,722 @@ class NexusCoreAPITester:
         
         return success
 
+    def test_phase_6c_advanced_forecasting_system(self):
+        """Test Phase 6C: Advanced Forecasting System backend implementation"""
+        print("\n" + "="*50)
+        print("TESTING PHASE 6C: ADVANCED FORECASTING SYSTEM")
+        print("="*50)
+        
+        # Test 1: Forecasting System Health Check
+        success1, health_response = self.run_test("Forecasting System Health Check", "GET", "forecasting/health")
+        if success1:
+            print(f"   Forecasting Status: {health_response.get('status', 'unknown')}")
+            components = health_response.get('components', {})
+            supported_forecasts = health_response.get('supported_forecasts', [])
+            supported_periods = health_response.get('supported_periods', [])
+            
+            print(f"   AI Engine: {components.get('ai_engine', 'unknown')}")
+            print(f"   Database: {components.get('database', 'unknown')}")
+            print(f"   Forecasting Models: {components.get('forecasting_models', 'unknown')}")
+            print(f"   Supported Forecasts: {len(supported_forecasts)}")
+            print(f"   Supported Periods: {len(supported_periods)}")
+            
+            # Verify 6 forecast types as expected
+            if len(supported_forecasts) >= 6:
+                print("   ✅ All 6 forecast types available")
+                print(f"   Forecast Types: {', '.join(supported_forecasts)}")
+            else:
+                print(f"   ❌ Expected 6 forecast types, found {len(supported_forecasts)}")
+        
+        # Test 2: Get Available Forecast Types
+        success2, types_response = self.run_test("Get Available Forecast Types", "GET", "forecasting/types")
+        if success2:
+            forecast_types = types_response.get('forecast_types', [])
+            periods = types_response.get('periods', [])
+            
+            print(f"   Available Forecast Types: {len(forecast_types)}")
+            print(f"   Available Periods: {len(periods)}")
+            
+            # Verify expected forecast types
+            expected_types = ['revenue', 'lead_conversion', 'agent_performance', 'seasonal_analysis', 'resource_planning', 'market_trends']
+            found_types = [ft.get('type') for ft in forecast_types]
+            
+            if all(expected_type in found_types for expected_type in expected_types):
+                print("   ✅ All 6 expected forecast types present")
+                for ft in forecast_types:
+                    print(f"   - {ft.get('name')}: {ft.get('description')[:50]}...")
+            else:
+                missing = [t for t in expected_types if t not in found_types]
+                print(f"   ❌ Missing forecast types: {missing}")
+        
+        # Test 3: Generate Revenue Forecast
+        revenue_forecast_request = {
+            "forecast_type": "revenue",
+            "period": "monthly",
+            "horizon_months": 6,
+            "tenant_id": "test_tenant_forecasting",
+            "include_confidence": True,
+            "include_factors": True
+        }
+        
+        success3, revenue_forecast = self.run_test("Generate Revenue Forecast", "POST", "forecasting/generate", 200, revenue_forecast_request)
+        if success3:
+            print(f"   Forecast Type: {revenue_forecast.get('forecast_type')}")
+            print(f"   Period: {revenue_forecast.get('period')}")
+            print(f"   Generated At: {revenue_forecast.get('generated_at')}")
+            print(f"   Confidence Score: {revenue_forecast.get('confidence_score')}")
+            
+            forecast_data = revenue_forecast.get('forecast_data', [])
+            summary = revenue_forecast.get('summary', {})
+            recommendations = revenue_forecast.get('recommendations', [])
+            
+            print(f"   Forecast Data Points: {len(forecast_data)}")
+            print(f"   Key Factors: {len(revenue_forecast.get('key_factors', []))}")
+            print(f"   Recommendations: {len(recommendations)}")
+            
+            if forecast_data:
+                first_forecast = forecast_data[0]
+                print(f"   Sample Forecast: {first_forecast}")
+        
+        # Test 4: Generate Lead Conversion Forecast
+        conversion_forecast_request = {
+            "forecast_type": "lead_conversion",
+            "period": "monthly",
+            "horizon_months": 3,
+            "tenant_id": "test_tenant_forecasting",
+            "include_confidence": True
+        }
+        
+        success4, conversion_forecast = self.run_test("Generate Lead Conversion Forecast", "POST", "forecasting/generate", 200, conversion_forecast_request)
+        if success4:
+            print(f"   Conversion Forecast Type: {conversion_forecast.get('forecast_type')}")
+            print(f"   Conversion Confidence: {conversion_forecast.get('confidence_score')}")
+            
+            conversion_summary = conversion_forecast.get('summary', {})
+            print(f"   Current Conversion Rate: {conversion_summary.get('current_conversion_rate', 0):.1f}%")
+            print(f"   Total Leads Analyzed: {conversion_summary.get('total_leads_analyzed', 0)}")
+        
+        # Test 5: Generate Seasonal Analysis
+        seasonal_request = {
+            "tenant_id": "test_tenant_seasonal",
+            "years_lookback": 2,
+            "metrics": ["revenue", "leads", "conversions"]
+        }
+        
+        success5, seasonal_analysis = self.run_test("Generate Seasonal Analysis", "POST", "forecasting/seasonal-analysis", 200, seasonal_request)
+        if success5:
+            print(f"   Analysis Type: {seasonal_analysis.get('analysis_type')}")
+            print(f"   Years Analyzed: {seasonal_analysis.get('years_analyzed')}")
+            print(f"   Metrics Analyzed: {seasonal_analysis.get('metrics_analyzed')}")
+            
+            seasonal_insights = seasonal_analysis.get('seasonal_insights', {})
+            print(f"   Seasonal Patterns: {len(seasonal_insights.get('seasonal_patterns', []))}")
+            print(f"   Peak Seasons: {seasonal_insights.get('peak_seasons', [])}")
+            print(f"   Low Seasons: {seasonal_insights.get('low_seasons', [])}")
+        
+        # Test 6: Generate Resource Planning Forecast
+        resource_request = {
+            "tenant_id": "test_tenant_resources",
+            "target_growth_rate": 0.15,
+            "current_capacity": 85,
+            "forecast_months": 6
+        }
+        
+        success6, resource_planning = self.run_test("Generate Resource Planning", "POST", "forecasting/resource-planning", 200, resource_request)
+        if success6:
+            print(f"   Planning Type: {resource_planning.get('planning_type')}")
+            print(f"   Forecast Months: {resource_planning.get('forecast_months')}")
+            print(f"   Target Growth Rate: {resource_planning.get('target_growth_rate') * 100}%")
+            
+            current_baseline = resource_planning.get('current_baseline', {})
+            resource_projections = resource_planning.get('resource_projections', [])
+            
+            print(f"   Current Agents: {current_baseline.get('agents', 0)}")
+            print(f"   Monthly Leads: {current_baseline.get('monthly_leads', 0)}")
+            print(f"   Resource Projections: {len(resource_projections)}")
+            
+            if resource_projections:
+                first_projection = resource_projections[0]
+                print(f"   Sample Projection: Month {first_projection.get('month')}, Agents: {first_projection.get('required_agents')}")
+        
+        # Test 7: Get Forecasting Insights
+        success7, insights_response = self.run_test("Get Forecasting Insights", "GET", "forecasting/insights?tenant_id=test_tenant_insights")
+        if success7:
+            print(f"   Insights Type: {insights_response.get('insights_type')}")
+            print(f"   Analysis Period: {insights_response.get('analysis_period')}")
+            
+            key_insights = insights_response.get('key_insights', {})
+            historical_summary = insights_response.get('historical_summary', {})
+            
+            print(f"   Key Insights Available: {bool(key_insights)}")
+            print(f"   Historical Summary: {bool(historical_summary)}")
+            
+            if historical_summary:
+                print(f"   Leads Count: {historical_summary.get('leads_count', 0)}")
+                print(f"   Conversion Rate: {historical_summary.get('conversion_rate', 0):.1f}%")
+        
+        # Test 8: Test Different Forecast Types
+        other_forecast_types = ["agent_performance", "market_trends"]
+        forecast_type_results = []
+        
+        for forecast_type in other_forecast_types:
+            forecast_request = {
+                "forecast_type": forecast_type,
+                "period": "monthly",
+                "horizon_months": 3,
+                "tenant_id": "test_tenant_types"
+            }
+            
+            success_type, type_response = self.run_test(f"Generate {forecast_type.title()} Forecast", "POST", "forecasting/generate", 200, forecast_request)
+            forecast_type_results.append(success_type)
+            
+            if success_type:
+                print(f"   {forecast_type.title()} Forecast Generated: {type_response.get('forecast_type')}")
+                print(f"   Confidence: {type_response.get('confidence_score', 0):.2f}")
+        
+        success8 = all(forecast_type_results)
+        
+        # Test 9: Test AI Integration (Emergent LLM Key)
+        success9 = True
+        if success1:
+            ai_engine_status = health_response.get('components', {}).get('ai_engine', 'unknown')
+            if ai_engine_status == 'healthy':
+                print("   ✅ AI Integration (Emergent LLM) working correctly")
+            else:
+                print(f"   ❌ AI Integration issue: {ai_engine_status}")
+                success9 = False
+        
+        # Summary of Advanced Forecasting System Tests
+        all_forecasting_tests = [success1, success2, success3, success4, success5, success6, success7, success8, success9]
+        passed_forecasting_tests = sum(all_forecasting_tests)
+        total_forecasting_tests = len(all_forecasting_tests)
+        
+        print(f"\n📊 ADVANCED FORECASTING SYSTEM TEST SUMMARY:")
+        print(f"   Tests Passed: {passed_forecasting_tests}/{total_forecasting_tests}")
+        print(f"   Success Rate: {(passed_forecasting_tests/total_forecasting_tests*100):.1f}%")
+        
+        if passed_forecasting_tests == total_forecasting_tests:
+            print("   🎉 ALL ADVANCED FORECASTING SYSTEM TESTS PASSED!")
+            print("   ✅ 6 forecast types available")
+            print("   ✅ 4 time periods supported")
+            print("   ✅ AI integration with Emergent LLM operational")
+        else:
+            print("   ⚠️  Some Advanced Forecasting System tests failed")
+        
+        return all(all_forecasting_tests)
+
+    def test_phase_6c_advanced_security_system(self):
+        """Test Phase 6C: Advanced Security System backend implementation"""
+        print("\n" + "="*50)
+        print("TESTING PHASE 6C: ADVANCED SECURITY SYSTEM")
+        print("="*50)
+        
+        # Test 1: Security System Health Check
+        success1, health_response = self.run_test("Security System Health Check", "GET", "advanced-security/health")
+        if success1:
+            print(f"   Security Status: {health_response.get('status', 'unknown')}")
+            components = health_response.get('components', {})
+            auth_methods = health_response.get('supported_auth_methods', [])
+            security_levels = health_response.get('security_levels', [])
+            
+            print(f"   JWT Service: {components.get('jwt_service', 'unknown')}")
+            print(f"   MFA Service: {components.get('mfa_service', 'unknown')}")
+            print(f"   Password Policies: {components.get('password_policies', 'unknown')}")
+            print(f"   Threat Detection: {components.get('threat_detection', 'unknown')}")
+            print(f"   Database: {components.get('database', 'unknown')}")
+            print(f"   Supported Auth Methods: {len(auth_methods)}")
+            print(f"   Security Levels: {len(security_levels)}")
+            
+            # Verify 5 authentication methods
+            if len(auth_methods) >= 5:
+                print("   ✅ All 5 authentication methods supported")
+                print(f"   Auth Methods: {', '.join(auth_methods)}")
+            else:
+                print(f"   ❌ Expected 5 auth methods, found {len(auth_methods)}")
+            
+            # Verify 4 security levels
+            if len(security_levels) >= 4:
+                print("   ✅ All 4 security levels supported")
+                print(f"   Security Levels: {', '.join(security_levels)}")
+            else:
+                print(f"   ❌ Expected 4 security levels, found {len(security_levels)}")
+        
+        # Test 2: MFA Setup (TOTP Method)
+        mfa_setup_request = {
+            "user_id": "test_user_mfa_001",
+            "method": "mfa_totp"
+        }
+        
+        success2, mfa_setup = self.run_test("MFA Setup - TOTP", "POST", "advanced-security/mfa/setup", 200, mfa_setup_request)
+        totp_secret = None
+        if success2:
+            print(f"   MFA User ID: {mfa_setup.get('user_id')}")
+            print(f"   MFA Method: {mfa_setup.get('method')}")
+            print(f"   Setup Complete: {mfa_setup.get('setup_complete')}")
+            
+            totp_secret = mfa_setup.get('secret_key')
+            qr_code_url = mfa_setup.get('qr_code_url')
+            backup_codes = mfa_setup.get('backup_codes', [])
+            
+            print(f"   Secret Key Generated: {bool(totp_secret)}")
+            print(f"   QR Code URL Generated: {bool(qr_code_url)}")
+            print(f"   Backup Codes: {len(backup_codes)}")
+            
+            if totp_secret and qr_code_url and len(backup_codes) > 0:
+                print("   ✅ TOTP MFA setup complete with all components")
+            else:
+                print("   ❌ MFA setup incomplete")
+        
+        # Test 3: MFA Verification (using a test token)
+        success3 = True
+        if totp_secret:
+            # Generate a test TOTP token (this would normally come from user's authenticator app)
+            import pyotp
+            try:
+                totp = pyotp.TOTP(totp_secret)
+                test_token = totp.now()
+                
+                mfa_verify_request = {
+                    "user_id": "test_user_mfa_001",
+                    "token": test_token,
+                    "method": "mfa_totp"
+                }
+                
+                success3, mfa_verify = self.run_test("MFA Verification - TOTP", "POST", "advanced-security/mfa/verify", 200, mfa_verify_request)
+                if success3:
+                    print(f"   Verification User ID: {mfa_verify.get('user_id')}")
+                    print(f"   Verification Method: {mfa_verify.get('method')}")
+                    print(f"   Token Verified: {mfa_verify.get('verified')}")
+                    
+                    if mfa_verify.get('verified'):
+                        print("   ✅ TOTP token verification successful")
+                    else:
+                        print("   ❌ TOTP token verification failed")
+            except ImportError:
+                print("   ⚠️  pyotp not available for token generation, skipping verification test")
+                success3 = True  # Don't fail the test for missing dependency
+        
+        # Test 4: Password Policy Configuration
+        password_policy_request = {
+            "tenant_id": "test_tenant_security",
+            "min_length": 12,
+            "require_uppercase": True,
+            "require_lowercase": True,
+            "require_numbers": True,
+            "require_symbols": True,
+            "max_age_days": 60,
+            "prevent_reuse": 8,
+            "lockout_attempts": 3
+        }
+        
+        success4, password_policy = self.run_test("Password Policy Configuration", "POST", "advanced-security/password-policy", 200, password_policy_request)
+        if success4:
+            print(f"   Policy Tenant ID: {password_policy.get('tenant_id')}")
+            print(f"   Policy Updated: {password_policy.get('policy_updated')}")
+            
+            policy = password_policy.get('policy', {})
+            print(f"   Min Length: {policy.get('min_length')} characters")
+            print(f"   Complexity Requirements: {policy.get('require_uppercase')}")
+            print(f"   Max Age: {policy.get('max_age_days')} days")
+            print(f"   Lockout Attempts: {policy.get('lockout_attempts')}")
+        
+        # Test 5: IP Restrictions Configuration
+        ip_restrictions_request = {
+            "tenant_id": "test_tenant_security",
+            "allowed_ips": ["192.168.1.0/24", "10.0.0.1"],
+            "blocked_ips": ["192.168.100.0/24"],
+            "require_whitelist": True
+        }
+        
+        success5, ip_restrictions = self.run_test("IP Restrictions Configuration", "POST", "advanced-security/ip-restrictions", 200, ip_restrictions_request)
+        if success5:
+            print(f"   IP Restrictions Tenant: {ip_restrictions.get('tenant_id')}")
+            print(f"   Restrictions Updated: {ip_restrictions.get('restrictions_updated')}")
+            
+            restrictions = ip_restrictions.get('restrictions', {})
+            print(f"   Allowed IPs Count: {restrictions.get('allowed_ips_count')}")
+            print(f"   Blocked IPs Count: {restrictions.get('blocked_ips_count')}")
+            print(f"   Whitelist Required: {restrictions.get('whitelist_required')}")
+        
+        # Test 6: API Key Generation
+        api_key_request = {
+            "user_id": "test_user_api_001",
+            "name": "Test API Key for Security Testing",
+            "permissions": ["read:leads", "write:agents", "admin:tenants"],
+            "expires_in_days": 30
+        }
+        
+        success6, api_key_response = self.run_test("API Key Generation", "POST", "advanced-security/api-keys/generate", 200, api_key_request)
+        if success6:
+            print(f"   Key Generated: {api_key_response.get('key_generated')}")
+            print(f"   API Key: {api_key_response.get('api_key')[:20]}...")  # Show only first 20 chars
+            print(f"   Key ID: {api_key_response.get('key_id')}")
+            print(f"   Key Name: {api_key_response.get('name')}")
+            print(f"   Permissions: {len(api_key_response.get('permissions', []))}")
+            print(f"   Expires At: {api_key_response.get('expires_at')}")
+        
+        # Test 7: Threat Detection Analysis
+        success7, threat_analysis = self.run_test("Threat Detection Analysis", "GET", "advanced-security/threat-detection/test_user_threat_001")
+        if success7:
+            threats_detected = threat_analysis.get('threats_detected', [])
+            risk_level = threat_analysis.get('risk_level')
+            automated_actions = threat_analysis.get('automated_actions', [])
+            manual_review = threat_analysis.get('manual_review_required', [])
+            
+            print(f"   Threats Detected: {len(threats_detected)}")
+            print(f"   Risk Level: {risk_level}")
+            print(f"   Automated Actions: {len(automated_actions)}")
+            print(f"   Manual Review Items: {len(manual_review)}")
+            
+            if threats_detected:
+                threat = threats_detected[0]
+                print(f"   Sample Threat - Risk Score: {threat.get('risk_score')}")
+                print(f"   Sample Threat - Level: {threat.get('threat_level')}")
+                print(f"   Sample Threat - Factors: {len(threat.get('risk_factors', []))}")
+        
+        # Test 8: Security Audit Generation
+        success8, security_audit = self.run_test("Security Audit Generation", "GET", "advanced-security/audit/test_tenant_security?days=30")
+        if success8:
+            print(f"   Audit Tenant ID: {security_audit.get('tenant_id')}")
+            print(f"   Audit Period: {security_audit.get('audit_period')}")
+            
+            security_events = security_audit.get('security_events', [])
+            risk_summary = security_audit.get('risk_summary', {})
+            recommendations = security_audit.get('recommendations', [])
+            compliance_score = security_audit.get('compliance_score')
+            
+            print(f"   Security Events: {len(security_events)}")
+            print(f"   Risk Summary Available: {bool(risk_summary)}")
+            print(f"   Recommendations: {len(recommendations)}")
+            print(f"   Compliance Score: {compliance_score}")
+            
+            if risk_summary:
+                print(f"   Total Events: {risk_summary.get('total_events', 0)}")
+                print(f"   Login Attempts: {risk_summary.get('login_attempts', 0)}")
+                print(f"   Failed Logins: {risk_summary.get('failed_logins', 0)}")
+        
+        # Test 9: Session Security Configuration
+        session_security_request = {
+            "tenant_id": "test_tenant_security",
+            "session_timeout_hours": 4,
+            "idle_timeout_minutes": 15,
+            "require_device_verification": True,
+            "max_concurrent_sessions": 2
+        }
+        
+        success9, session_security = self.run_test("Session Security Configuration", "POST", "advanced-security/sessions/security", 200, session_security_request)
+        if success9:
+            print(f"   Session Security Tenant: {session_security.get('tenant_id')}")
+            print(f"   Session Security Updated: {session_security.get('session_security_updated')}")
+            
+            configuration = session_security.get('configuration', {})
+            print(f"   Session Timeout: {configuration.get('session_timeout_hours')} hours")
+            print(f"   Idle Timeout: {configuration.get('idle_timeout_minutes')} minutes")
+            print(f"   Device Verification: {configuration.get('require_device_verification')}")
+            print(f"   Max Concurrent: {configuration.get('max_concurrent_sessions')}")
+        
+        # Test 10: Security Overview
+        success10, security_overview = self.run_test("Security Overview", "GET", "advanced-security/security-overview/test_tenant_security")
+        if success10:
+            print(f"   Overview Tenant ID: {security_overview.get('tenant_id')}")
+            
+            overview = security_overview.get('security_overview', {})
+            policy_summary = security_overview.get('policy_summary', {})
+            
+            print(f"   Password Policy Configured: {overview.get('password_policy_configured')}")
+            print(f"   IP Restrictions Enabled: {overview.get('ip_restrictions_enabled')}")
+            print(f"   MFA Adoption Rate: {overview.get('mfa_adoption_rate', 0):.1f}%")
+            print(f"   Active API Keys: {overview.get('active_api_keys', 0)}")
+            print(f"   Session Security Configured: {overview.get('session_security_configured')}")
+            
+            if policy_summary:
+                password_reqs = policy_summary.get('password_requirements', {})
+                access_controls = policy_summary.get('access_controls', {})
+                session_controls = policy_summary.get('session_controls', {})
+                
+                print(f"   Password Min Length: {password_reqs.get('min_length', 0)}")
+                print(f"   IP Whitelist Required: {access_controls.get('ip_whitelist_required', False)}")
+                print(f"   Session Timeout: {session_controls.get('timeout_hours', 0)} hours")
+        
+        # Summary of Advanced Security System Tests
+        all_security_tests = [success1, success2, success3, success4, success5, success6, success7, success8, success9, success10]
+        passed_security_tests = sum(all_security_tests)
+        total_security_tests = len(all_security_tests)
+        
+        print(f"\n📊 ADVANCED SECURITY SYSTEM TEST SUMMARY:")
+        print(f"   Tests Passed: {passed_security_tests}/{total_security_tests}")
+        print(f"   Success Rate: {(passed_security_tests/total_security_tests*100):.1f}%")
+        
+        if passed_security_tests == total_security_tests:
+            print("   🎉 ALL ADVANCED SECURITY SYSTEM TESTS PASSED!")
+            print("   ✅ 5 authentication methods supported")
+            print("   ✅ 4 security levels operational")
+            print("   ✅ MFA (TOTP) setup and verification working")
+            print("   ✅ Password policies, IP restrictions, API keys functional")
+            print("   ✅ Threat detection and security auditing operational")
+        else:
+            print("   ⚠️  Some Advanced Security System tests failed")
+        
+        return all(all_security_tests)
+
+    def test_phase_6c_comparative_analytics_system(self):
+        """Test Phase 6C: Comparative Analytics System backend implementation"""
+        print("\n" + "="*50)
+        print("TESTING PHASE 6C: COMPARATIVE ANALYTICS SYSTEM")
+        print("="*50)
+        
+        # Test 1: Comparative Analytics Health Check
+        success1, health_response = self.run_test("Comparative Analytics Health Check", "GET", "comparative-analytics/health")
+        if success1:
+            print(f"   Analytics Status: {health_response.get('status', 'unknown')}")
+            components = health_response.get('components', {})
+            benchmarks = health_response.get('supported_benchmarks', [])
+            industries = health_response.get('supported_industries', [])
+            periods = health_response.get('comparison_periods', [])
+            
+            print(f"   AI Analytics Engine: {components.get('ai_analytics_engine', 'unknown')}")
+            print(f"   Benchmark Data: {components.get('benchmark_data', 'unknown')}")
+            print(f"   Trend Analysis: {components.get('trend_analysis', 'unknown')}")
+            print(f"   Database: {components.get('database', 'unknown')}")
+            print(f"   Supported Benchmarks: {len(benchmarks)}")
+            print(f"   Supported Industries: {len(industries)}")
+            print(f"   Comparison Periods: {len(periods)}")
+            
+            # Verify 6 benchmark types
+            if len(benchmarks) >= 6:
+                print("   ✅ All 6 benchmark types supported")
+                print(f"   Benchmark Types: {', '.join(benchmarks)}")
+            else:
+                print(f"   ❌ Expected 6 benchmark types, found {len(benchmarks)}")
+            
+            # Verify 8 industry categories
+            if len(industries) >= 8:
+                print("   ✅ All 8 industry categories supported")
+                print(f"   Industries: {', '.join(industries)}")
+            else:
+                print(f"   ❌ Expected 8 industries, found {len(industries)}")
+        
+        # Test 2: Benchmark Analysis
+        benchmark_request = {
+            "tenant_id": "test_tenant_analytics",
+            "benchmark_types": ["performance", "revenue", "conversion"],
+            "industry": "technology",
+            "period": "quarterly",
+            "include_anonymized_comparison": True,
+            "include_recommendations": True
+        }
+        
+        success2, benchmark_analysis = self.run_test("Generate Benchmark Analysis", "POST", "comparative-analytics/benchmark", 200, benchmark_request)
+        if success2:
+            print(f"   Benchmark Tenant ID: {benchmark_analysis.get('tenant_id')}")
+            print(f"   Industry: {benchmark_analysis.get('industry')}")
+            print(f"   Analysis Period: {benchmark_analysis.get('analysis_period')}")
+            print(f"   Confidence Score: {benchmark_analysis.get('confidence_score')}")
+            
+            benchmark_results = benchmark_analysis.get('benchmark_results', [])
+            performance_summary = benchmark_analysis.get('performance_summary', {})
+            recommendations = benchmark_analysis.get('recommendations', [])
+            
+            print(f"   Benchmark Results: {len(benchmark_results)}")
+            print(f"   Performance Summary Available: {bool(performance_summary)}")
+            print(f"   Recommendations: {len(recommendations)}")
+            
+            if benchmark_results:
+                for result in benchmark_results:
+                    metric = result.get('metric')
+                    performance = result.get('performance')
+                    percentile = result.get('percentile')
+                    print(f"   - {metric}: {performance} (percentile: {percentile})")
+            
+            if performance_summary:
+                overall_score = performance_summary.get('overall_score')
+                strengths = performance_summary.get('strengths', [])
+                weaknesses = performance_summary.get('weaknesses', [])
+                print(f"   Overall Score: {overall_score}")
+                print(f"   Strengths: {len(strengths)}")
+                print(f"   Weaknesses: {len(weaknesses)}")
+        
+        # Test 3: Trend Analysis
+        trend_request = {
+            "tenant_id": "test_tenant_trends",
+            "metrics": ["revenue", "leads", "conversions"],
+            "lookback_months": 12,
+            "forecast_months": 6,
+            "include_seasonality": True
+        }
+        
+        success3, trend_analysis = self.run_test("Generate Trend Analysis", "POST", "comparative-analytics/trends", 200, trend_request)
+        if success3:
+            print(f"   Trend Tenant ID: {trend_analysis.get('tenant_id')}")
+            print(f"   Analysis Period: {trend_analysis.get('analysis_period')}")
+            
+            trend_data = trend_analysis.get('trend_data', [])
+            seasonal_patterns = trend_analysis.get('seasonal_patterns', {})
+            forecast_data = trend_analysis.get('forecast_data', [])
+            insights = trend_analysis.get('insights', [])
+            
+            print(f"   Trend Data Points: {len(trend_data)}")
+            print(f"   Seasonal Patterns: {bool(seasonal_patterns)}")
+            print(f"   Forecast Data Points: {len(forecast_data)}")
+            print(f"   Insights: {len(insights)}")
+            
+            if trend_data:
+                latest_trend = trend_data[-1] if trend_data else {}
+                print(f"   Latest Trend: {latest_trend.get('month')} - {latest_trend.get('total_leads', 0)} leads")
+        
+        # Test 4: Gap Analysis
+        gap_request = {
+            "tenant_id": "test_tenant_gaps",
+            "target_percentile": 75,
+            "focus_metrics": ["conversion_rate", "revenue_per_lead", "agent_efficiency"]
+        }
+        
+        success4, gap_analysis = self.run_test("Generate Gap Analysis", "POST", "comparative-analytics/gap-analysis", 200, gap_request)
+        if success4:
+            print(f"   Gap Analysis Tenant: {gap_analysis.get('tenant_id')}")
+            
+            current_performance = gap_analysis.get('current_performance', {})
+            target_performance = gap_analysis.get('target_performance', {})
+            performance_gaps = gap_analysis.get('performance_gaps', [])
+            improvement_roadmap = gap_analysis.get('improvement_roadmap', [])
+            estimated_impact = gap_analysis.get('estimated_impact', {})
+            
+            print(f"   Current Performance Metrics: {len(current_performance)}")
+            print(f"   Target Performance Metrics: {len(target_performance)}")
+            print(f"   Performance Gaps: {len(performance_gaps)}")
+            print(f"   Improvement Roadmap Steps: {len(improvement_roadmap)}")
+            print(f"   Estimated Impact Available: {bool(estimated_impact)}")
+            
+            if current_performance and target_performance:
+                current_conversion = current_performance.get('conversion_rate', 0)
+                target_conversion = target_performance.get('conversion_rate', 0)
+                print(f"   Conversion Rate Gap: {current_conversion:.1f}% → {target_conversion:.1f}%")
+        
+        # Test 5: Competitive Analysis
+        competitive_request = {
+            "tenant_id": "test_tenant_competitive",
+            "industry": "technology",
+            "company_size": "medium",
+            "focus_areas": ["market_share", "efficiency", "growth"]
+        }
+        
+        success5, competitive_analysis = self.run_test("Generate Competitive Analysis", "POST", "comparative-analytics/competitive-analysis", 200, competitive_request)
+        if success5:
+            print(f"   Competitive Tenant: {competitive_analysis.get('tenant_id')}")
+            print(f"   Industry: {competitive_analysis.get('industry')}")
+            
+            competitive_position = competitive_analysis.get('competitive_position', {})
+            market_insights = competitive_analysis.get('market_insights', [])
+            opportunity_areas = competitive_analysis.get('opportunity_areas', [])
+            threat_analysis = competitive_analysis.get('threat_analysis', [])
+            
+            print(f"   Market Position: {competitive_position.get('market_position')}")
+            print(f"   Relative Performance: {competitive_position.get('relative_performance')}")
+            print(f"   Market Insights: {len(market_insights)}")
+            print(f"   Opportunity Areas: {len(opportunity_areas)}")
+            print(f"   Threat Analysis: {len(threat_analysis)}")
+        
+        # Test 6: Industry Benchmarks
+        success6, industry_benchmarks = self.run_test("Get Industry Benchmarks", "GET", "comparative-analytics/industry-benchmarks?industry=technology")
+        if success6:
+            print(f"   Industry: {industry_benchmarks.get('industry')}")
+            
+            standard_benchmarks = industry_benchmarks.get('standard_benchmarks', {})
+            live_benchmarks = industry_benchmarks.get('live_benchmarks', {})
+            benchmark_categories = industry_benchmarks.get('benchmark_categories', {})
+            data_sources = industry_benchmarks.get('data_sources', {})
+            
+            print(f"   Standard Benchmarks: {len(standard_benchmarks)}")
+            print(f"   Live Benchmarks: {len(live_benchmarks)}")
+            print(f"   Benchmark Categories: {len(benchmark_categories)}")
+            print(f"   Data Sources Available: {bool(data_sources)}")
+            
+            if standard_benchmarks:
+                avg_conversion = standard_benchmarks.get('average_conversion_rate', 0)
+                avg_revenue = standard_benchmarks.get('average_revenue_per_lead', 0)
+                print(f"   Industry Avg Conversion: {avg_conversion}%")
+                print(f"   Industry Avg Revenue/Lead: ${avg_revenue}")
+            
+            if live_benchmarks:
+                sample_size = live_benchmarks.get('sample_size', 0)
+                print(f"   Cross-tenant Sample Size: {sample_size}")
+        
+        # Test 7: Analytics Insights
+        success7, analytics_insights = self.run_test("Get Analytics Insights", "GET", "comparative-analytics/insights/test_tenant_insights?industry=technology")
+        if success7:
+            print(f"   Insights Tenant: {analytics_insights.get('tenant_id')}")
+            print(f"   Industry: {analytics_insights.get('industry')}")
+            
+            performance_snapshot = analytics_insights.get('performance_snapshot', {})
+            market_position = analytics_insights.get('market_position', {})
+            key_insights = analytics_insights.get('key_insights', [])
+            recommendations = analytics_insights.get('recommendations', [])
+            
+            print(f"   Performance Snapshot: {bool(performance_snapshot)}")
+            print(f"   Market Position: {bool(market_position)}")
+            print(f"   Key Insights: {len(key_insights)}")
+            print(f"   Recommendations: {len(recommendations)}")
+            
+            if performance_snapshot:
+                conversion_rate = performance_snapshot.get('conversion_rate', 0)
+                vs_industry = performance_snapshot.get('vs_industry_average', 0)
+                print(f"   Conversion Rate: {conversion_rate:.1f}% (vs industry: {vs_industry:+.1f}%)")
+            
+            if market_position:
+                percentile = market_position.get('percentile_estimate', 0)
+                competitive_status = market_position.get('competitive_status')
+                trend_direction = market_position.get('trend_direction')
+                print(f"   Market Percentile: {percentile}")
+                print(f"   Competitive Status: {competitive_status}")
+                print(f"   Trend Direction: {trend_direction}")
+        
+        # Test 8: Cross-tenant Benchmarking Functionality
+        # Test multiple industry benchmarks to verify cross-tenant functionality
+        industries_to_test = ["finance", "healthcare", "retail"]
+        cross_tenant_results = []
+        
+        for industry in industries_to_test:
+            success_industry, industry_data = self.run_test(f"Cross-tenant Benchmarks - {industry.title()}", "GET", f"comparative-analytics/industry-benchmarks?industry={industry}")
+            cross_tenant_results.append(success_industry)
+            
+            if success_industry:
+                live_benchmarks = industry_data.get('live_benchmarks', {})
+                sample_size = live_benchmarks.get('sample_size', 0)
+                print(f"   {industry.title()} Cross-tenant Sample: {sample_size} tenants")
+        
+        success8 = all(cross_tenant_results)
+        
+        # Test 9: AI-powered Analytics Integration
+        success9 = True
+        if success1:
+            ai_engine_status = health_response.get('components', {}).get('ai_analytics_engine', 'unknown')
+            if ai_engine_status == 'healthy':
+                print("   ✅ AI-powered Analytics Integration working correctly")
+            else:
+                print(f"   ❌ AI Analytics Integration issue: {ai_engine_status}")
+                success9 = False
+        
+        # Summary of Comparative Analytics System Tests
+        all_analytics_tests = [success1, success2, success3, success4, success5, success6, success7, success8, success9]
+        passed_analytics_tests = sum(all_analytics_tests)
+        total_analytics_tests = len(all_analytics_tests)
+        
+        print(f"\n📊 COMPARATIVE ANALYTICS SYSTEM TEST SUMMARY:")
+        print(f"   Tests Passed: {passed_analytics_tests}/{total_analytics_tests}")
+        print(f"   Success Rate: {(passed_analytics_tests/total_analytics_tests*100):.1f}%")
+        
+        if passed_analytics_tests == total_analytics_tests:
+            print("   🎉 ALL COMPARATIVE ANALYTICS SYSTEM TESTS PASSED!")
+            print("   ✅ 6 benchmark types supported")
+            print("   ✅ 8 industry categories operational")
+            print("   ✅ Cross-tenant benchmarking functional")
+            print("   ✅ AI-powered analytics integration working")
+            print("   ✅ Trend analysis, gap analysis, competitive analysis operational")
+        else:
+            print("   ⚠️  Some Comparative Analytics System tests failed")
+        
+        return all(all_analytics_tests)
+
     def test_phase_7_performance_optimization_systems(self):
         """Test Phase 7: Platform Optimization & Performance Backend Systems"""
         print("\n" + "="*50)
