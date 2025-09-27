@@ -33,6 +33,8 @@ import { NaturalLanguageWorkflows } from './components/NaturalLanguageWorkflows'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { ThemeToggle, ThemeToggleButton } from './components/ThemeToggle'
 import { VoiceCommands, VoiceCommandsHelp } from './components/VoiceCommands'
+import { TenantManagement } from './components/TenantManagement'
+import { UserManagement } from './components/UserManagement'
 import { 
   Brain, 
   Zap, 
