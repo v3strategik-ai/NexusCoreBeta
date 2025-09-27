@@ -449,7 +449,7 @@ class ComparativeAnalyticsEngine:
             )
             
             try:
-                trend_analysis = json.loads(ai_response.content)
+                trend_analysis = json.loads(ai_response)
             except:
                 # Fallback analysis
                 trend_analysis = {
