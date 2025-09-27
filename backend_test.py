@@ -941,6 +941,220 @@ class NexusCoreAPITester:
         
         return success
 
+    def test_phase_7_performance_optimization_systems(self):
+        """Test Phase 7: Platform Optimization & Performance Backend Systems"""
+        print("\n" + "="*50)
+        print("TESTING PHASE 7: PERFORMANCE OPTIMIZATION SYSTEMS")
+        print("="*50)
+        
+        # Test 1: Performance Health Check
+        success1, health_response = self.run_test("Performance System Health Check", "GET", "performance/health")
+        if success1:
+            print(f"   Performance Status: {health_response.get('status', 'unknown')}")
+            components = health_response.get('components', {})
+            print(f"   Redis Cache: {components.get('redis_cache', 'unknown')}")
+            print(f"   Rate Limiter: {components.get('rate_limiter', 'unknown')}")
+            print(f"   Performance Monitor: {components.get('performance_monitor', 'unknown')}")
+            print(f"   Database Optimizer: {components.get('database_optimizer', 'unknown')}")
+        
+        # Test 2: Performance Metrics Collection
+        success2, metrics_response = self.run_test("Performance Metrics Collection", "GET", "performance/metrics")
+        if success2:
+            performance_metrics = metrics_response.get('performance_metrics', {})
+            cache_stats = metrics_response.get('cache_statistics', {})
+            rate_limit_stats = metrics_response.get('rate_limit_statistics', {})
+            
+            print(f"   Performance Metrics Available: {bool(performance_metrics)}")
+            print(f"   Cache Statistics Available: {bool(cache_stats)}")
+            print(f"   Rate Limit Statistics Available: {bool(rate_limit_stats)}")
+        
+        # Test 3: Rate Limiting Statistics
+        success3, rate_stats = self.run_test("Rate Limiting Statistics", "GET", "performance/rate-limits/stats")
+        if success3:
+            global_stats = rate_stats.get('global_stats', {})
+            tier_configs = global_stats.get('tier_configurations', {})
+            endpoint_costs = global_stats.get('endpoint_costs', {})
+            
+            print(f"   Rate Limit Tiers: {len(tier_configs)}")
+            print(f"   Endpoint Cost Multipliers: {len(endpoint_costs)}")
+            
+            # Verify all 4 tiers are configured
+            expected_tiers = ['trial', 'standard', 'professional', 'enterprise']
+            found_tiers = list(tier_configs.keys())
+            if all(tier in found_tiers for tier in expected_tiers):
+                print("   ✅ All 4 rate limiting tiers configured")
+                
+                # Show tier limits
+                for tier, config in tier_configs.items():
+                    print(f"   {tier.title()}: {config.get('requests_per_minute', 0)}/min, {config.get('concurrent_requests', 0)} concurrent")
+            else:
+                print(f"   ❌ Missing rate limiting tiers: {set(expected_tiers) - set(found_tiers)}")
+        
+        # Test 4: Redis Cache Statistics
+        success4, cache_stats = self.run_test("Redis Cache Statistics", "GET", "performance/cache/stats")
+        if success4:
+            cache_data = cache_stats.get('cache_stats', {})
+            redis_info = cache_stats.get('redis_info', {})
+            configurations = cache_stats.get('configurations', {})
+            
+            print(f"   Cache Hit Rate: {cache_data.get('hit_rate_percent', 0)}%")
+            print(f"   Total Cache Hits: {cache_data.get('hits', 0)}")
+            print(f"   Total Cache Misses: {cache_data.get('misses', 0)}")
+            print(f"   Cache Sets: {cache_data.get('sets', 0)}")
+            print(f"   Cache Errors: {cache_data.get('errors', 0)}")
+            print(f"   Redis Version: {redis_info.get('redis_version', 'Unknown')}")
+            print(f"   Cache Configurations: {len(configurations)}")
+            
+            # Verify all 7 cache types are configured
+            expected_cache_types = ['api_responses', 'db_queries', 'analytics', 'sessions', 'config', 'ai_responses', 'file_processing']
+            found_cache_types = list(configurations.keys())
+            if all(cache_type in found_cache_types for cache_type in expected_cache_types):
+                print("   ✅ All 7 cache types configured")
+            else:
+                missing = set(expected_cache_types) - set(found_cache_types)
+                print(f"   ❌ Missing cache types: {missing}")
+        
+        # Test 5: Cache Operations - Check if cache key exists
+        success5, cache_exists = self.run_test("Cache Key Exists Check", "GET", "performance/cache/exists?cache_type=api_responses&identifier=test_key")
+        if success5:
+            exists = cache_exists.get('exists', False)
+            print(f"   Cache Key Exists Test: {exists}")
+        
+        # Test 6: Database Index Information
+        success6, db_indexes = self.run_test("Database Index Information", "GET", "performance/database/indexes")
+        if success6:
+            status = db_indexes.get('status', 'unknown')
+            optimized_collections = db_indexes.get('optimized_collections', [])
+            
+            print(f"   Database Index Status: {status}")
+            print(f"   Optimized Collections: {len(optimized_collections)}")
+            
+            # Verify 10 collections are optimized as expected
+            if len(optimized_collections) >= 10:
+                print("   ✅ Database optimization completed (10+ collections)")
+                print(f"   Collections: {', '.join(optimized_collections[:5])}...")
+            else:
+                print(f"   ⚠️  Only {len(optimized_collections)} collections optimized")
+        
+        # Test 7: Performance Optimization Trigger
+        optimization_request = {
+            "include_database": False,  # Skip heavy database operations
+            "include_cache": True,
+            "include_memory": True,
+            "run_analysis": True
+        }
+        
+        success7, optimization_result = self.run_test("Performance Optimization", "POST", "performance/optimize", 200, optimization_request)
+        if success7:
+            status = optimization_result.get('status', 'unknown')
+            memory_opt = optimization_result.get('memory_optimization', {})
+            performance_metrics = optimization_result.get('performance_metrics', {})
+            recommendations = optimization_result.get('recommendations', [])
+            
+            print(f"   Optimization Status: {status}")
+            print(f"   Memory Optimization: {bool(memory_opt)}")
+            print(f"   Performance Metrics: {bool(performance_metrics)}")
+            print(f"   Recommendations: {len(recommendations)}")
+        
+        # Test 8: Cache TTL Extension
+        success8, ttl_result = self.run_test("Cache TTL Extension", "POST", "performance/cache/extend-ttl?cache_type=api_responses&identifier=test_key&additional_seconds=300")
+        if success8:
+            extended = ttl_result.get('extended', False)
+            print(f"   Cache TTL Extension: {extended}")
+        
+        # Test 9: Query Analysis
+        success9, query_analysis = self.run_test("Database Query Analysis", "POST", "performance/database/analyze-queries?collection_name=leads&sample_size=3")
+        if success9:
+            queries_analyzed = query_analysis.get('queries_analyzed', 0)
+            optimization_results = query_analysis.get('optimization_results', [])
+            
+            print(f"   Queries Analyzed: {queries_analyzed}")
+            print(f"   Optimization Results: {len(optimization_results)}")
+            
+            if optimization_results:
+                first_result = optimization_results[0]
+                print(f"   Sample Query Time: {first_result.get('execution_time_ms', 0)}ms")
+                print(f"   Index Used: {first_result.get('index_used', False)}")
+        
+        # Test 10: Rate Limit Violation Tracking (Test with different tiers)
+        # Test Trial tier limits
+        success10a, trial_stats = self.run_test("Rate Limit Stats - Trial Tier", "GET", "performance/rate-limits/stats?include_global=true")
+        if success10a:
+            global_stats = trial_stats.get('global_stats', {})
+            tier_configs = global_stats.get('tier_configurations', {})
+            trial_config = tier_configs.get('trial', {})
+            
+            if trial_config:
+                print(f"   Trial Tier - Requests/min: {trial_config.get('requests_per_minute', 0)}")
+                print(f"   Trial Tier - Concurrent: {trial_config.get('concurrent_requests', 0)}")
+                print(f"   Trial Tier - Daily limit: {trial_config.get('requests_per_day', 0)}")
+        
+        # Test 11: Cache Tenant Isolation
+        success11, tenant_cache = self.run_test("Cache Tenant Isolation Check", "GET", "performance/cache/exists?cache_type=api_responses&identifier=tenant_test&tenant_id=test_tenant")
+        if success11:
+            tenant_exists = tenant_cache.get('exists', False)
+            tenant_id = tenant_cache.get('tenant_id')
+            print(f"   Tenant Cache Isolation: tenant_id={tenant_id}, exists={tenant_exists}")
+        
+        # Test 12: Endpoint Cost Multipliers Verification
+        success12, cost_stats = self.run_test("Endpoint Cost Multipliers", "GET", "performance/rate-limits/stats")
+        if success12:
+            global_stats = cost_stats.get('global_stats', {})
+            endpoint_costs = global_stats.get('endpoint_costs', {})
+            
+            # Check for AI operation multipliers
+            ai_endpoints = [ep for ep in endpoint_costs.keys() if 'ai-content' in ep or 'lead-scoring' in ep or 'sentiment' in ep]
+            high_cost_endpoints = [ep for ep, cost in endpoint_costs.items() if cost >= 3]
+            
+            print(f"   AI Endpoints with Multipliers: {len(ai_endpoints)}")
+            print(f"   High-Cost Endpoints (3x+): {len(high_cost_endpoints)}")
+            
+            if ai_endpoints:
+                print("   ✅ AI operations have higher cost multipliers")
+            else:
+                print("   ❌ AI operations may not have cost multipliers")
+        
+        # Test 13: Cache Compression and Storage
+        success13, cache_configs = self.run_test("Cache Compression Configuration", "GET", "performance/cache/stats")
+        if success13:
+            configurations = cache_configs.get('configurations', {})
+            
+            # Check compression settings
+            compressed_caches = [name for name, config in configurations.items() if config.get('compression') != 'none']
+            analytics_cache = configurations.get('analytics', {})
+            ai_cache = configurations.get('ai_responses', {})
+            
+            print(f"   Caches with Compression: {len(compressed_caches)}")
+            print(f"   Analytics Cache TTL: {analytics_cache.get('ttl_seconds', 0)}s")
+            print(f"   AI Responses Cache TTL: {ai_cache.get('ttl_seconds', 0)}s")
+            
+            if len(compressed_caches) >= 5:
+                print("   ✅ Most cache types use compression")
+            else:
+                print("   ⚠️  Limited compression usage")
+        
+        # Summary of Performance Optimization Tests
+        all_performance_tests = [success1, success2, success3, success4, success5, success6, success7, success8, success9, success10a, success11, success12, success13]
+        passed_performance_tests = sum(all_performance_tests)
+        total_performance_tests = len(all_performance_tests)
+        
+        print(f"\n📊 PERFORMANCE OPTIMIZATION SYSTEMS TEST SUMMARY:")
+        print(f"   Tests Passed: {passed_performance_tests}/{total_performance_tests}")
+        print(f"   Success Rate: {(passed_performance_tests/total_performance_tests*100):.1f}%")
+        
+        if passed_performance_tests == total_performance_tests:
+            print("   🎉 ALL PERFORMANCE OPTIMIZATION SYSTEMS TESTS PASSED!")
+            print("   ✅ API Rate Limiting System operational")
+            print("   ✅ Redis Caching System operational") 
+            print("   ✅ Performance Monitoring operational")
+            print("   ✅ Database Optimization completed")
+        else:
+            print("   ⚠️  Some Performance Optimization tests failed")
+            failed_count = total_performance_tests - passed_performance_tests
+            print(f"   ❌ {failed_count} test(s) failed - check system configuration")
+        
+        return all(all_performance_tests)
+
     def test_conditional_logic_builder_condition_counting(self):
         """Test SPECIFIC condition counting fix in Conditional Logic Builder"""
         print("\n" + "="*50)
