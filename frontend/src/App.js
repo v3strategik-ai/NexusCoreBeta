@@ -947,8 +947,8 @@ function App() {
             </div>
           </TabsContent>
 
-          {/* Analytics Tab */}
-          <TabsContent value="analytics" className="space-y-6">
+          {/* Analytics & Performance Tab */}
+          <TabsContent value="analytics-performance" className="space-y-6">
             <Tabs defaultValue="dashboard" className="w-full">
               <TabsList className="grid w-full grid-cols-3 mb-6">
                 <TabsTrigger value="dashboard">Analytics Dashboard</TabsTrigger>
