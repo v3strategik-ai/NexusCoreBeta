@@ -265,7 +265,8 @@ class PerformanceSystemTester:
             deleted = delete_result.get('deleted', False)
             cache_type = delete_result.get('cache_type')
             identifier = delete_result.get('identifier')
-            print(f"   Cache Delete: {cache_type}:{identifier} = {deleted}")
+            tenant_id = delete_result.get('tenant_id')
+            print(f"   Cache Delete: {cache_type}:{identifier} (tenant:{tenant_id}) = {deleted}")
         
         # Test 13: Rate Limit Reset (if available)
         success13, reset_result = self.run_test("Rate Limit Reset", "DELETE", "performance/rate-limits/reset/test_client", 200)
