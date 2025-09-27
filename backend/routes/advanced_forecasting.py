@@ -170,10 +170,8 @@ class AdvancedForecastingEngine:
             """
             
             # Get AI analysis
-            ai_response = await self.llm.chat_completion_async(
-                messages=[{"role": "user", "content": analysis_prompt}],
-                model="gpt-4o-mini",
-                temperature=0.3
+            ai_response = await asyncio.to_thread(
+                self.llm.send_message, analysis_prompt
             )
             
             # Parse AI response
