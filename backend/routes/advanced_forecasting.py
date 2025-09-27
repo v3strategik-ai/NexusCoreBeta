@@ -593,7 +593,7 @@ async def generate_resource_planning(request: ResourcePlanningRequest):
         )
         
         try:
-            resource_plan = json.loads(ai_response.content)
+            resource_plan = json.loads(ai_response)
         except:
             resource_plan = {
                 "monthly_projections": [
