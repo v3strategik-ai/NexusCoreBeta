@@ -80,7 +80,9 @@ import {
   RefreshCw,
   Minimize,
   Plug,
-  Crown
+  Crown,
+  Mic,
+  Archive
 } from 'lucide-react'
 import axios from 'axios'
 import './App.css'
