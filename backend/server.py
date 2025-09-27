@@ -132,6 +132,11 @@ api_router.include_router(data_export.router)
 # Phase 7: Platform Optimization & Performance Routes
 api_router.include_router(performance.router)
 
+# Phase 6C: Remaining Enterprise Architecture Routes
+api_router.include_router(advanced_forecasting.router)
+api_router.include_router(advanced_security.router)
+api_router.include_router(comparative_analytics.router)
+
 # Include the main API router
 app.include_router(api_router)
 
