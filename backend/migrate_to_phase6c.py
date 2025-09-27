@@ -213,14 +213,16 @@ class Phase6CMigration:
     async def execute_batch_update(self, collection, batch_updates):
         """Execute a batch of updates"""
         try:
+            from pymongo import UpdateOne
+            
             operations = []
             for update in batch_updates:
-                operations.append({
-                    "updateOne": {
-                        "filter": update["filter"],
-                        "update": update["update"]
-                    }
-                })
+                operations.append(
+                    UpdateOne(
+                        update["filter"],
+                        update["update"]
+                    )
+                )
             
             if operations:
                 result = await collection.bulk_write(operations)
