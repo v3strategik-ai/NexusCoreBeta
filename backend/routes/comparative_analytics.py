@@ -446,9 +446,9 @@ class ComparativeAnalyticsEngine:
             Format as JSON with trend insights and forecast data.
             """
             
-            ai_response = await self.llm.chat_completion(
-                model="gpt-4o-mini",
+            ai_response = await self.llm.chat_completion_async(
                 messages=[{"role": "user", "content": trend_prompt}],
+                model="gpt-4o-mini",
                 temperature=0.3
             )
             
