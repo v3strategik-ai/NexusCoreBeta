@@ -857,54 +857,131 @@ function App() {
             </div>
           </TabsContent>
 
-          {/* Operations Tab - Phase 6B: Advanced Workflows & Automation */}
+          {/* Operations Tab - Workflows + Documents consolidated */}
           <TabsContent value="operations" className="space-y-6">
-            <div className="flex justify-between items-center">
-              <div>
-                <h2 className="text-3xl font-bold gradient-text">Advanced Workflows & Automation</h2>
-                <p className="text-muted-foreground">Build sophisticated automation with AI-powered tools and visual builders</p>
-              </div>
-              <div className="flex gap-2">
-                <Badge variant="outline" className="flex items-center gap-1">
-                  <Brain className="w-3 h-3" />
-                  Phase 6B
-                </Badge>
-                <Badge variant="outline" className="flex items-center gap-1">
-                  <Zap className="w-3 h-3" />
-                  {workflows.length} Workflows
-                </Badge>
-              </div>
+            <div className="text-center mb-8">
+              <h2 className="text-4xl font-bold gradient-text mb-2">Operations Center</h2>
+              <p className="text-muted-foreground">Workflow automation and document generation</p>
             </div>
 
-            <Tabs defaultValue="conditional" className="w-full">
-              <TabsList className="grid w-full grid-cols-5">
-                <TabsTrigger value="conditional">Conditional Logic</TabsTrigger>
-                <TabsTrigger value="scheduling">Time Triggers</TabsTrigger>
-                <TabsTrigger value="approvals">Approvals</TabsTrigger>
-                <TabsTrigger value="webhooks">APIs & Webhooks</TabsTrigger>
-                <TabsTrigger value="natural-language">AI Workflows</TabsTrigger>
-              </TabsList>
+            {/* Operations Sub-navigation */}
+            <div className="border-b border-gray-200 mb-6">
+              <nav className="flex space-x-8">
+                <button
+                  onClick={() => setOperationsTab('workflows')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                    operationsTab === 'workflows'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <Workflow className="h-4 w-4 inline mr-2" />
+                  Workflows & Automation
+                </button>
+                <button
+                  onClick={() => setOperationsTab('documents')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                    operationsTab === 'documents'
+                      ? 'border-green-500 text-green-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <FileText className="h-4 w-4 inline mr-2" />
+                  Document Generation
+                </button>
+              </nav>
+            </div>
 
-              <TabsContent value="conditional" className="mt-6">
-                <ConditionalLogicBuilder />
-              </TabsContent>
+            {/* Operations Sub-content */}
+            {operationsTab === 'workflows' && (
+              <div>
+                <div className="flex justify-between items-center mb-6">
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900">Advanced Workflows & Automation</h3>
+                    <p className="text-gray-600 mt-1">Build, manage, and execute complex business workflows</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Badge variant="outline" className="flex items-center gap-1">
+                      <Zap className="w-3 h-3" />
+                      Phase 6B
+                    </Badge>
+                  </div>
+                </div>
 
-              <TabsContent value="scheduling" className="mt-6">
-                <TimeBasedTriggers />
-              </TabsContent>
+                <Tabs defaultValue="conditional" className="w-full">
+                  <TabsList className="grid w-full grid-cols-5 mb-6">
+                    <TabsTrigger value="conditional">Conditional Logic</TabsTrigger>
+                    <TabsTrigger value="triggers">Time Triggers</TabsTrigger>
+                    <TabsTrigger value="approvals">Multi-Step Approvals</TabsTrigger>
+                    <TabsTrigger value="webhooks">Webhook Automation</TabsTrigger>
+                    <TabsTrigger value="nl-workflows">Natural Language</TabsTrigger>
+                  </TabsList>
 
-              <TabsContent value="approvals" className="mt-6">
-                <MultiStepApprovalProcesses />
-              </TabsContent>
+                  <TabsContent value="conditional" className="mt-6">
+                    <ConditionalLogicBuilder />
+                  </TabsContent>
 
-              <TabsContent value="webhooks" className="mt-6">
-                <WebhookApiAutomation />
-              </TabsContent>
+                  <TabsContent value="triggers" className="mt-6">
+                    <TimeBasedTriggers />
+                  </TabsContent>
 
-              <TabsContent value="natural-language" className="mt-6">
-                <NaturalLanguageWorkflows />
-              </TabsContent>
-            </Tabs>
+                  <TabsContent value="approvals" className="mt-6">
+                    <MultiStepApprovalProcesses />
+                  </TabsContent>
+
+                  <TabsContent value="webhooks" className="mt-6">
+                    <WebhookApiAutomation />
+                  </TabsContent>
+
+                  <TabsContent value="nl-workflows" className="mt-6">
+                    <NaturalLanguageWorkflows />
+                  </TabsContent>
+                </Tabs>
+              </div>
+            )}
+
+            {operationsTab === 'documents' && (
+              <div>
+                <div className="flex justify-between items-center mb-6">
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900">Document Generation</h3>
+                    <p className="text-gray-600 mt-1">AI-powered business document creation</p>
+                  </div>
+                  <DocumentGenerationModal agents={agents} onDocumentGenerated={handleDocumentGenerated}>
+                    <Button className="glow-effect">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Generate Document
+                    </Button>
+                  </DocumentGenerationModal>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {[
+                    { icon: FileText, title: 'AI Proposals', desc: 'Generate winning proposals', color: 'text-blue-400', type: 'proposal' },
+                    { icon: DollarSign, title: 'Smart Invoices', desc: 'Automated invoicing', color: 'text-green-400', type: 'invoice' },
+                    { icon: Briefcase, title: 'Business Plans', desc: 'Comprehensive plans', color: 'text-purple-400', type: 'business_plan' },
+                    { icon: BarChart3, title: 'Analytics Reports', desc: 'Data-driven insights', color: 'text-orange-400', type: 'report' }
+                  ].map((doc, index) => (
+                    <DocumentGenerationModal 
+                      key={index} 
+                      agents={agents} 
+                      onDocumentGenerated={handleDocumentGenerated}
+                      defaultType={doc.type}
+                    >
+                      <Card 
+                        className="quantum-bg cursor-pointer hover:border-primary/50 transition-all duration-300 hover:scale-105 glow-effect"
+                      >
+                        <CardContent className="p-6 text-center">
+                          <doc.icon className={`w-12 h-12 mx-auto mb-4 ${doc.color}`} />
+                          <h3 className="font-semibold mb-2">{doc.title}</h3>
+                          <p className="text-sm text-muted-foreground">{doc.desc}</p>
+                        </CardContent>
+                      </Card>
+                    </DocumentGenerationModal>
+                  ))}
+                </div>
+              </div>
+            )}
           </TabsContent>
 
           {/* Documents Tab removed - functionality consolidated into other tabs */}
