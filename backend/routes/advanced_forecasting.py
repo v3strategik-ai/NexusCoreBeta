@@ -264,10 +264,8 @@ class AdvancedForecastingEngine:
             }}
             """
             
-            ai_response = await self.llm.chat_completion_async(
-                messages=[{"role": "user", "content": forecast_prompt}],
-                model="gpt-4o",
-                temperature=0.2
+            ai_response = await asyncio.to_thread(
+                self.llm.send_message, forecast_prompt
             )
             
             # Parse AI forecast
