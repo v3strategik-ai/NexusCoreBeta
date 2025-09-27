@@ -38,6 +38,7 @@ import { UserManagement } from './components/UserManagement'
 import { AdvancedVoiceInterface } from './components/AdvancedVoiceInterface'
 import { DataExportBackup } from './components/DataExportBackup'
 import PerformanceDashboard from './components/PerformanceDashboard'
+import EnterpriseArchitectureDashboard from './components/EnterpriseArchitectureDashboard'
 import { 
   Brain, 
   Zap, 
