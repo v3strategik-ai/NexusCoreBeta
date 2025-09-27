@@ -288,7 +288,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Phase 6C Frontend Components"
+    - "Phase 6D-A: Advanced Voice Interface"
+    - "Phase 6D-B: Data Export & Backup Systems"
+    - "Phase 6D Frontend Components"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
