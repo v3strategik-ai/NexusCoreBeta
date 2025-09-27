@@ -347,27 +347,6 @@ class AgentActivity(BaseModel):
     autonomy_level: str
     metadata: Dict[str, Any] = {}
 
-# User and Authentication Models
-class User(BaseEntity):
-    username: str
-    email: str
-    full_name: str
-    is_active: bool = True
-    is_admin: bool = False
-    preferences: Dict[str, Any] = {}
-
-class UserCreate(BaseModel):
-    username: str
-    email: str
-    full_name: str
-    password: str
-
-class UserUpdate(BaseModel):
-    full_name: Optional[str] = None
-    email: Optional[str] = None
-    is_active: Optional[bool] = None
-    preferences: Optional[Dict[str, Any]] = None
-
 # Response Models
 class AgentListResponse(BaseModel):
     agents: List[Agent]
