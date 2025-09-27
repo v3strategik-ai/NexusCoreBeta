@@ -114,6 +114,11 @@ api_router.include_router(workflow_engine.router)
 api_router.include_router(workflow_execution.router)
 api_router.include_router(nl_workflows.router)
 
+# Phase 6C: Enterprise Architecture Routes
+api_router.include_router(tenants.router)
+api_router.include_router(users_management.router)
+api_router.include_router(audit.router)
+
 # Include the main API router
 app.include_router(api_router)
 
