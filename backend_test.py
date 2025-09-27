@@ -6168,6 +6168,49 @@ class NexusCoreAPITester:
         
         return all(all_tests)
 
+    def test_phase_6c_enterprise_architecture_comprehensive(self):
+        """Test all Phase 6C Enterprise Architecture systems comprehensively"""
+        print("\n" + "="*80)
+        print("COMPREHENSIVE PHASE 6C ENTERPRISE ARCHITECTURE TESTING")
+        print("="*80)
+        
+        # Run all three Phase 6C system tests
+        forecasting_success = self.test_phase_6c_advanced_forecasting_system()
+        security_success = self.test_phase_6c_advanced_security_system()
+        analytics_success = self.test_phase_6c_comparative_analytics_system()
+        
+        # Overall Phase 6C summary
+        phase_6c_systems = [forecasting_success, security_success, analytics_success]
+        passed_systems = sum(phase_6c_systems)
+        total_systems = len(phase_6c_systems)
+        
+        print(f"\n🏢 PHASE 6C ENTERPRISE ARCHITECTURE COMPREHENSIVE SUMMARY:")
+        print(f"   Systems Tested: {total_systems}")
+        print(f"   Systems Passed: {passed_systems}")
+        print(f"   Overall Success Rate: {(passed_systems/total_systems*100):.1f}%")
+        
+        if passed_systems == total_systems:
+            print("   🎉 ALL PHASE 6C ENTERPRISE ARCHITECTURE SYSTEMS OPERATIONAL!")
+            print("   ✅ Advanced Forecasting System: 6 forecast types, 4 time periods, AI integration")
+            print("   ✅ Advanced Security System: 5 auth methods, 4 security levels, MFA, threat detection")
+            print("   ✅ Comparative Analytics System: 6 benchmark types, 8 industries, cross-tenant benchmarking")
+            print("   ✅ All systems have proper AI engine integration with Emergent LLM")
+            print("   ✅ Tenant isolation working correctly across all systems")
+        else:
+            failed_systems = []
+            if not forecasting_success:
+                failed_systems.append("Advanced Forecasting System")
+            if not security_success:
+                failed_systems.append("Advanced Security System")
+            if not analytics_success:
+                failed_systems.append("Comparative Analytics System")
+            
+            print(f"   ⚠️  {total_systems - passed_systems} system(s) have issues:")
+            for system in failed_systems:
+                print(f"   ❌ {system}")
+        
+        return all(phase_6c_systems)
+
 def main():
     """Main test execution"""
     tester = NexusCoreAPITester()
