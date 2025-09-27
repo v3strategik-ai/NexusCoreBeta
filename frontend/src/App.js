@@ -123,6 +123,9 @@ function App() {
   // Voice commands state
   const [voiceEnabled, setVoiceEnabled] = useState(false)
   
+  // Enterprise tab state
+  const [enterpriseTab, setEnterpriseTab] = useState('management')
+  
   const [dashboardData, setDashboardData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
