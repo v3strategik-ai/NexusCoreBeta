@@ -518,9 +518,7 @@ async def generate_seasonal_analysis(request: SeasonalAnalysisRequest):
         Format as JSON with seasonal insights.
         """
         
-        ai_response = await asyncio.to_thread(
-            forecasting_engine.llm.send_message, seasonal_prompt
-        )
+        ai_response = forecasting_engine.llm.send_message(seasonal_prompt)
         
         try:
             seasonal_analysis = json.loads(ai_response)
