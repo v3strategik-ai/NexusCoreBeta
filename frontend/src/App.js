@@ -598,17 +598,13 @@ function App() {
               <Users className="w-4 h-4" />
               CRM Intelligence
             </TabsTrigger>
-            <TabsTrigger value="workflows" className="flex items-center gap-2">
+            <TabsTrigger value="operations" className="flex items-center gap-2">
               <Workflow className="w-4 h-4" />
-              Workflows
+              Operations
             </TabsTrigger>
-            <TabsTrigger value="documents" className="flex items-center gap-2">
-              <FileText className="w-4 h-4" />
-              Documents
-            </TabsTrigger>
-            <TabsTrigger value="analytics" className="flex items-center gap-2">
+            <TabsTrigger value="analytics-performance" className="flex items-center gap-2">
               <BarChart3 className="w-4 h-4" />
-              Analytics
+              Analytics & Performance
             </TabsTrigger>
             <TabsTrigger value="integrations" className="flex items-center gap-2">
               <Plug className="w-4 h-4" />
