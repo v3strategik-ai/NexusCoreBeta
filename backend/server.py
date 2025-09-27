@@ -14,8 +14,14 @@ from datetime import datetime
 from database import connect_to_mongo, close_mongo_connection, get_database
 
 # Import all route modules
-from routes import agents, crm, dashboard, knowledge, documents, workflows, ai_chat, email, realtime, workflows_advanced, analytics, ab_testing, lead_scoring, ai_content, sentiment, workflow_engine, workflow_execution, nl_workflows, tenants, users_management, audit, advanced_voice, data_export
+from routes import agents, crm, dashboard, knowledge, documents, workflows, ai_chat, email, realtime, workflows_advanced, analytics, ab_testing, lead_scoring, ai_content, sentiment, workflow_engine, workflow_execution, nl_workflows, tenants, users_management, audit, advanced_voice, data_export, performance
 from websocket import socketio_app, start_background_tasks
+
+# Import Phase 7 performance optimization components
+from middleware import RateLimitMiddleware
+from rate_limiter import setup_rate_limiter, cleanup_rate_limiter
+from redis_cache import setup_redis_cache, cleanup_redis_cache
+from performance_optimizer import performance_optimizer
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
