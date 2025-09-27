@@ -189,10 +189,12 @@ class Phase6CEnterpriseTester:
         
         if test_tenant_id:
             print("\n🔍 Testing User Creation with Role Assignment...")
+            import time
+            unique_suffix = str(int(time.time()))[-6:]  # Use timestamp for uniqueness
             user_data = {
                 "tenant_id": test_tenant_id,
-                "email": "manager@testcorp.com",
-                "username": "manager.user",
+                "email": f"manager-{unique_suffix}@testcorp.com",
+                "username": f"manager.user.{unique_suffix}",
                 "first_name": "Manager",
                 "last_name": "User",
                 "password": "SecurePass123!",
