@@ -518,10 +518,8 @@ class ComparativeAnalyticsEngine:
             Format as JSON with comprehensive improvement plan.
             """
             
-            ai_response = await self.llm.chat_completion_async(
-                messages=[{"role": "user", "content": gap_prompt}],
-                model="gpt-4o",
-                temperature=0.2
+            ai_response = await asyncio.to_thread(
+                self.llm.send_message, gap_prompt
             )
             
             try:
