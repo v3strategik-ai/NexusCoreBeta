@@ -986,30 +986,75 @@ function App() {
 
           {/* Documents Tab removed - functionality consolidated into other tabs */}
 
-          {/* Analytics & Performance Tab */}
+          {/* Analytics & Performance Tab - Analytics + Performance consolidated */}
           <TabsContent value="analytics-performance" className="space-y-6">
-            <Tabs defaultValue="dashboard" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-6">
-                <TabsTrigger value="dashboard">Analytics Dashboard</TabsTrigger>
-                <TabsTrigger value="reports">Report Builder</TabsTrigger>
-                <TabsTrigger value="testing">A/B Testing</TabsTrigger>
-              </TabsList>
+            <div className="text-center mb-8">
+              <h2 className="text-4xl font-bold gradient-text mb-2">Analytics & Performance</h2>
+              <p className="text-muted-foreground">Business insights and platform performance monitoring</p>
+            </div>
 
-              <TabsContent value="dashboard">
-                <AnalyticsDashboard />
-              </TabsContent>
+            {/* Analytics & Performance Sub-navigation */}
+            <div className="border-b border-gray-200 mb-6">
+              <nav className="flex space-x-8">
+                <button
+                  onClick={() => setAnalyticsPerformanceTab('analytics')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                    analyticsPerformanceTab === 'analytics'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <BarChart3 className="h-4 w-4 inline mr-2" />
+                  Business Analytics
+                </button>
+                <button
+                  onClick={() => setAnalyticsPerformanceTab('performance')}
+                  className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                    analyticsPerformanceTab === 'performance'
+                      ? 'border-green-500 text-green-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <Gauge className="h-4 w-4 inline mr-2" />
+                  Platform Performance
+                </button>
+              </nav>
+            </div>
 
-              <TabsContent value="reports">
-                <ReportBuilder onReportGenerated={(report) => {
-                  console.log('Report generated:', report.report_name)
-                  // Handle report generation success
-                }} />
-              </TabsContent>
+            {/* Analytics & Performance Sub-content */}
+            {analyticsPerformanceTab === 'analytics' && (
+              <div>
+                <Tabs defaultValue="dashboard" className="w-full">
+                  <TabsList className="grid w-full grid-cols-3 mb-6">
+                    <TabsTrigger value="dashboard">Analytics Dashboard</TabsTrigger>
+                    <TabsTrigger value="reports">Report Builder</TabsTrigger>
+                    <TabsTrigger value="ab-testing">A/B Testing</TabsTrigger>
+                  </TabsList>
 
-              <TabsContent value="testing">
-                <ABTestingManager />
-              </TabsContent>
-            </Tabs>
+                  <TabsContent value="dashboard" className="mt-6">
+                    <AnalyticsDashboard data={dashboardData} />
+                  </TabsContent>
+
+                  <TabsContent value="reports" className="mt-6">
+                    <ReportBuilder reports={generatedReports} />
+                  </TabsContent>
+
+                  <TabsContent value="ab-testing" className="mt-6">
+                    <ABTestingManager tests={activeABTests} />
+                  </TabsContent>
+                </Tabs>
+              </div>
+            )}
+
+            {analyticsPerformanceTab === 'performance' && (
+              <div>
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900">Platform Performance</h3>
+                  <p className="text-gray-600 mt-1">Monitor and optimize platform performance for maximum efficiency</p>
+                </div>
+                <PerformanceDashboard />
+              </div>
+            )}
           </TabsContent>
 
           {/* Integrations Tab */}
