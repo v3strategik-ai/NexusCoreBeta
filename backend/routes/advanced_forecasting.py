@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 from database import get_database
-from emergentintegrations import EmergentLLM
+from emergentintegrations.llm.chat import LlmChat
 
 logger = logging.getLogger(__name__)
 
