@@ -330,7 +330,7 @@ class AdvancedForecastingEngine:
             )
             
             try:
-                forecast_data = json.loads(ai_response.content)
+                forecast_data = json.loads(ai_response)
             except:
                 forecast_data = {
                     "monthly_forecasts": self._generate_fallback_forecast(request.horizon_months, "conversion"),
