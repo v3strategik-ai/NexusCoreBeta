@@ -63,6 +63,98 @@ class BaseEntity(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
+# Enterprise Models for Phase 6C: Multi-Tenancy & RBAC
+class Tenant(BaseEntity):
+    name: str = Field(description="Tenant organization name")
+    subdomain: str = Field(description="Unique subdomain for tenant")
+    status: TenantStatus = TenantStatus.ACTIVE
+    plan_type: str = Field(default="standard", description="Subscription plan")
+    max_users: int = Field(default=50, description="Maximum allowed users")
+    max_agents: int = Field(default=20, description="Maximum allowed AI agents")
+    
+    # White-label customization
+    branding: Dict[str, Any] = Field(default={}, description="Custom branding settings")
+    settings: Dict[str, Any] = Field(default={}, description="Tenant-specific settings")
+    
+    # Contact and billing
+    admin_email: str
+    billing_email: Optional[str] = None
+    phone: Optional[str] = None
+    address: Optional[Dict[str, str]] = None
+    
+    # Usage tracking
+    current_users: int = Field(default=0)
+    current_agents: int = Field(default=0)
+    storage_used_mb: float = Field(default=0.0)
+
+class Permission(BaseModel):
+    resource: str = Field(description="Resource name (e.g., 'agents', 'workflows')")
+    action: PermissionType = Field(description="Permission type")
+    
+class Role(BaseModel):
+    name: UserRole
+    display_name: str
+    description: str
+    permissions: List[Permission] = Field(default=[])
+    is_system_role: bool = Field(default=True, description="System-defined or custom role")
+
+class User(BaseEntity):
+    tenant_id: str = Field(description="Tenant this user belongs to")
+    email: str = Field(unique=True, description="User email address")
+    username: str = Field(description="Display username")
+    password_hash: str = Field(description="Hashed password")
+    
+    # Profile information
+    first_name: str
+    last_name: str
+    avatar_url: Optional[str] = None
+    phone: Optional[str] = None
+    
+    # Role and permissions
+    role: UserRole = UserRole.EMPLOYEE
+    permissions: List[Permission] = Field(default=[])
+    
+    # Status and settings
+    is_active: bool = Field(default=True)
+    is_verified: bool = Field(default=False)
+    last_login: Optional[datetime] = None
+    preferences: Dict[str, Any] = Field(default={})
+    
+    # Activity tracking
+    login_count: int = Field(default=0)
+    failed_login_attempts: int = Field(default=0)
+    last_failed_login: Optional[datetime] = None
+
+class AuditLog(BaseEntity):
+    tenant_id: str = Field(description="Tenant for this audit entry")
+    user_id: str = Field(description="User who performed the action")
+    user_email: str = Field(description="Email of user who performed action")
+    
+    # Action details
+    action: str = Field(description="Action performed (e.g., 'create_agent', 'delete_lead')")
+    resource_type: str = Field(description="Type of resource affected")
+    resource_id: Optional[str] = Field(description="ID of affected resource")
+    
+    # Context
+    ip_address: Optional[str] = None
+    user_agent: Optional[str] = None
+    request_path: Optional[str] = None
+    
+    # Changes tracking
+    old_values: Optional[Dict[str, Any]] = Field(default=None)
+    new_values: Optional[Dict[str, Any]] = Field(default=None)
+    
+    # Metadata
+    success: bool = Field(default=True)
+    error_message: Optional[str] = None
+    session_id: Optional[str] = None
+
+# Tenant-aware Base Model
+class TenantEntity(BaseEntity):
+    tenant_id: str = Field(description="Tenant this entity belongs to")
+    created_by: str = Field(description="User ID who created this entity")
+    updated_by: Optional[str] = Field(description="User ID who last updated this entity")
+
 # Digital Employee (AI Agent) Models
 class KnowledgeFile(BaseModel):
     filename: str
