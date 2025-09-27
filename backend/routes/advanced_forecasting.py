@@ -89,7 +89,11 @@ class AdvancedForecastingEngine:
     """AI-powered forecasting engine using Emergent LLM"""
     
     def __init__(self):
-        self.llm = EmergentLLM(api_key=os.environ.get('EMERGENT_LLM_KEY'))
+        self.llm = LlmChat(
+            api_key=os.environ.get('EMERGENT_LLM_KEY'),
+            session_id='forecasting_session',
+            system_message='You are an AI business analyst specializing in forecasting and predictive analytics.'
+        )
     
     async def get_historical_data(self, tenant_id: str = None, months_back: int = 12) -> Dict[str, List[Dict]]:
         """Retrieve historical data for forecasting"""
