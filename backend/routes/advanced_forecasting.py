@@ -178,7 +178,7 @@ class AdvancedForecastingEngine:
             
             # Parse AI response
             try:
-                ai_analysis = json.loads(ai_response.choices[0].message.content)
+                ai_analysis = json.loads(ai_response.content)
             except:
                 # Fallback analysis
                 ai_analysis = {
