@@ -129,6 +129,9 @@ api_router.include_router(audit.router)
 api_router.include_router(advanced_voice.router)
 api_router.include_router(data_export.router)
 
+# Phase 7: Platform Optimization & Performance Routes
+api_router.include_router(performance.router)
+
 # Include the main API router
 app.include_router(api_router)
 
