@@ -78,10 +78,12 @@ class Phase6CEnterpriseTester:
         
         # Test 1: Create Tenant
         print("\n🔍 Testing Tenant Creation...")
+        import time
+        unique_suffix = str(int(time.time()))[-6:]  # Use timestamp for uniqueness
         tenant_create_data = {
             "name": "TechCorp Enterprise",
-            "subdomain": "techcorp-test",
-            "admin_email": "admin@techcorp.com",
+            "subdomain": f"techcorp-{unique_suffix}",
+            "admin_email": f"admin-{unique_suffix}@techcorp.com",
             "admin_first_name": "John",
             "admin_last_name": "Smith",
             "plan_type": "enterprise",
