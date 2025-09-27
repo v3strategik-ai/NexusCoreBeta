@@ -37,6 +37,7 @@ import { TenantManagement } from './components/TenantManagement'
 import { UserManagement } from './components/UserManagement'
 import { AdvancedVoiceInterface } from './components/AdvancedVoiceInterface'
 import { DataExportBackup } from './components/DataExportBackup'
+import PerformanceDashboard from './components/PerformanceDashboard'
 import { 
   Brain, 
   Zap, 
