@@ -325,10 +325,8 @@ class AdvancedForecastingEngine:
             Format as JSON with monthly predictions.
             """
             
-            ai_response = await self.llm.chat_completion(
-                model="gpt-4o-mini",
-                messages=[{"role": "user", "content": forecast_prompt}],
-                temperature=0.3
+            ai_response = await asyncio.to_thread(
+                self.llm.send_message, forecast_prompt
             )
             
             try:
