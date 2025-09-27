@@ -288,9 +288,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Phase 6C-A: Multi-Tenant Architecture"
-    - "Phase 6C-B: Role-Based Access Control (RBAC)" 
-    - "Phase 6C-C: Audit Logging System"
     - "Phase 6C Frontend Components"
   stuck_tasks: []
   test_all: false
