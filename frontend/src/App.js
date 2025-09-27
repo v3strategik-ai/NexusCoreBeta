@@ -1006,6 +1006,41 @@ function App() {
               </TabsContent>
             </Tabs>
           </TabsContent>
+
+          {/* Advanced AI Tab - Phase 6D */}
+          <TabsContent value="advanced" className="space-y-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-3xl font-bold gradient-text">Advanced Intelligence & Voice</h2>
+                <p className="text-muted-foreground">Full audio interface with voice responses and enterprise data management</p>
+              </div>
+              <div className="flex gap-2">
+                <Badge variant="outline" className="flex items-center gap-1">
+                  <Mic className="w-3 h-3" />
+                  Phase 6D
+                </Badge>
+                <Badge variant="outline" className="flex items-center gap-1">
+                  <Archive className="w-3 h-3" />
+                  Enterprise Features
+                </Badge>
+              </div>
+            </div>
+
+            <Tabs defaultValue="voice" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="voice">Advanced Voice Interface</TabsTrigger>
+                <TabsTrigger value="data">Data Export & Backup</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="voice" className="mt-6">
+                <AdvancedVoiceInterface />
+              </TabsContent>
+
+              <TabsContent value="data" className="mt-6">
+                <DataExportBackup />
+              </TabsContent>
+            </Tabs>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
