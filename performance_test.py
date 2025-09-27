@@ -34,7 +34,7 @@ class PerformanceSystemTester:
             elif method == 'PUT':
                 response = requests.put(url, json=data, headers=headers, timeout=timeout)
             elif method == 'DELETE':
-                response = requests.delete(url, headers=headers, timeout=timeout)
+                response = requests.delete(url, json=data, headers=headers, timeout=timeout)
 
             success = response.status_code == expected_status
             if success:
