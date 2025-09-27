@@ -617,6 +617,10 @@ function App() {
               <Mic className="w-4 h-4" />
               Advanced AI
             </TabsTrigger>
+            <TabsTrigger value="performance" className="flex items-center gap-2">
+              <Gauge className="w-4 h-4" />
+              Performance
+            </TabsTrigger>
           </TabsList>
 
           {/* Dashboard Tab */}
