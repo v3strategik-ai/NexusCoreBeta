@@ -1060,6 +1060,15 @@ function App() {
             </div>
             <PerformanceDashboard />
           </TabsContent>
+
+          {/* Enterprise Architecture Tab */}
+          <TabsContent value="enterprise-arch" className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-4xl font-bold gradient-text mb-2">Enterprise Architecture</h2>
+              <p className="text-muted-foreground">Advanced forecasting, security management, and comparative analytics</p>
+            </div>
+            <EnterpriseArchitectureDashboard />
+          </TabsContent>
         </Tabs>
       </div>
     </div>
