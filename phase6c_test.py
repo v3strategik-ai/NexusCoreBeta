@@ -113,8 +113,9 @@ class Phase6CEnterpriseTester:
         # Test 3: Get Tenant by Subdomain (Routing Test)
         success3 = False
         if created_tenant_id:
+            subdomain = tenant_create_data["subdomain"]  # Use the dynamic subdomain
             success3, subdomain_response = self.run_test(
-                "Get Tenant by Subdomain", "GET", "tenants/subdomain/techcorp-test"
+                "Get Tenant by Subdomain", "GET", f"tenants/subdomain/{subdomain}"
             )
             
             if success3:
