@@ -152,6 +152,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Phase 7: Rate Limiting Middleware
+app.add_middleware(RateLimitMiddleware, exclude_paths=[
+    "/docs", "/redoc", "/openapi.json", "/api/health", "/api/performance/health"
+])
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
