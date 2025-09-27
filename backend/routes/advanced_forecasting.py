@@ -580,9 +580,7 @@ async def generate_resource_planning(request: ResourcePlanningRequest):
         Format as JSON with monthly projections.
         """
         
-        ai_response = await asyncio.to_thread(
-            forecasting_engine.llm.send_message, planning_prompt
-        )
+        ai_response = forecasting_engine.llm.send_message(planning_prompt)
         
         try:
             resource_plan = json.loads(ai_response)
