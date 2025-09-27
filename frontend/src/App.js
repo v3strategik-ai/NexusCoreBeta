@@ -126,6 +126,12 @@ function App() {
   // Enterprise tab state
   const [enterpriseTab, setEnterpriseTab] = useState('management')
   
+  // Operations tab state (Workflows + Documents)
+  const [operationsTab, setOperationsTab] = useState('workflows')
+  
+  // Analytics & Performance tab state
+  const [analyticsPerformanceTab, setAnalyticsPerformanceTab] = useState('analytics')
+  
   const [dashboardData, setDashboardData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
