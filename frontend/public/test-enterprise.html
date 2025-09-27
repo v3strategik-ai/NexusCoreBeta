@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Components Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .test-section h2 {
+            color: #333;
+            margin-top: 0;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .api-result {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Phase 6C Enterprise Components Test</h1>
+        <p>This page tests the enterprise management components independently of the main application.</p>
+        
+        <div class="test-section">
+            <h2>Backend API Connectivity Test</h2>
+            <div id="backend-status" class="status info">Testing backend connectivity...</div>
+            <button onclick="testBackendAPIs()">Test Backend APIs</button>
+            <div id="api-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Tenant Management API Test</h2>
+            <div id="tenant-status" class="status info">Ready to test tenant management...</div>
+            <button onclick="testTenantAPIs()">Test Tenant APIs</button>
+            <div id="tenant-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>User Management API Test</h2>
+            <div id="user-status" class="status info">Ready to test user management...</div>
+            <button onclick="testUserAPIs()">Test User APIs</button>
+            <div id="user-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Component Integration Test</h2>
+            <div id="component-status" class="status info">Ready to test React components...</div>
+            <button onclick="testComponents()">Test Components</button>
+            <div id="component-results"></div>
+        </div>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://smartagent-nexus.preview.emergentagent.com/api';
+        
+        function updateStatus(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.className = `status ${type}`;
+            element.textContent = message;
+        }
+        
+        function addResult(containerId, title, data) {
+            const container = document.getElementById(containerId);
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'api-result';
+            resultDiv.innerHTML = `<strong>${title}:</strong>\n${JSON.stringify(data, null, 2)}`;
+            container.appendChild(resultDiv);
+        }
+        
+        async function testBackendAPIs() {
+            updateStatus('backend-status', 'Testing backend APIs...', 'info');
+            const results = document.getElementById('api-results');
+            results.innerHTML = '';
+            
+            const endpoints = [
+                { name: 'Dashboard Metrics', url: '/dashboard/metrics' },
+                { name: 'Tenants List', url: '/tenants/' },
+                { name: 'Users List', url: '/users/' }
+            ];
+            
+            let successCount = 0;
+            
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(BACKEND_URL + endpoint.url);
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        addResult('api-results', `✅ ${endpoint.name} (${response.status})`, data);
+                        successCount++;
+                    } else {
+                        addResult('api-results', `❌ ${endpoint.name} (${response.status})`, data);
+                    }
+                } catch (error) {
+                    addResult('api-results', `❌ ${endpoint.name} (Error)`, { error: error.message });
+                }
+            }
+            
+            if (successCount === endpoints.length) {
+                updateStatus('backend-status', 'All backend APIs working correctly!', 'success');
+            } else {
+                updateStatus('backend-status', `${successCount}/${endpoints.length} APIs working`, 'error');
+            }
+        }
+        
+        async function testTenantAPIs() {
+            updateStatus('tenant-status', 'Testing tenant management APIs...', 'info');
+            const results = document.getElementById('tenant-results');
+            results.innerHTML = '';
+            
+            try {
+                // Test GET tenants
+                const response = await fetch(BACKEND_URL + '/tenants/');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    addResult('tenant-results', '✅ GET /tenants/', data);
+                    updateStatus('tenant-status', `Found ${data.length || 0} tenants`, 'success');
+                    
+                    // If we have tenants, test getting a specific tenant
+                    if (data.length > 0) {
+                        const tenantId = data[0].id;
+                        const tenantResponse = await fetch(BACKEND_URL + `/tenants/${tenantId}`);
+                        const tenantData = await tenantResponse.json();
+                        addResult('tenant-results', `✅ GET /tenants/${tenantId}`, tenantData);
+                    }
+                } else {
+                    addResult('tenant-results', '❌ GET /tenants/', data);
+                    updateStatus('tenant-status', 'Tenant API test failed', 'error');
+                }
+            } catch (error) {
+                addResult('tenant-results', '❌ Tenant API Error', { error: error.message });
+                updateStatus('tenant-status', 'Tenant API connection failed', 'error');
+            }
+        }
+        
+        async function testUserAPIs() {
+            updateStatus('user-status', 'Testing user management APIs...', 'info');
+            const results = document.getElementById('user-results');
+            results.innerHTML = '';
+            
+            try {
+                // First get tenants to test user APIs
+                const tenantsResponse = await fetch(BACKEND_URL + '/tenants/');
+                const tenants = await tenantsResponse.json();
+                
+                if (tenantsResponse.ok && tenants.length > 0) {
+                    const tenantId = tenants[0].id;
+                    
+                    // Test GET users for tenant
+                    const usersResponse = await fetch(BACKEND_URL + `/users/tenant/${tenantId}`);
+                    const users = await usersResponse.json();
+                    
+                    if (usersResponse.ok) {
+                        addResult('user-results', `✅ GET /users/tenant/${tenantId}`, users);
+                        updateStatus('user-status', `Found ${users.length || 0} users for tenant`, 'success');
+                    } else {
+                        addResult('user-results', `❌ GET /users/tenant/${tenantId}`, users);
+                        updateStatus('user-status', 'User API test failed', 'error');
+                    }
+                } else {
+                    updateStatus('user-status', 'No tenants available for user testing', 'error');
+                }
+            } catch (error) {
+                addResult('user-results', '❌ User API Error', { error: error.message });
+                updateStatus('user-status', 'User API connection failed', 'error');
+            }
+        }
+        
+        async function testComponents() {
+            updateStatus('component-status', 'Testing React component integration...', 'info');
+            const results = document.getElementById('component-results');
+            results.innerHTML = '';
+            
+            // Test if we can access the main app and check for enterprise components
+            try {
+                const response = await fetch('/');
+                const html = await response.text();
+                
+                const hasReactApp = html.includes('nexus-core-frontend');
+                const hasTenantManagement = html.includes('TenantManagement') || html.includes('tenant');
+                const hasUserManagement = html.includes('UserManagement') || html.includes('user');
+                
+                addResult('component-results', '✅ Main App HTML', {
+                    hasReactApp,
+                    hasTenantManagement,
+                    hasUserManagement,
+                    htmlLength: html.length
+                });
+                
+                if (hasReactApp) {
+                    updateStatus('component-status', 'React app detected, components should be available', 'success');
+                } else {
+                    updateStatus('component-status', 'React app not detected', 'error');
+                }
+            } catch (error) {
+                addResult('component-results', '❌ Component Test Error', { error: error.message });
+                updateStatus('component-status', 'Component test failed', 'error');
+            }
+        }
+        
+        // Auto-run basic connectivity test on page load
+        window.onload = function() {
+            testBackendAPIs();
+        };
+    </script>
+</body>
+</html>
