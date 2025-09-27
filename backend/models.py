@@ -4,6 +4,25 @@ from datetime import datetime
 from enum import Enum
 import uuid
 
+# Enterprise Enums for Phase 6C
+class UserRole(str, Enum):
+    SUPER_ADMIN = "super_admin"
+    TENANT_ADMIN = "tenant_admin"
+    MANAGER = "manager"
+    EMPLOYEE = "employee"
+
+class TenantStatus(str, Enum):
+    ACTIVE = "active"
+    SUSPENDED = "suspended"
+    TRIAL = "trial"
+    EXPIRED = "expired"
+
+class PermissionType(str, Enum):
+    READ = "read"
+    WRITE = "write"
+    DELETE = "delete"
+    ADMIN = "admin"
+
 # Enums for various status and types
 class AgentStatus(str, Enum):
     ACTIVE = "active"
