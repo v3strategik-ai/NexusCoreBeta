@@ -671,7 +671,7 @@ async def generate_competitive_analysis(request: CompetitiveAnalysisRequest):
         )
         
         try:
-            competitive_analysis = json.loads(ai_response.choices[0].message.content)
+            competitive_analysis = json.loads(ai_response.content)
         except:
             competitive_analysis = {
                 "competitive_position": "challenger",
