@@ -77,7 +77,8 @@ import {
   Trash2,
   RefreshCw,
   Minimize,
-  Plug
+  Plug,
+  Crown
 } from 'lucide-react'
 import axios from 'axios'
 import './App.css'
