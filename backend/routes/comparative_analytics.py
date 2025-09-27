@@ -444,10 +444,8 @@ class ComparativeAnalyticsEngine:
             Format as JSON with trend insights and forecast data.
             """
             
-            ai_response = await self.llm.chat_completion_async(
-                messages=[{"role": "user", "content": trend_prompt}],
-                model="gpt-4o-mini",
-                temperature=0.3
+            ai_response = await asyncio.to_thread(
+                self.llm.send_message, trend_prompt
             )
             
             try:
