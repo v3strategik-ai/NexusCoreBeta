@@ -35,6 +35,8 @@ import { ThemeToggle, ThemeToggleButton } from './components/ThemeToggle'
 import { VoiceCommands, VoiceCommandsHelp } from './components/VoiceCommands'
 import { TenantManagement } from './components/TenantManagement'
 import { UserManagement } from './components/UserManagement'
+import { AdvancedVoiceInterface } from './components/AdvancedVoiceInterface'
+import { DataExportBackup } from './components/DataExportBackup'
 import { 
   Brain, 
   Zap, 
