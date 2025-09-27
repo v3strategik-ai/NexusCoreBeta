@@ -1046,6 +1046,15 @@ function App() {
               </TabsContent>
             </Tabs>
           </TabsContent>
+
+          {/* Performance Tab */}
+          <TabsContent value="performance" className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-4xl font-bold gradient-text mb-2">Performance Optimization</h2>
+              <p className="text-muted-foreground">Monitor and optimize platform performance for maximum efficiency</p>
+            </div>
+            <PerformanceDashboard />
+          </TabsContent>
         </Tabs>
       </div>
     </div>
