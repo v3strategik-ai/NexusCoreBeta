@@ -658,10 +658,8 @@ async def generate_competitive_analysis(request: CompetitiveAnalysisRequest):
         Format as JSON with competitive insights.
         """
         
-        ai_response = await analytics_engine.llm.chat_completion_async(
-            messages=[{"role": "user", "content": competitive_prompt}],
-            model="gpt-4o",
-            temperature=0.3
+        ai_response = await asyncio.to_thread(
+            analytics_engine.llm.send_message, competitive_prompt
         )
         
         try:
