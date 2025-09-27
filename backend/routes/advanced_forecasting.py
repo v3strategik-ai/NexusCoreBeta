@@ -588,10 +588,8 @@ async def generate_resource_planning(request: ResourcePlanningRequest):
         Format as JSON with monthly projections.
         """
         
-        ai_response = await forecasting_engine.llm.chat_completion(
-            model="gpt-4o",
-            messages=[{"role": "user", "content": planning_prompt}],
-            temperature=0.2
+        ai_response = await asyncio.to_thread(
+            forecasting_engine.llm.send_message, planning_prompt
         )
         
         try:
