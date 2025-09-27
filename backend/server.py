@@ -14,7 +14,7 @@ from datetime import datetime
 from database import connect_to_mongo, close_mongo_connection, get_database
 
 # Import all route modules
-from routes import agents, crm, dashboard, knowledge, documents, workflows, ai_chat, email, realtime, workflows_advanced, analytics, ab_testing, lead_scoring, ai_content, sentiment, workflow_engine, workflow_execution, nl_workflows
+from routes import agents, crm, dashboard, knowledge, documents, workflows, ai_chat, email, realtime, workflows_advanced, analytics, ab_testing, lead_scoring, ai_content, sentiment, workflow_engine, workflow_execution, nl_workflows, tenants, users_management, audit
 from websocket import socketio_app, start_background_tasks
 
 ROOT_DIR = Path(__file__).parent
