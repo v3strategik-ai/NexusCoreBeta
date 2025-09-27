@@ -270,7 +270,7 @@ class AdvancedForecastingEngine:
             
             # Parse AI forecast
             try:
-                forecast_data = json.loads(ai_response.content)
+                forecast_data = json.loads(ai_response)
             except:
                 # Fallback forecast
                 forecast_data = {
