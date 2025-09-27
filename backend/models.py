@@ -164,7 +164,7 @@ class KnowledgeFile(BaseModel):
     file_path: str
     processed: bool = False
 
-class Agent(BaseEntity):
+class Agent(TenantEntity):
     name: str
     type: str
     status: AgentStatus
