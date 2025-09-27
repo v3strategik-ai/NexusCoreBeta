@@ -274,7 +274,7 @@ class AdvancedForecastingEngine:
             
             # Parse AI forecast
             try:
-                forecast_data = json.loads(ai_response.choices[0].message.content)
+                forecast_data = json.loads(ai_response.content)
             except:
                 # Fallback forecast
                 forecast_data = {
@@ -336,7 +336,7 @@ class AdvancedForecastingEngine:
             )
             
             try:
-                forecast_data = json.loads(ai_response.choices[0].message.content)
+                forecast_data = json.loads(ai_response.content)
             except:
                 forecast_data = {
                     "monthly_forecasts": self._generate_fallback_forecast(request.horizon_months, "conversion"),
