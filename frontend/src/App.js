@@ -855,8 +855,8 @@ function App() {
             </div>
           </TabsContent>
 
-          {/* Workflows Tab - Phase 6B: Advanced Workflows & Automation */}
-          <TabsContent value="workflows" className="space-y-6">
+          {/* Operations Tab - Phase 6B: Advanced Workflows & Automation */}
+          <TabsContent value="operations" className="space-y-6">
             <div className="flex justify-between items-center">
               <div>
                 <h2 className="text-3xl font-bold gradient-text">Advanced Workflows & Automation</h2>
