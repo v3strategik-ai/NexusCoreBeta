@@ -962,6 +962,41 @@ function App() {
           <TabsContent value="integrations" className="space-y-6">
             <IntegrationsManager />
           </TabsContent>
+
+          {/* Enterprise Tab - Phase 6C */}
+          <TabsContent value="enterprise" className="space-y-6">
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h2 className="text-3xl font-bold gradient-text">Enterprise Management</h2>
+                <p className="text-muted-foreground">Multi-tenant architecture with role-based access control</p>
+              </div>
+              <div className="flex gap-2">
+                <Badge variant="outline" className="flex items-center gap-1">
+                  <Shield className="w-3 h-3" />
+                  Phase 6C
+                </Badge>
+                <Badge variant="outline" className="flex items-center gap-1">
+                  <Crown className="w-3 h-3" />
+                  Enterprise Features
+                </Badge>
+              </div>
+            </div>
+
+            <Tabs defaultValue="tenants" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="tenants">Tenant Management</TabsTrigger>
+                <TabsTrigger value="users">User Management</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="tenants" className="mt-6">
+                <TenantManagement />
+              </TabsContent>
+
+              <TabsContent value="users" className="mt-6">
+                <UserManagement />
+              </TabsContent>
+            </Tabs>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
