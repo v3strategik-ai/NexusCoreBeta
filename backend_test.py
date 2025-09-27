@@ -4037,7 +4037,10 @@ class NexusCoreAPITester:
             self.test_phase_6a_ai_features(),  # Phase 6A Foundation & AI Core Features
             self.test_conditional_logic_builder(),  # Phase 6B Conditional Logic Builder
             self.test_workflow_execution_engine(),  # Phase 6B Workflow Execution Engine
-            self.test_natural_language_workflows()  # Phase 6B Natural Language Workflow Creation
+            self.test_natural_language_workflows(),  # Phase 6B Natural Language Workflow Creation
+            self.test_multi_tenant_architecture(),  # Phase 6C Multi-Tenant Architecture
+            self.test_role_based_access_control(),  # Phase 6C Role-Based Access Control
+            self.test_audit_logging_system()  # Phase 6C Audit Logging System
         ]
         
         # Print summary
