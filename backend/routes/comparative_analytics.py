@@ -136,7 +136,11 @@ class ComparativeAnalyticsEngine:
     """AI-powered comparative analytics engine"""
     
     def __init__(self):
-        self.llm = EmergentLLM(api_key=os.environ.get('EMERGENT_LLM_KEY'))
+        self.llm = LlmChat(
+            api_key=os.environ.get('EMERGENT_LLM_KEY'),
+            session_id='analytics_session',
+            system_message='You are an AI business analyst specializing in comparative analytics and benchmarking.'
+        )
         self.industry_benchmarks = self._load_industry_benchmarks()
     
     def _load_industry_benchmarks(self) -> Dict[str, Dict[str, float]]:
