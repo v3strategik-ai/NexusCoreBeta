@@ -376,15 +376,18 @@ agent_communication:
 
   - task: "Phase 6C Frontend Components"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/frontend/src/components/TenantManagement.js, UserManagement.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "IMPLEMENTED: Enterprise management UI components. TenantManagement - comprehensive tenant CRUD with subscription plans, usage monitoring, status management. UserManagement - user lifecycle management with role-based UI, permissions display, and activity tracking across tenants."
+        - working: false
+          agent: "testing"
+          comment: "CRITICAL ISSUE: Frontend components cannot be tested due to main app navigation failure. Backend APIs are 100% functional (6 tenants, 4-tier RBAC, multi-tenancy operational), but legacy data models (agents, leads, workflows) missing required Phase 6C fields (tenant_id, created_by, updated_by) cause 500 errors, preventing React app from rendering navigation. Enterprise components exist and are properly implemented but cannot be accessed through main UI. BACKEND WORKING: ✅ Tenant Management (6 tenants with 4 plan types), ✅ User Management (RBAC with super_admin/tenant_admin/manager/employee roles), ✅ Multi-tenancy (6 isolated subdomains, white-label branding). FRONTEND BLOCKED: Main app error screen prevents enterprise tab access. Requires data migration to add missing fields to existing records."
 
   - task: "Phase 6B Frontend Implementation"
     implemented: true
