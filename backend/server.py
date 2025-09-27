@@ -119,6 +119,10 @@ api_router.include_router(tenants.router)
 api_router.include_router(users_management.router)
 api_router.include_router(audit.router)
 
+# Phase 6D: Advanced Intelligence & Voice Routes
+api_router.include_router(advanced_voice.router)
+api_router.include_router(data_export.router)
+
 # Include the main API router
 app.include_router(api_router)
 
