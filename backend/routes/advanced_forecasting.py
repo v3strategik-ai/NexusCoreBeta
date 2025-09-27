@@ -262,9 +262,7 @@ class AdvancedForecastingEngine:
             }}
             """
             
-            ai_response = await asyncio.to_thread(
-                self.llm.send_message, forecast_prompt
-            )
+            ai_response = self.llm.send_message(forecast_prompt)
             
             # Parse AI forecast
             try:
@@ -323,9 +321,7 @@ class AdvancedForecastingEngine:
             Format as JSON with monthly predictions.
             """
             
-            ai_response = await asyncio.to_thread(
-                self.llm.send_message, forecast_prompt
-            )
+            ai_response = self.llm.send_message(forecast_prompt)
             
             try:
                 forecast_data = json.loads(ai_response)
