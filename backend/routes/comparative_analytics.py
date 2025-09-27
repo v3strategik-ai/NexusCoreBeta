@@ -522,9 +522,9 @@ class ComparativeAnalyticsEngine:
             Format as JSON with comprehensive improvement plan.
             """
             
-            ai_response = await self.llm.chat_completion(
-                model="gpt-4o",
+            ai_response = await self.llm.chat_completion_async(
                 messages=[{"role": "user", "content": gap_prompt}],
+                model="gpt-4o",
                 temperature=0.2
             )
             
