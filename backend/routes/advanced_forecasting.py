@@ -170,9 +170,7 @@ class AdvancedForecastingEngine:
             """
             
             # Get AI analysis
-            ai_response = await asyncio.to_thread(
-                self.llm.send_message, analysis_prompt
-            )
+            ai_response = self.llm.send_message(analysis_prompt)
             
             # Parse AI response
             try:
