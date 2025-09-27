@@ -622,6 +622,10 @@ function App() {
               <Gauge className="w-4 h-4" />
               Performance
             </TabsTrigger>
+            <TabsTrigger value="enterprise-arch" className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4" />
+              Enterprise+
+            </TabsTrigger>
           </TabsList>
 
           {/* Dashboard Tab */}
