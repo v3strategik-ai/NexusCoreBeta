@@ -524,10 +524,8 @@ async def generate_seasonal_analysis(request: SeasonalAnalysisRequest):
         Format as JSON with seasonal insights.
         """
         
-        ai_response = await forecasting_engine.llm.chat_completion(
-            model="gpt-4o-mini",
-            messages=[{"role": "user", "content": seasonal_prompt}],
-            temperature=0.3
+        ai_response = await asyncio.to_thread(
+            forecasting_engine.llm.send_message, seasonal_prompt
         )
         
         try:
