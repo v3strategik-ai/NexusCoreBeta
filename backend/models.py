@@ -199,7 +199,7 @@ class AgentUpdate(BaseModel):
     configuration: Optional[Dict[str, Any]] = None
 
 # CRM Models
-class Lead(BaseEntity):
+class Lead(TenantEntity):
     name: str
     email: str
     phone: Optional[str] = None
