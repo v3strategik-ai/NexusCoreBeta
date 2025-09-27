@@ -529,7 +529,7 @@ class ComparativeAnalyticsEngine:
             )
             
             try:
-                gap_analysis = json.loads(ai_response.choices[0].message.content)
+                gap_analysis = json.loads(ai_response.content)
             except:
                 # Fallback gap analysis
                 gap_analysis = {
