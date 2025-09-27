@@ -4416,7 +4416,9 @@ class NexusCoreAPITester:
             self.test_natural_language_workflows(),  # Phase 6B Natural Language Workflow Creation
             self.test_multi_tenant_architecture(),  # Phase 6C Multi-Tenant Architecture
             self.test_role_based_access_control(),  # Phase 6C Role-Based Access Control
-            self.test_audit_logging_system()  # Phase 6C Audit Logging System
+            self.test_audit_logging_system(),  # Phase 6C Audit Logging System
+            self.test_phase_6d_advanced_voice_interface(),  # Phase 6D-A Advanced Voice Interface
+            self.test_phase_6d_data_export_backup_systems()  # Phase 6D-B Data Export & Backup Systems
         ]
         
         # Print summary
