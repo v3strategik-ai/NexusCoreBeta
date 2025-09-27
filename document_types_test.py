@@ -7,7 +7,7 @@ import requests
 import json
 
 def test_all_document_types():
-    base_url = "https://smartagent-nexus.preview.emergentagent.com/api"
+    base_url = "https://smartnexus-1.preview.emergentagent.com/api"
     
     document_types = [
         {

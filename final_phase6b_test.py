@@ -10,7 +10,7 @@ from urllib.parse import quote
 
 class FinalPhase6BTester:
     def __init__(self):
-        self.base_url = "https://smartagent-nexus.preview.emergentagent.com/api"
+        self.base_url = "https://smartnexus-1.preview.emergentagent.com/api"
         self.tests_run = 0
         self.tests_passed = 0
         self.failed_tests = []
