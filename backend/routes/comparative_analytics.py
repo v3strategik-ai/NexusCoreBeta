@@ -324,7 +324,7 @@ class ComparativeAnalyticsEngine:
             
             # Parse AI analysis
             try:
-                ai_analysis = json.loads(ai_response.content)
+                ai_analysis = json.loads(ai_response)
             except:
                 # Fallback analysis
                 ai_analysis = {
