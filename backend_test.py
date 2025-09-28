@@ -1231,7 +1231,7 @@ class NexusCoreAPITester:
             "temperature": 0.7
         }
         
-        success3, chat_response = self.run_test("AI Chat - Conversation Task", "POST", "ai-models/chat", 200, conversation_request)
+        success3, chat_response = self.run_test("AI Chat - Conversation Task", "POST", "ai-models/chat", 200, conversation_request, timeout=30)
         if success3:
             print(f"   Chat Response Length: {len(chat_response.get('response', ''))}")
             print(f"   Model Used: {chat_response.get('model_used')}")
