@@ -96,22 +96,22 @@ const VideoIntroModal = ({ isOpen, onClose, autoClose = false }) => {
             Your browser does not support the video tag.
           </video>
 
-          {/* Video Controls Overlay */}
-          {hasEnded && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-              <div className="text-center">
-                <button
-                  onClick={handleReplay}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors duration-200 mb-4"
-                >
-                  Replay Animation
-                </button>
-                {!autoClose && (
-                  <div className="text-white/70 text-sm">
-                    Press ESC or click outside to close
-                  </div>
-                )}
-              </div>
+          {/* Video Controls Overlay - Hidden for cleaner experience */}
+          {hasEnded && autoClose && (
+            <div className="absolute inset-0 bg-black/20">
+              {/* Clean end - no visible controls for auto-close mode */}
+            </div>
+          )}
+          
+          {hasEnded && !autoClose && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+              <button
+                onClick={handleReplay}
+                className="bg-blue-600/80 hover:bg-blue-600 text-white px-6 py-2 rounded-full font-medium transition-all duration-200 opacity-0 hover:opacity-100"
+                title="Replay Animation"
+              >
+                ↻
+              </button>
             </div>
           )}
         </div>
