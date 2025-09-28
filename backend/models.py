@@ -56,6 +56,7 @@ class WorkflowStatus(str, Enum):
     PAUSED = "paused"
     STOPPED = "stopped"
     ERROR = "error"
+    DRAFT = "draft"  # Legacy status support
 
 # Base Models
 class BaseEntity(BaseModel):
