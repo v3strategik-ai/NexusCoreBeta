@@ -1139,13 +1139,18 @@ function App() {
             </div>
 
             <Tabs defaultValue="voice" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="voice">Advanced Voice Interface</TabsTrigger>
+                <TabsTrigger value="ai-models">AI Model Router</TabsTrigger>
                 <TabsTrigger value="data">Data Export & Backup</TabsTrigger>
               </TabsList>
 
               <TabsContent value="voice" className="mt-6">
                 <AdvancedVoiceInterface />
+              </TabsContent>
+
+              <TabsContent value="ai-models" className="mt-6">
+                <AIModelRouter />
               </TabsContent>
 
               <TabsContent value="data" className="mt-6">
