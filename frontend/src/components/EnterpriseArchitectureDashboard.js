@@ -111,7 +111,7 @@ const EnterpriseArchitectureDashboard = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="p-4 bg-blue-50 rounded-lg">
-              <h4 className="font-medium text-blue-900">Supported Forecasts</h4>
+              <h4 className="font-medium text-foreground">Supported Forecasts</h4>
               <p className="text-sm text-blue-700 mt-1">
                 {forecastingData?.supported_forecasts?.length || 0} forecast types available
               </p>
