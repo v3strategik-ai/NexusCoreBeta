@@ -249,7 +249,7 @@ const EnterpriseArchitectureDashboard = () => {
             <div className="p-4 bg-yellow-50 rounded-lg">
               <div className="flex items-center">
                 <Eye className="h-5 w-5 text-yellow-500 mr-2" />
-                <h4 className="font-medium text-yellow-900">Threat Detection</h4>
+                <h4 className="font-medium text-foreground">Threat Detection</h4>
               </div>
               <p className="text-sm text-yellow-700 mt-1">
                 {securityData?.components?.threat_detection === 'healthy' ? 'Monitoring' : 'Offline'}
