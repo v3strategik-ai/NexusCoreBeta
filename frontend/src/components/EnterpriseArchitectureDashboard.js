@@ -102,7 +102,7 @@ const EnterpriseArchitectureDashboard = () => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <TrendingUp className="h-5 w-5 text-blue-500 mr-2" />
-              <h3 className="text-lg font-semibold">AI-Powered Business Forecasting</h3>
+              <h3 className="text-lg font-semibold text-foreground">AI-Powered Business Forecasting</h3>
             </div>
             <div className={`px-3 py-1 rounded-full text-sm ${getStatusColor(forecastingData?.status || 'unknown')}`}>
               {forecastingData?.status || 'Unknown'}
