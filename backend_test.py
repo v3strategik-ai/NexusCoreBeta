@@ -1279,7 +1279,7 @@ class NexusCoreAPITester:
         
         task_test_results = []
         for i, task_request in enumerate(task_types_to_test):
-            success_task, task_response = self.run_test(f"AI Chat - {task_request['task_type'].title()} Task", "POST", "ai-models/chat", 200, task_request)
+            success_task, task_response = self.run_test(f"AI Chat - {task_request['task_type'].title()} Task", "POST", "ai-models/chat", 200, task_request, timeout=30)
             task_test_results.append(success_task)
             
             if success_task:
