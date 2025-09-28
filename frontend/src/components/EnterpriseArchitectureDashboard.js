@@ -393,7 +393,7 @@ const EnterpriseArchitectureDashboard = () => {
               </div>
             </div>
             <div className="p-4 bg-indigo-50 rounded-lg">
-              <h4 className="font-medium text-indigo-900">Industries</h4>
+              <h4 className="font-medium text-foreground">Industries</h4>
               <p className="text-sm text-indigo-700 mt-1">
                 {analyticsData?.supported_industries?.length || 0} industry verticals
               </p>
