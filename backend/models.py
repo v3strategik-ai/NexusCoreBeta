@@ -62,7 +62,7 @@ class WorkflowStatus(str, Enum):
 class BaseEntity(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: Optional[datetime] = Field(default_factory=datetime.utcnow)
 
 # Enterprise Models for Phase 6C: Multi-Tenancy & RBAC
 class Tenant(BaseEntity):
