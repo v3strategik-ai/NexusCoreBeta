@@ -1225,10 +1225,11 @@ class NexusCoreAPITester:
         
         # Test 3: AI Chat with Intelligent Routing - Conversation Task
         conversation_request = {
-            "message": "Hello! Can you help me understand the benefits of AI automation for business processes?",
+            "message": "Hello! What are the main benefits of AI?",
             "task_type": "conversation",
-            "system_message": "You are a helpful business AI assistant.",
-            "temperature": 0.7
+            "system_message": "You are a helpful AI assistant.",
+            "temperature": 0.7,
+            "max_tokens": 100
         }
         
         success3, chat_response = self.run_test("AI Chat - Conversation Task", "POST", "ai-models/chat", 200, conversation_request, timeout=30)
