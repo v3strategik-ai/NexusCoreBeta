@@ -1294,10 +1294,10 @@ class NexusCoreAPITester:
         
         # Test 6: Model Comparison (GPT-5 vs Claude 4 Sonnet)
         comparison_request = {
-            "message": "Explain the key advantages of using AI for business process automation.",
+            "message": "What are AI benefits?",
             "task_type": "conversation",
             "models": ["gpt-5", "claude-4-sonnet-20250514"],
-            "system_message": "You are a business AI consultant.",
+            "system_message": "You are an AI consultant.",
             "temperature": 0.7
         }
         
