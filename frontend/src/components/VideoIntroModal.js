@@ -75,6 +75,20 @@ const VideoIntroModal = ({ isOpen, onClose, autoClose = false }) => {
     onClose();
   };
 
+  // Add keyboard escape handler
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && isOpen) {
+        handleClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      return () => document.removeEventListener('keydown', handleEscape);
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (
