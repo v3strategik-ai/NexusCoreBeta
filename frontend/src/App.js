@@ -1123,10 +1123,14 @@ function App() {
           <TabsContent value="advanced" className="space-y-6">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-3xl font-bold gradient-text">Advanced Intelligence & Voice</h2>
-                <p className="text-muted-foreground">Full audio interface with voice responses and enterprise data management</p>
+                <h2 className="text-3xl font-bold gradient-text">Advanced AI & Intelligence</h2>
+                <p className="text-muted-foreground">Multi-model AI integration, voice interface, and enterprise data management</p>
               </div>
               <div className="flex gap-2">
+                <Badge variant="outline" className="flex items-center gap-1">
+                  <Brain className="w-3 h-3" />
+                  Phase 8A
+                </Badge>
                 <Badge variant="outline" className="flex items-center gap-1">
                   <Mic className="w-3 h-3" />
                   Phase 6D
