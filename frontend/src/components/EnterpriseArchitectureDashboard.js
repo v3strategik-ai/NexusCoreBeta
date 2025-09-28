@@ -258,7 +258,7 @@ const EnterpriseArchitectureDashboard = () => {
             <div className="p-4 bg-blue-50 rounded-lg">
               <div className="flex items-center">
                 <Users className="h-5 w-5 text-blue-500 mr-2" />
-                <h4 className="font-medium text-blue-900">Password Policies</h4>
+                <h4 className="font-medium text-foreground">Password Policies</h4>
               </div>
               <p className="text-sm text-blue-700 mt-1">
                 {securityData?.components?.password_policies === 'healthy' ? 'Configured' : 'Not Set'}
