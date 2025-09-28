@@ -1116,7 +1116,7 @@ function App() {
               <div>
                 <div className="text-center mb-6">
                   <h3 className="text-2xl font-bold gradient-text">Enterprise Architecture</h3>
-                  <p className="text-gray-600 mt-1">Advanced forecasting, security management, and comparative analytics</p>
+                  <p className="text-muted-foreground mt-1">Advanced forecasting, security management, and comparative analytics</p>
                 </div>
                 <EnterpriseArchitectureDashboard />
               </div>
