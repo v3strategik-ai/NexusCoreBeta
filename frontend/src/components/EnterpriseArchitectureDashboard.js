@@ -60,7 +60,7 @@ const EnterpriseArchitectureDashboard = () => {
       case 'healthy': return <CheckCircle className="h-5 w-5 text-green-500" />;
       case 'degraded': return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
       case 'error': return <XCircle className="h-5 w-5 text-red-500" />;
-      default: return <Activity className="h-5 w-5 text-gray-500" />;
+      default: return <Activity className="h-5 w-5 text-muted-foreground" />;
     }
   };
 
