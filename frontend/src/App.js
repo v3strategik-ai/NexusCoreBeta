@@ -945,7 +945,7 @@ function App() {
                 <div className="flex justify-between items-center mb-6">
                   <div>
                     <h3 className="text-2xl font-bold text-green-600 dark:text-green-400">Document Generation</h3>
-                    <p className="text-green-700 dark:text-green-300 mt-1">AI-powered business document creation</p>
+                    <p className="text-muted-foreground mt-1">AI-powered business document creation</p>
                   </div>
                   <DocumentGenerationModal agents={agents} onDocumentGenerated={handleDocumentGenerated}>
                     <Button className="glow-effect">
