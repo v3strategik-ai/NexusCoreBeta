@@ -144,7 +144,7 @@ const EnterpriseArchitectureDashboard = () => {
               <select
                 value={forecastType}
                 onChange={(e) => setForecastType(e.target.value)}
-                className="border border-gray-300 rounded-md px-3 py-2"
+                className="border border-border rounded-md px-3 py-2 bg-background text-foreground focus:border-primary focus:ring-1 focus:ring-primary"
               >
                 <option value="revenue">Revenue Forecasting</option>
                 <option value="lead_conversion">Lead Conversion</option>
