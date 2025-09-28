@@ -13,6 +13,12 @@ const VideoIntroModal = ({ isOpen, onClose, autoClose = false }) => {
       setHasEnded(false);
       setIsPlaying(false);
       
+      // Fallback timeout - auto-close after 10 seconds if video doesn't load/end
+      const fallbackTimeout = setTimeout(() => {
+        console.log("Video intro fallback timeout - auto-closing");
+        handleVideoEnd();
+      }, 10000);
+      
       // Small delay to ensure modal is fully rendered
       setTimeout(() => {
         if (videoRef.current) {
@@ -24,11 +30,17 @@ const VideoIntroModal = ({ isOpen, onClose, autoClose = false }) => {
               setIsPlaying(true);
             }).catch((error) => {
               console.log("Video autoplay failed:", error);
-              // Fallback: show play button or handle gracefully
+              // Auto-close if video can't play
+              setTimeout(() => {
+                handleVideoEnd();
+              }, 3000);
             });
           }
         }
       }, 100);
+      
+      // Cleanup timeout if component unmounts or isOpen changes
+      return () => clearTimeout(fallbackTimeout);
     }
   }, [isOpen]);
 
