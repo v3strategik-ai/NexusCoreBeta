@@ -92,9 +92,12 @@ const VideoIntroModal = ({ isOpen, onClose, autoClose = false }) => {
   if (!isOpen) return null;
 
   return (
-    <div className={`fixed inset-0 z-[100] bg-black transition-opacity duration-800 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
+    <div 
+      className={`fixed inset-0 z-[100] bg-black transition-opacity duration-800 ${isClosing ? 'opacity-0' : 'opacity-100'}`}
+      onClick={handleClose}
+    >
       {/* Fullscreen Video Container - No Modal Background */}
-      <div className="relative w-full h-full flex items-center justify-center">
+      <div className="relative w-full h-full flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
         <video
           ref={videoRef}
           className="w-full h-full object-cover"
