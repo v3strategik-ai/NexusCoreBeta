@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Brain, Zap, BarChart3, Cpu, MessageCircle, TrendingUp, Settings, RefreshCw, Play, Compare, Activity, Clock, DollarSign, Star } from 'lucide-react';
+import { Brain, Zap, BarChart3, Cpu, MessageCircle, TrendingUp, Settings, RefreshCw, Play, GitCompare, Activity, Clock, DollarSign, Star } from 'lucide-react';
 
 const AIModelRouter = () => {
   const [activeTab, setActiveTab] = useState('chat');
