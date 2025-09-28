@@ -267,7 +267,7 @@ const EnterpriseArchitectureDashboard = () => {
             <div className="p-4 bg-green-50 rounded-lg">
               <div className="flex items-center">
                 <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
-                <h4 className="font-medium text-green-900">JWT Service</h4>
+                <h4 className="font-medium text-foreground">JWT Service</h4>
               </div>
               <p className="text-sm text-green-700 mt-1">
                 {securityData?.components?.jwt_service === 'healthy' ? 'Active' : 'Inactive'}
