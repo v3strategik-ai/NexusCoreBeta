@@ -92,7 +92,6 @@ import {
 } from 'lucide-react'
 import axios from 'axios'
 import './App.css'
-import logoFrame3 from './assets/logo_frame_3.png'
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 const API = `${BACKEND_URL}/api`
