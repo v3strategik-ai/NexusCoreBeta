@@ -530,8 +530,8 @@ const EnterpriseArchitectureDashboard = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Enterprise Architecture Dashboard</h1>
-        <p className="text-gray-600 mt-1">Advanced forecasting, security management, and comparative analytics</p>
+        <h1 className="text-2xl font-bold text-foreground">Enterprise Architecture Dashboard</h1>
+        <p className="text-muted-foreground mt-1">Advanced forecasting, security management, and comparative analytics</p>
       </div>
 
       {/* Tab Navigation */}
