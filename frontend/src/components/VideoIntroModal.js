@@ -66,7 +66,7 @@ const VideoIntroModal = ({ isOpen, onClose, autoClose = false }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black">
+    <div className={`fixed inset-0 z-[100] bg-black transition-opacity duration-800 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
       {/* Fullscreen Video Container - No Modal Background */}
       <div className="relative w-full h-full flex items-center justify-center">
         <video
