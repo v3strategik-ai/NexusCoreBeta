@@ -384,7 +384,7 @@ const EnterpriseArchitectureDashboard = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div className="p-4 bg-purple-50 rounded-lg">
-              <h4 className="font-medium text-purple-900">Benchmark Types</h4>
+              <h4 className="font-medium text-foreground">Benchmark Types</h4>
               <p className="text-sm text-purple-700 mt-1">
                 {analyticsData?.supported_benchmarks?.length || 0} benchmark categories
               </p>
