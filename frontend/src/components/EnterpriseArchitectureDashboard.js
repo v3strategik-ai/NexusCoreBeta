@@ -581,8 +581,8 @@ const EnterpriseArchitectureDashboard = () => {
       </div>
 
       {/* Enterprise Overview */}
-      <div className="mt-8 bg-gray-50 rounded-lg p-6">
-        <h3 className="text-lg font-semibold mb-4">Enterprise Systems Overview</h3>
+      <div className="mt-8 bg-card rounded-lg p-6 border border-border">
+        <h3 className="text-lg font-semibold text-foreground mb-4">Enterprise Systems Overview</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center justify-between p-4 bg-white rounded border">
             <div className="flex items-center">
