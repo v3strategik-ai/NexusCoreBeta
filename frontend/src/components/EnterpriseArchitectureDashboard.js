@@ -437,16 +437,16 @@ const EnterpriseArchitectureDashboard = () => {
             </div>
 
             {benchmarkResults && (
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h4 className="font-medium mb-4">Benchmark Analysis Results</h4>
+              <div className="bg-muted rounded-lg p-4">
+                <h4 className="font-medium text-foreground mb-4">Benchmark Analysis Results</h4>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <p className="text-sm text-gray-600">Industry</p>
-                    <p className="text-lg font-semibold capitalize">{benchmarkResults.industry}</p>
+                    <p className="text-sm text-muted-foreground">Industry</p>
+                    <p className="text-lg font-semibold text-foreground capitalize">{benchmarkResults.industry}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Confidence Score</p>
+                    <p className="text-sm text-muted-foreground">Confidence Score</p>
                     <p className="text-lg font-semibold text-purple-600">
                       {(benchmarkResults.confidence_score * 100).toFixed(0)}%
                     </p>
