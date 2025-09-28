@@ -1257,7 +1257,7 @@ class NexusCoreAPITester:
             "temperature": 0.3
         }
         
-        success4, gpt5_response = self.run_test("AI Chat - GPT-5 Analysis", "POST", "ai-models/chat", 200, gpt5_request)
+        success4, gpt5_response = self.run_test("AI Chat - GPT-5 Analysis", "POST", "ai-models/chat", 200, gpt5_request, timeout=30)
         if success4:
             print(f"   GPT-5 Response Length: {len(gpt5_response.get('response', ''))}")
             print(f"   Model Used: {gpt5_response.get('model_used')}")
