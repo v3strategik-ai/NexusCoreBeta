@@ -323,7 +323,7 @@ const EnterpriseArchitectureDashboard = () => {
                 <h4 className="font-medium mb-2">Supported Authentication Methods</h4>
                 <div className="flex flex-wrap gap-2">
                   {securityData.supported_auth_methods.map((method, idx) => (
-                    <span key={idx} className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                    <span key={idx} className="px-2 py-1 bg-muted text-foreground rounded-full text-sm">
                       {method.replace('_', ' ').toUpperCase()}
                     </span>
                   ))}
