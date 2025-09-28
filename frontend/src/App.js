@@ -1115,7 +1115,7 @@ function App() {
             {enterpriseTab === 'architecture' && (
               <div>
                 <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900">Enterprise Architecture</h3>
+                  <h3 className="text-2xl font-bold gradient-text">Enterprise Architecture</h3>
                   <p className="text-gray-600 mt-1">Advanced forecasting, security management, and comparative analytics</p>
                 </div>
                 <EnterpriseArchitectureDashboard />
