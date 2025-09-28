@@ -1170,6 +1170,13 @@ function App() {
         </Tabs>
       </div>
     </div>
+
+    {/* Video Intro Modal */}
+    <VideoIntroModal 
+      isOpen={showIntro}
+      onClose={handleIntroClose}
+      autoClose={true}
+    />
     </ThemeProvider>
   )
 }
