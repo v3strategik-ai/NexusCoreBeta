@@ -114,6 +114,9 @@ function App() {
     unreadCount 
   } = useNotifications()
 
+  // Video intro functionality
+  const { showIntro, replayIntro, handleIntroClose } = useVideoIntro()
+
   // Add real-time features
   const [isRealTimeEnabled, setIsRealTimeEnabled] = useState(true)
   const [connectionStatus, setConnectionStatus] = useState('disconnected')
