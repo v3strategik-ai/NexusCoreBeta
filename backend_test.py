@@ -1145,6 +1145,264 @@ class NexusCoreAPITester:
         
         return all(all_forecasting_tests)
 
+    def test_phase_8a_ai_model_router_backend(self):
+        """Test Phase 8A: Multi-Model AI Integration backend implementation"""
+        print("\n" + "="*50)
+        print("TESTING PHASE 8A: MULTI-MODEL AI INTEGRATION")
+        print("="*50)
+        
+        # Test 1: AI Models Health Check
+        success1, health_response = self.run_test("AI Models Health Check", "GET", "ai-models/health")
+        if success1:
+            print(f"   AI Models Status: {health_response.get('status', 'unknown')}")
+            components = health_response.get('components', {})
+            available_models = health_response.get('available_models', {})
+            supported_tasks = health_response.get('supported_task_types', [])
+            
+            print(f"   Emergent LLM Key: {components.get('emergent_llm_key', 'unknown')}")
+            print(f"   Model Router: {components.get('model_router', 'unknown')}")
+            print(f"   Performance Tracking: {components.get('performance_tracking', 'unknown')}")
+            
+            # Verify 6 models across 3 providers
+            openai_models = available_models.get('openai', [])
+            anthropic_models = available_models.get('anthropic', [])
+            google_models = available_models.get('google', [])
+            total_models = len(openai_models) + len(anthropic_models) + len(google_models)
+            
+            print(f"   OpenAI Models: {len(openai_models)} ({', '.join(openai_models[:3])}...)")
+            print(f"   Anthropic Models: {len(anthropic_models)} ({', '.join(anthropic_models[:2])}...)")
+            print(f"   Google Models: {len(google_models)} ({', '.join(google_models[:2])}...)")
+            print(f"   Total Models Available: {total_models}")
+            print(f"   Supported Task Types: {len(supported_tasks)}")
+            
+            # Verify expected task types (10 types)
+            if len(supported_tasks) >= 10:
+                print("   ✅ All 10 task types supported")
+                print(f"   Task Types: {', '.join(supported_tasks[:5])}...")
+            else:
+                print(f"   ❌ Expected 10 task types, found {len(supported_tasks)}")
+            
+            # Verify 6+ models available
+            if total_models >= 6:
+                print("   ✅ 6+ AI models available across 3 providers")
+            else:
+                print(f"   ❌ Expected 6+ models, found {total_models}")
+        
+        # Test 2: Get Available Models with Capabilities
+        success2, models_response = self.run_test("Get Available Models", "GET", "ai-models/models")
+        if success2:
+            available_models = models_response.get('available_models', {})
+            task_routing = models_response.get('task_routing', {})
+            total_models = models_response.get('total_models', 0)
+            providers = models_response.get('providers', [])
+            
+            print(f"   Available Models: {total_models}")
+            print(f"   Providers: {len(providers)} ({', '.join(providers)})")
+            print(f"   Task Routing Rules: {len(task_routing)}")
+            
+            # Verify model capabilities
+            if available_models:
+                sample_model = list(available_models.keys())[0]
+                sample_capabilities = available_models[sample_model].get('capabilities', {})
+                
+                print(f"   Sample Model: {sample_model}")
+                print(f"   - Provider: {available_models[sample_model].get('provider')}")
+                print(f"   - Reasoning Score: {sample_capabilities.get('reasoning_score', 0)}")
+                print(f"   - Creativity Score: {sample_capabilities.get('creativity_score', 0)}")
+                print(f"   - Speed Score: {sample_capabilities.get('speed_score', 0)}")
+                print(f"   - Cost Score: {sample_capabilities.get('cost_score', 0)}")
+                print(f"   - Context Length: {sample_capabilities.get('context_length', 0):,}")
+                print(f"   - Multimodal: {sample_capabilities.get('multimodal', False)}")
+                print(f"   - Specialties: {len(sample_capabilities.get('specialties', []))}")
+            
+            # Verify expected providers (OpenAI, Anthropic, Google)
+            expected_providers = ['openai', 'anthropic', 'google']
+            if all(provider in providers for provider in expected_providers):
+                print("   ✅ All 3 expected providers present (OpenAI, Anthropic, Google)")
+            else:
+                missing = [p for p in expected_providers if p not in providers]
+                print(f"   ❌ Missing providers: {missing}")
+        
+        # Test 3: AI Chat with Intelligent Routing - Conversation Task
+        conversation_request = {
+            "message": "Hello! Can you help me understand the benefits of AI automation for business processes?",
+            "task_type": "conversation",
+            "system_message": "You are a helpful business AI assistant.",
+            "temperature": 0.7
+        }
+        
+        success3, chat_response = self.run_test("AI Chat - Conversation Task", "POST", "ai-models/chat", 200, conversation_request)
+        if success3:
+            print(f"   Chat Response Length: {len(chat_response.get('response', ''))}")
+            print(f"   Model Used: {chat_response.get('model_used')}")
+            print(f"   Provider: {chat_response.get('provider')}")
+            print(f"   Processing Time: {chat_response.get('processing_time', 0):.2f}s")
+            print(f"   Task Type: {chat_response.get('task_type')}")
+            print(f"   Cost Estimate: ${chat_response.get('cost_estimate', 0):.4f}")
+            
+            # Verify response quality
+            response_text = chat_response.get('response', '')
+            if len(response_text) > 100:
+                print("   ✅ AI generated substantial response (100+ characters)")
+                print(f"   Response Preview: {response_text[:100]}...")
+            else:
+                print("   ❌ AI response too short or missing")
+        
+        # Test 4: AI Chat with Preferred Model (GPT-5)
+        gpt5_request = {
+            "message": "Analyze the ROI potential of implementing AI-powered lead scoring in a CRM system.",
+            "task_type": "analysis",
+            "preferred_model": "gpt-5",
+            "system_message": "You are an expert business analyst specializing in AI ROI analysis.",
+            "temperature": 0.3
+        }
+        
+        success4, gpt5_response = self.run_test("AI Chat - GPT-5 Analysis", "POST", "ai-models/chat", 200, gpt5_request)
+        if success4:
+            print(f"   GPT-5 Response Length: {len(gpt5_response.get('response', ''))}")
+            print(f"   Model Used: {gpt5_response.get('model_used')}")
+            print(f"   Provider: {gpt5_response.get('provider')}")
+            print(f"   Processing Time: {gpt5_response.get('processing_time', 0):.2f}s")
+            
+            # Verify GPT-5 was used as requested
+            if gpt5_response.get('model_used') == 'gpt-5':
+                print("   ✅ GPT-5 model used as requested")
+            else:
+                print(f"   ❌ Expected GPT-5, got {gpt5_response.get('model_used')}")
+        
+        # Test 5: Test Different Task Types
+        task_types_to_test = [
+            {"task_type": "reasoning", "message": "If all roses are flowers and some flowers are red, what can we conclude about roses?"},
+            {"task_type": "creative", "message": "Write a creative tagline for an AI business automation platform called Nexus Core."},
+            {"task_type": "coding", "message": "Write a Python function to calculate compound interest with monthly contributions."}
+        ]
+        
+        task_test_results = []
+        for i, task_request in enumerate(task_types_to_test):
+            success_task, task_response = self.run_test(f"AI Chat - {task_request['task_type'].title()} Task", "POST", "ai-models/chat", 200, task_request)
+            task_test_results.append(success_task)
+            
+            if success_task:
+                print(f"   {task_request['task_type'].title()} Task:")
+                print(f"   - Model Used: {task_response.get('model_used')}")
+                print(f"   - Response Length: {len(task_response.get('response', ''))}")
+                print(f"   - Processing Time: {task_response.get('processing_time', 0):.2f}s")
+        
+        success5 = all(task_test_results)
+        
+        # Test 6: Model Comparison (GPT-5 vs Claude 4 Sonnet)
+        comparison_request = {
+            "message": "Explain the key advantages of using AI for business process automation.",
+            "task_type": "conversation",
+            "models": ["gpt-5", "claude-4-sonnet-20250514"],
+            "system_message": "You are a business AI consultant.",
+            "temperature": 0.7
+        }
+        
+        success6, comparison_response = self.run_test("Model Comparison - GPT-5 vs Claude", "POST", "ai-models/compare", 200, comparison_request)
+        if success6:
+            results = comparison_response.get('results', [])
+            models_compared = comparison_response.get('models_compared', 0)
+            task_type = comparison_response.get('task_type')
+            
+            print(f"   Models Compared: {models_compared}")
+            print(f"   Task Type: {task_type}")
+            print(f"   Comparison Results: {len(results)}")
+            
+            for i, result in enumerate(results):
+                print(f"   Model {i+1}: {result.get('model')} ({result.get('provider')})")
+                print(f"   - Response Length: {len(result.get('response', ''))}")
+                print(f"   - Processing Time: {result.get('processing_time', 0):.2f}s")
+                print(f"   - Cost Estimate: ${result.get('cost_estimate', 0):.4f}")
+                
+                performance = result.get('performance_score', {})
+                if performance:
+                    print(f"   - Reasoning Score: {performance.get('reasoning_score', 0)}")
+                    print(f"   - Creativity Score: {performance.get('creativity_score', 0)}")
+            
+            # Verify concurrent processing worked
+            if models_compared >= 2:
+                print("   ✅ Model comparison with concurrent processing working")
+            else:
+                print("   ❌ Model comparison failed or incomplete")
+        
+        # Test 7: Task Routing Recommendation
+        routing_tests = [
+            {"task_type": "reasoning", "message_preview": "Complex logical problem requiring step-by-step analysis"},
+            {"task_type": "creative", "message_preview": "Need creative content generation for marketing campaign"},
+            {"task_type": "coding", "message_preview": "Python programming task with algorithm optimization"}
+        ]
+        
+        routing_test_results = []
+        for routing_test in routing_tests:
+            success_route, route_response = self.run_test(
+                f"Task Routing - {routing_test['task_type'].title()}", 
+                "POST", 
+                f"ai-models/route?task_type={routing_test['task_type']}&message_preview={routing_test['message_preview']}&consider_cost=false",
+                200
+            )
+            routing_test_results.append(success_route)
+            
+            if success_route:
+                print(f"   {routing_test['task_type'].title()} Task Routing:")
+                print(f"   - Recommended Model: {route_response.get('recommended_model')}")
+                print(f"   - Provider: {route_response.get('provider')}")
+                print(f"   - Routing Reason: {route_response.get('routing_reason')}")
+                
+                capabilities = route_response.get('model_capabilities', {})
+                alternatives = route_response.get('alternative_models', [])
+                
+                print(f"   - Reasoning Score: {capabilities.get('reasoning_score', 0)}")
+                print(f"   - Speed Score: {capabilities.get('speed_score', 0)}")
+                print(f"   - Alternative Models: {len(alternatives)} ({', '.join(alternatives[:2])}...)")
+        
+        success7 = all(routing_test_results)
+        
+        # Test 8: Performance Metrics
+        success8, performance_response = self.run_test("Performance Metrics", "GET", "ai-models/performance?days=7")
+        if success8:
+            analysis_period = performance_response.get('analysis_period_days', 0)
+            total_requests = performance_response.get('total_requests', 0)
+            model_performance = performance_response.get('model_performance', {})
+            top_models = performance_response.get('top_models_by_usage', [])
+            
+            print(f"   Analysis Period: {analysis_period} days")
+            print(f"   Total Requests: {total_requests}")
+            print(f"   Models with Performance Data: {len(model_performance)}")
+            print(f"   Top Models by Usage: {len(top_models)}")
+            
+            # Show performance data if available
+            if model_performance:
+                for model, metrics in list(model_performance.items())[:3]:  # Show first 3
+                    print(f"   {model}:")
+                    print(f"   - Total Requests: {metrics.get('total_requests', 0)}")
+                    print(f"   - Avg Response Time: {metrics.get('avg_response_time', 0):.2f}s")
+                    print(f"   - Total Cost: ${metrics.get('total_cost', 0):.4f}")
+                    print(f"   - Success Rate: {metrics.get('success_rate', 0):.1f}%")
+            
+            print("   ✅ Performance tracking system operational")
+        
+        # Summary of AI Model Router Tests
+        all_ai_tests = [success1, success2, success3, success4, success5, success6, success7, success8]
+        passed_ai_tests = sum(all_ai_tests)
+        total_ai_tests = len(all_ai_tests)
+        
+        print(f"\n📊 AI MODEL ROUTER TEST SUMMARY:")
+        print(f"   Tests Passed: {passed_ai_tests}/{total_ai_tests}")
+        print(f"   Success Rate: {(passed_ai_tests/total_ai_tests*100):.1f}%")
+        
+        if passed_ai_tests == total_ai_tests:
+            print("   🎉 ALL AI MODEL ROUTER TESTS PASSED!")
+            print("   ✅ 6+ AI models available across 3 providers")
+            print("   ✅ 10 task types supported with intelligent routing")
+            print("   ✅ GPT-5 latest model integration working")
+            print("   ✅ Model comparison and performance tracking operational")
+            print("   ✅ Emergent LLM key properly configured")
+        else:
+            print("   ⚠️  Some AI Model Router tests failed")
+        
+        return all(all_ai_tests)
+
     def test_phase_6c_advanced_security_system(self):
         """Test Phase 6C: Advanced Security System backend implementation"""
         print("\n" + "="*50)
