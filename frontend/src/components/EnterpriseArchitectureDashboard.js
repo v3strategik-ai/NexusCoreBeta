@@ -165,8 +165,8 @@ const EnterpriseArchitectureDashboard = () => {
             </div>
 
             {forecastResults && (
-              <div className="bg-gray-50 rounded-lg p-4">
-                <h4 className="font-medium mb-2">Forecast Results</h4>
+              <div className="bg-muted rounded-lg p-4">
+                <h4 className="font-medium text-foreground mb-2">Forecast Results</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-muted-foreground">Confidence Score</p>
