@@ -169,14 +169,14 @@ const EnterpriseArchitectureDashboard = () => {
                 <h4 className="font-medium mb-2">Forecast Results</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-600">Confidence Score</p>
+                    <p className="text-sm text-muted-foreground">Confidence Score</p>
                     <p className="text-lg font-semibold text-green-600">
                       {(forecastResults.confidence_score * 100).toFixed(0)}%
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Forecast Period</p>
-                    <p className="text-lg font-semibold">{forecastResults.period}</p>
+                    <p className="text-sm text-muted-foreground">Forecast Period</p>
+                    <p className="text-lg font-semibold text-foreground">{forecastResults.period}</p>
                   </div>
                 </div>
                 <div className="mt-4">
