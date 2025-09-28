@@ -320,7 +320,7 @@ const EnterpriseArchitectureDashboard = () => {
 
             {securityData?.supported_auth_methods && (
               <div className="mt-4">
-                <h4 className="font-medium mb-2">Supported Authentication Methods</h4>
+                <h4 className="font-medium text-foreground mb-2">Supported Authentication Methods</h4>
                 <div className="flex flex-wrap gap-2">
                   {securityData.supported_auth_methods.map((method, idx) => (
                     <span key={idx} className="px-2 py-1 bg-muted text-foreground rounded-full text-sm">
