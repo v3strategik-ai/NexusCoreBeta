@@ -98,7 +98,7 @@ const EnterpriseArchitectureDashboard = () => {
 
     return (
       <div className="space-y-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-card rounded-lg border border-border p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <TrendingUp className="h-5 w-5 text-blue-500 mr-2" />
@@ -225,7 +225,7 @@ const EnterpriseArchitectureDashboard = () => {
 
     return (
       <div className="space-y-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-card rounded-lg border border-border p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <Shield className="h-5 w-5 text-red-500 mr-2" />
@@ -371,7 +371,7 @@ const EnterpriseArchitectureDashboard = () => {
 
     return (
       <div className="space-y-6">
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="bg-card rounded-lg border border-border p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <BarChart3 className="h-5 w-5 text-purple-500 mr-2" />
