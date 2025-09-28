@@ -1251,11 +1251,12 @@ class NexusCoreAPITester:
         
         # Test 4: AI Chat with Preferred Model (GPT-5)
         gpt5_request = {
-            "message": "Analyze the ROI potential of implementing AI-powered lead scoring in a CRM system.",
+            "message": "What is the ROI of AI lead scoring?",
             "task_type": "analysis",
             "preferred_model": "gpt-5",
-            "system_message": "You are an expert business analyst specializing in AI ROI analysis.",
-            "temperature": 0.3
+            "system_message": "You are a business analyst.",
+            "temperature": 0.3,
+            "max_tokens": 100
         }
         
         success4, gpt5_response = self.run_test("AI Chat - GPT-5 Analysis", "POST", "ai-models/chat", 200, gpt5_request, timeout=30)
