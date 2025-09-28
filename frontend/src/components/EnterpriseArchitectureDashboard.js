@@ -51,7 +51,7 @@ const EnterpriseArchitectureDashboard = () => {
       case 'healthy': return 'text-green-600 bg-green-50';
       case 'degraded': return 'text-yellow-600 bg-yellow-50';
       case 'error': return 'text-red-600 bg-red-50';
-      default: return 'text-gray-600 bg-gray-50';
+      default: return 'text-muted-foreground bg-muted';
     }
   };
 
