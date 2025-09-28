@@ -149,8 +149,9 @@ export const useVideoIntro = () => {
   const [showIntro, setShowIntro] = useState(false);
 
   useEffect(() => {
+    // Temporarily disable auto-show for testing - enable for production
     // Show intro on first visit to the site in this session
-    if (!hasSeenIntro) {
+    if (!hasSeenIntro && false) { // Disabled for testing
       // Immediate show for seamless experience - no white flash
       setShowIntro(true);
     }
