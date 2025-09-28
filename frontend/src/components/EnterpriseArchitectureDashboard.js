@@ -402,7 +402,7 @@ const EnterpriseArchitectureDashboard = () => {
               </div>
             </div>
             <div className="p-4 bg-pink-50 rounded-lg">
-              <h4 className="font-medium text-pink-900">AI Analytics</h4>
+              <h4 className="font-medium text-foreground">AI Analytics</h4>
               <p className="text-sm text-pink-700 mt-1">
                 {analyticsData?.components?.ai_analytics_engine === 'healthy' ? 'Active' : 'Inactive'}
               </p>
