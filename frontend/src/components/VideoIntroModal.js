@@ -122,12 +122,8 @@ export const useVideoIntro = () => {
   useEffect(() => {
     // Show intro on first visit to the site in this session
     if (!hasSeenIntro) {
-      // Small delay to let the page load
-      const timer = setTimeout(() => {
-        setShowIntro(true);
-      }, 500);
-      
-      return () => clearTimeout(timer);
+      // Immediate show for seamless experience - no white flash
+      setShowIntro(true);
     }
   }, [hasSeenIntro]);
 
