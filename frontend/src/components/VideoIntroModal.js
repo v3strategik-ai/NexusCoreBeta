@@ -63,58 +63,45 @@ const VideoIntroModal = ({ isOpen, onClose, autoClose = false }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center">
-      {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/90 backdrop-blur-sm transition-opacity duration-300"
-        onClick={handleClose}
-      />
-      
-      {/* Modal Container */}
-      <div className="relative z-10 max-w-4xl w-full mx-4">
-        {/* Close Button */}
-        <button
-          onClick={handleClose}
-          className="absolute -top-12 right-0 text-white/70 hover:text-white transition-colors duration-200 z-20"
+    <div className="fixed inset-0 z-[100] bg-black">
+      {/* Fullscreen Video Container - No Modal Background */}
+      <div className="relative w-full h-full flex items-center justify-center">
+        <video
+          ref={videoRef}
+          className="w-full h-full object-cover"
+          onEnded={handleVideoEnd}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          playsInline
+          muted
+          preload="auto"
         >
-          <X className="h-8 w-8" />
-        </button>
+          <source src="/videos/nexus_core_logo_animation.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
 
-        {/* Video Container */}
-        <div className="relative bg-black rounded-lg overflow-hidden shadow-2xl">
-          <video
-            ref={videoRef}
-            className="w-full h-auto max-h-[80vh] object-contain"
-            onEnded={handleVideoEnd}
-            onPlay={() => setIsPlaying(true)}
-            onPause={() => setIsPlaying(false)}
-            playsInline
-            muted
-            preload="auto"
+        {/* Subtle close option for manual replays only */}
+        {!autoClose && (
+          <button
+            onClick={handleClose}
+            className="absolute top-4 right-4 text-white/30 hover:text-white/80 transition-colors duration-200 z-20"
           >
-            <source src="/videos/nexus_core_logo_animation.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+            <X className="h-6 w-6" />
+          </button>
+        )}
 
-          {/* Video Controls Overlay - Hidden for cleaner experience */}
-          {hasEnded && autoClose && (
-            <div className="absolute inset-0 bg-black/20">
-              {/* Clean end - no visible controls for auto-close mode */}
-            </div>
-          )}
-          
-          {hasEnded && !autoClose && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-              <button
-                onClick={handleReplay}
-                className="bg-blue-600/80 hover:bg-blue-600 text-white px-6 py-2 rounded-full font-medium transition-all duration-200 opacity-0 hover:opacity-100"
-                title="Replay Animation"
-              >
-                ↻
-              </button>
-            </div>
-          )}
-        </div>
+        {/* Clean end overlay - minimal for seamless flow */}
+        {hasEnded && !autoClose && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+            <button
+              onClick={handleReplay}
+              className="text-white/60 hover:text-white transition-all duration-300 text-4xl"
+              title="Replay Animation"
+            >
+              ↻
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
