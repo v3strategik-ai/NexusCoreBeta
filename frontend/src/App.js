@@ -537,10 +537,10 @@ function App() {
       <header className="border-b border-border/50 backdrop-blur-sm bg-background/80 sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <img 
-              src={logoFrame3} 
-              alt="Nexus Core" 
-              className="w-8 h-8 quantum-pulse"
+            <BrainLogo 
+              size="32"
+              onClick={replayIntro}
+              className="w-8 h-8"
             />
             <div>
               <h1 className="text-xl font-bold gradient-text">Nexus Core</h1>
