@@ -310,7 +310,7 @@ class Workflow(BaseEntity):
     name: str
     description: str
     status: WorkflowStatus
-    trigger_type: str  # "manual", "scheduled", "event_based"
+    trigger_type: Optional[str] = "manual"  # Legacy support: default to "manual" if missing
     trigger_config: Dict[str, Any] = {}
     steps: List[WorkflowStep] = []
     agent_id: Optional[str] = None
