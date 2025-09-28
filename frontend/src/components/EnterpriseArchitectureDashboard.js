@@ -120,7 +120,7 @@ const EnterpriseArchitectureDashboard = () => {
               </div>
             </div>
             <div className="p-4 bg-green-50 rounded-lg">
-              <h4 className="font-medium text-green-900">AI Analytics</h4>
+              <h4 className="font-medium text-foreground">AI Analytics</h4>
               <p className="text-sm text-green-700 mt-1">
                 {forecastingData?.components?.ai_engine === 'healthy' ? 'Operational' : 'Unavailable'}
               </p>
