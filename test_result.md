@@ -317,7 +317,9 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Phase 8A: AI Model Router Backend"
+    - "Phase 8A: AI Model Router Frontend"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
