@@ -500,7 +500,7 @@ const EnterpriseArchitectureDashboard = () => {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <Zap className="h-8 w-8 animate-spin text-purple-500 mx-auto mb-4" />
-            <p className="text-gray-600">Loading Enterprise Architecture systems...</p>
+            <p className="text-muted-foreground">Loading Enterprise Architecture systems...</p>
           </div>
         </div>
       </div>
