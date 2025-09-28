@@ -32,6 +32,11 @@ async def get_workflows(
         cursor = collection.find(filter_dict).skip(skip).limit(limit).sort("created_at", -1)
         workflows_data = await cursor.to_list(limit)
         
+        # Fix None updated_at values
+        for workflow in workflows_data:
+            if workflow.get('updated_at') is None:
+                workflow['updated_at'] = workflow.get('created_at', datetime.utcnow())
+        
         return [Workflow(**workflow) for workflow in workflows_data]
         
     except Exception as e:
