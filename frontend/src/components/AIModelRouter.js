@@ -280,7 +280,7 @@ const AIModelRouter = () => {
                 : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
             }`}
           >
-            <Compare className="h-4 w-4 inline mr-2" />
+            <GitCompare className="h-4 w-4 inline mr-2" />
             Model Comparison
           </button>
           <button
