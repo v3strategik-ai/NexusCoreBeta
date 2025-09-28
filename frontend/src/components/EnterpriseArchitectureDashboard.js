@@ -240,7 +240,7 @@ const EnterpriseArchitectureDashboard = () => {
             <div className="p-4 bg-red-50 rounded-lg">
               <div className="flex items-center">
                 <Lock className="h-5 w-5 text-red-500 mr-2" />
-                <h4 className="font-medium text-red-900">MFA Service</h4>
+                <h4 className="font-medium text-foreground">MFA Service</h4>
               </div>
               <p className="text-sm text-red-700 mt-1">
                 {securityData?.components?.mfa_service === 'healthy' ? 'Active' : 'Inactive'}
