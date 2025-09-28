@@ -447,7 +447,7 @@ const AIModelRouter = () => {
                 disabled={comparisonLoading || !comparisonMessage.trim() || comparisonModels.length < 2}
                 className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-md disabled:opacity-50 flex items-center"
               >
-                <Compare className="h-4 w-4 mr-2" />
+                <GitCompare className="h-4 w-4 mr-2" />
                 {comparisonLoading ? 'Comparing...' : `Compare ${comparisonModels.length} Models`}
               </button>
             </div>
