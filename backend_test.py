@@ -1299,7 +1299,7 @@ class NexusCoreAPITester:
             "temperature": 0.7
         }
         
-        success6, comparison_response = self.run_test("Model Comparison - GPT-5 vs Claude", "POST", "ai-models/compare", 200, comparison_request)
+        success6, comparison_response = self.run_test("Model Comparison - GPT-5 vs Claude", "POST", "ai-models/compare", 200, comparison_request, timeout=45)
         if success6:
             results = comparison_response.get('results', [])
             models_compared = comparison_response.get('models_compared', 0)
