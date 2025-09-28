@@ -417,7 +417,7 @@ const EnterpriseArchitectureDashboard = () => {
               <select
                 value={selectedIndustry}
                 onChange={(e) => setSelectedIndustry(e.target.value)}
-                className="border border-gray-300 rounded-md px-3 py-2"
+                className="border border-border rounded-md px-3 py-2 bg-background text-foreground focus:border-primary focus:ring-1 focus:ring-primary"
               >
                 {analyticsData?.supported_industries?.map(industry => (
                   <option key={industry} value={industry}>
