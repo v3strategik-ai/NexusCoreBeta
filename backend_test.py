@@ -5607,7 +5607,8 @@ class NexusCoreAPITester:
             self.test_audit_logging_system(),  # Phase 6C Audit Logging System
             self.test_phase_6d_advanced_voice_interface(),  # Phase 6D-A Advanced Voice Interface
             self.test_phase_6d_data_export_backup_systems(),  # Phase 6D-B Data Export & Backup Systems
-            self.test_phase_7_performance_optimization_systems()  # Phase 7 Performance Optimization Systems
+            self.test_phase_7_performance_optimization_systems(),  # Phase 7 Performance Optimization Systems
+            self.test_phase_8a_ai_model_router_backend()  # Phase 8A Multi-Model AI Integration
         ]
         
         # Print summary
