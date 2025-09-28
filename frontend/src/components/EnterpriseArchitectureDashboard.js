@@ -180,7 +180,7 @@ const EnterpriseArchitectureDashboard = () => {
                   </div>
                 </div>
                 <div className="mt-4">
-                  <p className="text-sm text-gray-600 mb-2">Key Recommendations:</p>
+                  <p className="text-sm text-muted-foreground mb-2">Key Recommendations:</p>
                   <ul className="text-sm space-y-1">
                     {forecastResults.recommendations?.slice(0, 3).map((rec, idx) => (
                       <li key={idx} className="flex items-start">
@@ -476,7 +476,7 @@ const EnterpriseArchitectureDashboard = () => {
                 )}
 
                 <div className="mt-4">
-                  <p className="text-sm text-gray-600 mb-2">Key Recommendations:</p>
+                  <p className="text-sm text-muted-foreground mb-2">Key Recommendations:</p>
                   <ul className="text-sm space-y-1">
                     {benchmarkResults.recommendations?.slice(0, 3).map((rec, idx) => (
                       <li key={idx} className="flex items-start">
