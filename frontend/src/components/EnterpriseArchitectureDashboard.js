@@ -455,12 +455,12 @@ const EnterpriseArchitectureDashboard = () => {
 
                 {benchmarkResults.benchmark_results && benchmarkResults.benchmark_results.length > 0 && (
                   <div className="space-y-3">
-                    <h5 className="font-medium">Performance Metrics</h5>
+                    <h5 className="font-medium text-foreground">Performance Metrics</h5>
                     {benchmarkResults.benchmark_results.map((result, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-3 bg-white rounded border">
+                      <div key={idx} className="flex items-center justify-between p-3 bg-card rounded border border-border">
                         <div>
-                          <p className="font-medium">{result.metric}</p>
-                          <p className="text-sm text-gray-600">
+                          <p className="font-medium text-foreground">{result.metric}</p>
+                          <p className="text-sm text-muted-foreground">
                             Your: {typeof result.tenant_value === 'number' ? result.tenant_value.toFixed(1) : result.tenant_value} | 
                             Industry Avg: {typeof result.industry_average === 'number' ? result.industry_average.toFixed(1) : result.industry_average}
                           </p>
