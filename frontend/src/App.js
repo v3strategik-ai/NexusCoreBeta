@@ -40,6 +40,8 @@ import { DataExportBackup } from './components/DataExportBackup'
 import PerformanceDashboard from './components/PerformanceDashboard'
 import EnterpriseArchitectureDashboard from './components/EnterpriseArchitectureDashboard'
 import AIModelRouter from './components/AIModelRouter'
+import VideoIntroModal, { useVideoIntro } from './components/VideoIntroModal'
+import BrainLogo from './components/BrainLogo'
 import { 
   Brain, 
   Zap, 
