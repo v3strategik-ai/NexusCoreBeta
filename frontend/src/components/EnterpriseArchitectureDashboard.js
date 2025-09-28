@@ -229,7 +229,7 @@ const EnterpriseArchitectureDashboard = () => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <Shield className="h-5 w-5 text-red-500 mr-2" />
-              <h3 className="text-lg font-semibold">Advanced Security Management</h3>
+              <h3 className="text-lg font-semibold text-foreground">Advanced Security Management</h3>
             </div>
             <div className={`px-3 py-1 rounded-full text-sm ${getStatusColor(securityData?.status || 'unknown')}`}>
               {securityData?.status || 'Unknown'}
