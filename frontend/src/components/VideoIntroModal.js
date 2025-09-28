@@ -37,10 +37,12 @@ const VideoIntroModal = ({ isOpen, onClose, autoClose = false }) => {
     setHasEnded(true);
     
     if (autoClose) {
-      // Auto-close after a brief pause to let the animation settle
+      // Start fade out transition
+      setIsClosing(true);
+      // Auto-close after fade animation
       setTimeout(() => {
         onClose();
-      }, 500);
+      }, 800);
     }
   };
 
