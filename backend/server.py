@@ -14,7 +14,7 @@ from datetime import datetime
 from database import connect_to_mongo, close_mongo_connection, get_database
 
 # Import all route modules
-from routes import agents, crm, dashboard, knowledge, documents, workflows, ai_chat, email, realtime, workflows_advanced, analytics, ab_testing, lead_scoring, ai_content, sentiment, workflow_engine, workflow_execution, nl_workflows, tenants, users_management, audit, advanced_voice, data_export, performance, advanced_forecasting, advanced_security, comparative_analytics
+from routes import agents, crm, dashboard, knowledge, documents, workflows, ai_chat, email, realtime, workflows_advanced, analytics, ab_testing, lead_scoring, ai_content, sentiment, workflow_engine, workflow_execution, nl_workflows, tenants, users_management, audit, advanced_voice, data_export, performance, advanced_forecasting, advanced_security, comparative_analytics, ai_models
 from websocket import socketio_app, start_background_tasks
 
 # Import Phase 7 performance optimization components
