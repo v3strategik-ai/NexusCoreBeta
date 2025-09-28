@@ -870,7 +870,7 @@ function App() {
             </div>
 
             {/* Operations Sub-navigation */}
-            <div className="border-b border-gray-200 mb-6">
+            <div className="border-b border-border mb-6">
               <nav className="flex space-x-8">
                 <button
                   onClick={() => setOperationsTab('workflows')}
@@ -999,7 +999,7 @@ function App() {
             </div>
 
             {/* Analytics & Performance Sub-navigation */}
-            <div className="border-b border-gray-200 mb-6">
+            <div className="border-b border-border mb-6">
               <nav className="flex space-x-8">
                 <button
                   onClick={() => setAnalyticsPerformanceTab('analytics')}
@@ -1075,7 +1075,7 @@ function App() {
             </div>
 
             {/* Enterprise Sub-navigation */}
-            <div className="border-b border-gray-200 mb-6">
+            <div className="border-b border-border mb-6">
               <nav className="flex space-x-8">
                 <button
                   onClick={() => setEnterpriseTab('management')}
