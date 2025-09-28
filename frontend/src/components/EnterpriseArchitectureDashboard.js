@@ -375,7 +375,7 @@ const EnterpriseArchitectureDashboard = () => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <BarChart3 className="h-5 w-5 text-purple-500 mr-2" />
-              <h3 className="text-lg font-semibold">Comparative Analytics & Benchmarking</h3>
+              <h3 className="text-lg font-semibold text-foreground">Comparative Analytics & Benchmarking</h3>
             </div>
             <div className={`px-3 py-1 rounded-full text-sm ${getStatusColor(analyticsData?.status || 'unknown')}`}>
               {analyticsData?.status || 'Unknown'}
