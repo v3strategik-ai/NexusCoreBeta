@@ -298,7 +298,7 @@ const EnterpriseArchitectureDashboard = () => {
 
             {mfaSetup && (
               <div className="bg-red-50 rounded-lg p-4">
-                <h4 className="font-medium text-red-900 mb-2">MFA Setup Complete</h4>
+                <h4 className="font-medium text-foreground mb-2">MFA Setup Complete</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-red-600">User ID</p>
