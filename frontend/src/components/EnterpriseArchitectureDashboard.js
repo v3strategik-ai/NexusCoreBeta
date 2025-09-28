@@ -129,7 +129,7 @@ const EnterpriseArchitectureDashboard = () => {
               </div>
             </div>
             <div className="p-4 bg-purple-50 rounded-lg">
-              <h4 className="font-medium text-purple-900">Forecast Periods</h4>
+              <h4 className="font-medium text-foreground">Forecast Periods</h4>
               <p className="text-sm text-purple-700 mt-1">
                 {forecastingData?.supported_periods?.length || 0} time periods
               </p>
