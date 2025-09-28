@@ -306,7 +306,7 @@ const EnterpriseArchitectureDashboard = () => {
                   </div>
                   <div>
                     <p className="text-sm text-red-600">Method</p>
-                    <p className="font-semibold">{mfaSetup.method}</p>
+                    <p className="font-semibold text-foreground">{mfaSetup.method}</p>
                   </div>
                 </div>
                 <div className="mt-4">
