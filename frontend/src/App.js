@@ -897,8 +897,8 @@ function App() {
               <div>
                 <div className="flex justify-between items-center mb-6">
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900">Advanced Workflows & Automation</h3>
-                    <p className="text-gray-600 mt-1">Build, manage, and execute complex business workflows</p>
+                    <h3 className="text-2xl font-bold text-slate-200 dark:text-slate-200">Advanced Workflows & Automation</h3>
+                    <p className="text-slate-300 dark:text-slate-300 mt-1">Build, manage, and execute complex business workflows</p>
                   </div>
                   <div className="flex gap-2">
                     <Badge variant="outline" className="flex items-center gap-1">
