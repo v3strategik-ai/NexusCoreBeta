@@ -535,14 +535,14 @@ const EnterpriseArchitectureDashboard = () => {
       </div>
 
       {/* Tab Navigation */}
-      <div className="border-b border-gray-200 mb-6">
+      <div className="border-b border-border mb-6">
         <nav className="flex space-x-8">
           <button
             onClick={() => setActiveTab('forecasting')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'forecasting'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
             }`}
           >
             <TrendingUp className="h-4 w-4 inline mr-2" />
