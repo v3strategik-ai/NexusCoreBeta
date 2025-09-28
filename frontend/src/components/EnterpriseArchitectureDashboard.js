@@ -584,34 +584,34 @@ const EnterpriseArchitectureDashboard = () => {
       <div className="mt-8 bg-card rounded-lg p-6 border border-border">
         <h3 className="text-lg font-semibold text-foreground mb-4">Enterprise Systems Overview</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex items-center justify-between p-4 bg-white rounded border">
+          <div className="flex items-center justify-between p-4 bg-card rounded border border-border">
             <div className="flex items-center">
               <TrendingUp className="h-5 w-5 text-blue-500 mr-3" />
               <div>
-                <p className="font-medium">Forecasting Engine</p>
-                <p className="text-sm text-gray-600">AI-powered predictions</p>
+                <p className="font-medium text-foreground">Forecasting Engine</p>
+                <p className="text-sm text-muted-foreground">AI-powered predictions</p>
               </div>
             </div>
             {getStatusIcon(forecastingData?.status || 'unknown')}
           </div>
           
-          <div className="flex items-center justify-between p-4 bg-white rounded border">
+          <div className="flex items-center justify-between p-4 bg-card rounded border border-border">
             <div className="flex items-center">
               <Shield className="h-5 w-5 text-red-500 mr-3" />
               <div>
-                <p className="font-medium">Security Manager</p>
-                <p className="text-sm text-gray-600">Enterprise security</p>
+                <p className="font-medium text-foreground">Security Manager</p>
+                <p className="text-sm text-muted-foreground">Enterprise security</p>
               </div>
             </div>
             {getStatusIcon(securityData?.status || 'unknown')}
           </div>
           
-          <div className="flex items-center justify-between p-4 bg-white rounded border">
+          <div className="flex items-center justify-between p-4 bg-card rounded border border-border">
             <div className="flex items-center">
               <BarChart3 className="h-5 w-5 text-purple-500 mr-3" />
               <div>
-                <p className="font-medium">Analytics Engine</p>
-                <p className="text-sm text-gray-600">Comparative insights</p>
+                <p className="font-medium text-foreground">Analytics Engine</p>
+                <p className="text-sm text-muted-foreground">Comparative insights</p>
               </div>
             </div>
             {getStatusIcon(analyticsData?.status || 'unknown')}
