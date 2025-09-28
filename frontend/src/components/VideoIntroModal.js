@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 const VideoIntroModal = ({ isOpen, onClose, autoClose = false }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasEnded, setHasEnded] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const videoRef = useRef(null);
 
   useEffect(() => {
