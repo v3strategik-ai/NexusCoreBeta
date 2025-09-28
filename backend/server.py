@@ -137,6 +137,9 @@ api_router.include_router(advanced_forecasting.router)
 api_router.include_router(advanced_security.router)
 api_router.include_router(comparative_analytics.router)
 
+# Phase 8A: Multi-Model AI Integration Routes
+api_router.include_router(ai_models.router)
+
 # Include the main API router
 app.include_router(api_router)
 
