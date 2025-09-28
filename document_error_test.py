@@ -7,7 +7,7 @@ import requests
 import json
 
 def test_error_handling():
-    base_url = "https://smartnexus-1.preview.emergentagent.com/api"
+    base_url = "https://nexus-multimodel.preview.emergentagent.com/api"
     
     print("🔍 Testing Error Handling & Edge Cases")
     print("=" * 50)

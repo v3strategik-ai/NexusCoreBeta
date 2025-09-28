@@ -10,7 +10,7 @@ from urllib.parse import quote
 
 def test_workflow_execution_fix():
     """Test workflow execution with proper workflow activation"""
-    base_url = "https://smartnexus-1.preview.emergentagent.com/api"
+    base_url = "https://nexus-multimodel.preview.emergentagent.com/api"
     
     print("🔧 Testing Workflow Execution Fix...")
     
@@ -80,7 +80,7 @@ def test_workflow_execution_fix():
 
 def test_nl_workflow_analyze_fix():
     """Test NL workflow analyze endpoint with correct parameters"""
-    base_url = "https://smartnexus-1.preview.emergentagent.com/api"
+    base_url = "https://nexus-multimodel.preview.emergentagent.com/api"
     
     print("\n🔧 Testing NL Workflow Analyze Fix...")
     
@@ -124,7 +124,7 @@ def test_nl_workflow_analyze_fix():
 
 def test_nl_workflow_creation():
     """Test NL workflow creation with detailed output"""
-    base_url = "https://smartnexus-1.preview.emergentagent.com/api"
+    base_url = "https://nexus-multimodel.preview.emergentagent.com/api"
     
     print("\n🔧 Testing NL Workflow Creation...")
     

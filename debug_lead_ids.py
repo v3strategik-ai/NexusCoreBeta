@@ -7,7 +7,7 @@ import requests
 import json
 
 def debug_lead_ids():
-    base_url = "https://smartnexus-1.preview.emergentagent.com"
+    base_url = "https://nexus-multimodel.preview.emergentagent.com"
     api_url = f"{base_url}/api"
     
     # Get leads
