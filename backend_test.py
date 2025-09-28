@@ -1274,9 +1274,9 @@ class NexusCoreAPITester:
         
         # Test 5: Test Different Task Types
         task_types_to_test = [
-            {"task_type": "reasoning", "message": "If all roses are flowers and some flowers are red, what can we conclude about roses?"},
-            {"task_type": "creative", "message": "Write a creative tagline for an AI business automation platform called Nexus Core."},
-            {"task_type": "coding", "message": "Write a Python function to calculate compound interest with monthly contributions."}
+            {"task_type": "reasoning", "message": "If A>B and B>C, what about A and C?", "max_tokens": 50},
+            {"task_type": "creative", "message": "Write a tagline for Nexus Core AI.", "max_tokens": 50},
+            {"task_type": "coding", "message": "Write a Python function to add two numbers.", "max_tokens": 50}
         ]
         
         task_test_results = []
